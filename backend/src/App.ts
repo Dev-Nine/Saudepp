@@ -2,14 +2,17 @@ import * as express from 'express';
 import { Application } from 'express';
 
 import UserController from './controller/UserController';
+import NoticeController from './controller/NoticeController';
 
 export default class App {
     public app: Application;
     private userController: UserController;
+    private noticeController: NoticeController;
 
     constructor() {
         this.app = express();
-        this.userController = new UserController();    
+        this.userController = new UserController();
+        this.noticeController = new NoticeController();
     }
 
     private midelwares(): void {
@@ -18,6 +21,9 @@ export default class App {
 
     private routes(): void {
         //! Register routes
+
+        // USUARIOS
+
         //Return all users
         this.app.get('/users', async (req, res) => {
             const users = await this.userController.getAll();
@@ -47,6 +53,28 @@ export default class App {
             const result = await this.userController.delete(req.params.id);
             return res.send(result);
         });
+
+        // NOTICIAS
+
+        //Return all notices
+        this.app.get('/notices', async (req, res) => {
+            const notices = await this.noticeController.getAll();
+            return res.json(notices);
+        });
+
+        //Return notice by id
+        this.app.get('/notice/:id', async (req, res) => {
+            const notice = await this.noticeController.getByPk(req.params.id);
+            return res.json(notice);
+        });
+
+        //Creating a notice
+        this.app.post('/notices', async (req, res) => {
+            const results = await this.noticeController.create(req.body);
+            return res.send(results);
+        });
+
+
     }
     
     public start(port? : number, args? : any): void {

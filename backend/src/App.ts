@@ -49,7 +49,7 @@ export default class App {
         });
     }
     
-    public start(port?, args?): void {
+    public start(port? : number, args? : any): void {
         this.midelwares();
         this.routes();
 

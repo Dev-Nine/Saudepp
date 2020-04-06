@@ -2,38 +2,38 @@ import { Connection, createConnection ,Repository, getConnection, ObjectID, Dele
 
 export default class UserController<T> {
     private connection: Connection;
-    private repositoy: Repository<T>;
-    private classe: ObjectType<T>
+    private repository: Repository<T>;
+    private classType: ObjectType<T>
 
-    constructor(classe: ObjectType<T>) {
-        this.classe = classe;
+    constructor(classType: ObjectType<T>) {
+        this.classType = classType;
         createConnection().then(connection => {
             this.connection = connection;
-            this.repositoy = this.connection.getRepository(this.classe);
+            this.repository = this.connection.getRepository(this.classType);
         });
     }
 
     public async getAll(): Promise<T[]> {
-        return this.repositoy.find();
+        return this.repository.find();
     }
 
     public async getByPk(id?: number | string | ObjectID): Promise<T> {
-        return this.repositoy.findOne(id);
+        return this.repository.findOne(id);
     }
 
     public async create(body): Promise<T[]> {
-        const user = this.repositoy.create(body);
-        return this.repositoy.save(user);
+        const user = this.repository.create(body);
+        return this.repository.save(user);
     }
 
     public async edit(body): Promise<T> {
-        const user = await this.repositoy.findOne(body.id);
-        this.repositoy.merge(user, body);
-        return this.repositoy.save(user);
+        const user = await this.repository.findOne(body.id);
+        this.repository.merge(user, body);
+        return this.repository.save(user);
     }
 
     public async delete(id): Promise<DeleteResult> {
-        return this.repositoy.delete(id);
+        return this.repository.delete(id);
     }
 
 }

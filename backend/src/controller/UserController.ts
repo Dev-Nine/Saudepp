@@ -1,5 +1,3 @@
-import { Connection, Repository, getConnection, ObjectID, DeleteResult } from "typeorm";
-
 import { User } from '../model/User';
 import GenericController from './GenericController';
 

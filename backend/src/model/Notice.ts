@@ -18,4 +18,11 @@ export class Notice {
 
     @ManyToOne(type => User, user => user.notices)
     user: User;
+
+    public isValid(): boolean {
+        if (this.title && this.text && this.date && this.user) {
+            return true;
+        } 
+        return false;
+    }
 }

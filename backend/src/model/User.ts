@@ -7,15 +7,22 @@ export class User {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({nullable: true})
+    @Column({ length: 50})
     name: string;
 
-    @Column({nullable: true})
+    @Column({ length: 50 })
     password: string;
 
-    @Column({nullable: true})
+    @Column({ length: 50 })
     email: string;
 
     @OneToMany(type => Notice, notice => notice.user)
     notices: Notice[];
-}
+
+    public isValid(): boolean {
+        if (this.name && this.password && this.email) {
+            return true;
+        }
+        return false;
+    }
+} 

@@ -1,8 +1,12 @@
+'use strict'
 import * as express from 'express';
 import { Application } from 'express';
 
 import UserController from './controller/UserController';
 import NoticeController from './controller/NoticeController';
+import { QueryFailedError } from 'typeorm';
+import { User } from './model/User';
+import UserReqBody from './controller/UserController';
 
 export default class App {
     public app: Application;
@@ -38,14 +42,36 @@ export default class App {
 
         //Creating a user
         this.app.post('/users', async (req, res) => {
-            const results = await this.userController.create(req.body);
-            return res.send(results);
+            try{
+                const results = await this.userController.create(req.body);
+                return res.send(results);
+            } catch (err) {
+                console.error(err);
+                if (err instanceof QueryFailedError) {
+                    return res.json({
+                        error: "Query Failed Error",
+                    });
+                } else if (err instanceof Error) {
+                    return res.status(400).json({error: (err.message)});
+                }
+            }
         });
 
         //Editing a user
         this.app.put('/users/:id', async (req, res) => {
-            const results = await this.userController.edit(req.body);
-            return res.send(results);
+            try {
+                const results = await this.userController.edit(req.body, req.params.id);
+                return res.send(results);
+            } catch (err) {
+                console.error(err);
+                if (err instanceof QueryFailedError) {
+                    return res.json({
+                        error: "Query Failed Error",
+                    });
+                } else if (err instanceof Error) {
+                    return res.status(400).json({error: (err.message)});
+                }
+            }
         });
 
         //Deleting a user
@@ -70,11 +96,37 @@ export default class App {
 
         //Creating a notice
         this.app.post('/notices', async (req, res) => {
-            const results = await this.noticeController.create(req.body);
-            return res.send(results);
+            try{
+                const results = await this.noticeController.create(req.body);
+                return res.send(results);
+            } catch (err) {
+                console.error(err);
+                if (err instanceof QueryFailedError) {
+                    return res.status(400).json({
+                        error: "Query Failed Error",
+                    });
+                } else if (err instanceof Error) {
+                    return res.status(400).json({error: (err.message)});
+                }
+            }
         });
 
-
+        //Editing a notice
+        this.app.put('/notices', async (req, res) => {
+            try{
+                const results = await this.noticeController.edit(req.body, req.params.id);
+                return res.send(results);
+            } catch (err) {
+                console.error(err);
+                if (err instanceof QueryFailedError) {
+                    return res.status(400).json({
+                        error: "Query Failed Error",
+                    });
+                } else if (err instanceof Error) {
+                    return res.status(400).json({error: (err.message)});
+                }
+            }
+        });
     }
     
     public start(port? : number, args? : any): void {

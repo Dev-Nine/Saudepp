@@ -17,4 +17,17 @@ export default class UserController extends GenericController<Notice> {
     constructor() {
         super(Notice);
     }
+
+    public processBody(body): Notice | undefined {
+        const notice = new Notice();
+        notice.id = body.id;
+        notice.title = body.title;
+        notice.text = body.text;
+        notice.date = body.date;
+        notice.user = body.user;
+
+        if (notice.isValid())
+            return notice;
+        return undefined;
+    }
 }

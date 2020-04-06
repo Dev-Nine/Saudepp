@@ -1,4 +1,4 @@
-import { Connection, createConnection ,Repository, getConnection, ObjectID, DeleteResult, ObjectType } from "typeorm";
+import { Connection, createConnection ,Repository, getConnection, ObjectID, DeleteResult, ObjectType, QueryFailedError } from "typeorm";
 
 
 export default class UserController<T> {
@@ -10,6 +10,10 @@ export default class UserController<T> {
         this.repository = getConnection().getRepository(this.classType);
     }
 
+    public processBody(body): T | undefined {
+        throw Error(`PROCESS BODY NOT IMPLEMENTED IN ${this.classType}`);
+    }
+
     public async getAll(): Promise<T[]> {
         return this.repository.find();
     }
@@ -19,14 +23,23 @@ export default class UserController<T> {
     }
 
     public async create(body): Promise<T[]> {
-        const user = this.repository.create(body);
-        return this.repository.save(user);
+        const object: T = this.processBody(body);
+
+        if (object) {
+            return this.repository.save([object]);
+        } 
+        throw Error(`Error in the atributes from User`);
     }
 
-    public async edit(body): Promise<T> {
-        const user = await this.repository.findOne(body.id);
-        this.repository.merge(user, body);
-        return this.repository.save(user);
+    public async edit(body, targetId): Promise<T> {
+        const object: T = this.processBody(body);
+
+        if (object) {
+            const user = await this.repository.findOne(targetId);
+            this.repository.merge(user, object);
+            return this.repository.save(user);
+        }
+        throw Error(`Error in the atributes from User`);
     }
 
     public async delete(id): Promise<DeleteResult> {

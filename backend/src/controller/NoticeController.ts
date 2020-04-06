@@ -23,8 +23,8 @@ export default class UserController extends GenericController<Notice> {
         notice.id = body.id;
         notice.title = body.title;
         notice.text = body.text;
-        notice.date = body.date;
         notice.user = body.user;
+        notice.date = new Date;
 
         if (notice.isValid())
             return notice;

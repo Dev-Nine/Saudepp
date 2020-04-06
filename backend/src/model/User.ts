@@ -1,4 +1,5 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
+import {Notice} from './Notice';
 
 @Entity()
 export class User {
@@ -6,13 +7,15 @@ export class User {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
-    firstName: string;
+    @Column({nullable: true})
+    name: string;
 
     @Column()
-    lastName: string;
+    password: string;
 
     @Column()
-    age: number;
+    email: string;
 
+    @OneToMany(type => Notice, notice => notice.user)
+    notices: Notice[];
 }

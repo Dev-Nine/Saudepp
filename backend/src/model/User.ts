@@ -10,10 +10,10 @@ export class User {
     @Column({nullable: true})
     name: string;
 
-    @Column()
+    @Column({nullable: true})
     password: string;
 
-    @Column()
+    @Column({nullable: true})
     email: string;
 
     @OneToMany(type => Notice, notice => notice.user)

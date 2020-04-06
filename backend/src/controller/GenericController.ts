@@ -1,16 +1,13 @@
 import { Connection, createConnection ,Repository, getConnection, ObjectID, DeleteResult, ObjectType } from "typeorm";
 
+
 export default class UserController<T> {
-    private connection: Connection;
     private repository: Repository<T>;
     private classType: ObjectType<T>
 
     constructor(classType: ObjectType<T>) {
         this.classType = classType;
-        createConnection().then(connection => {
-            this.connection = connection;
-            this.repository = this.connection.getRepository(this.classType);
-        });
+        this.repository = getConnection().getRepository(this.classType);
     }
 
     public async getAll(): Promise<T[]> {

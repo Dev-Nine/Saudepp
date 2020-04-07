@@ -20,7 +20,7 @@ export class Notice {
     user: User;
 
     public isValid(): boolean {
-        if (this.title && this.text && this.user) {
+        if (this.title && this.date && this.text && this.user) {
             return true;
         } 
         return false;

@@ -1,25 +1,28 @@
 import * as express from 'express';
 import { Application } from 'express';
-import routes from './routes';
+import Routes  from './routes';
 
 export default class App {
     public app: Application;
+    public routes: Routes;
 
     constructor() {
         this.app = express();
+        this.routes = new Routes();
     }
 
     private middlewares(): void {
         this.app.use(express.json());
     }
 
-    private routes(): void {
-        this.app.use(routes)
+    private linkAllRoutes(): void {
+        this.routes.defineRoutes();
+        this.app.use(this.routes.routes);
     }
     
     public start(port? : number, args? : any): void {
         this.middlewares();
-        this.routes();
+        this.linkAllRoutes();
 
         if (port) {
             if (args) {
@@ -27,7 +30,7 @@ export default class App {
             } else {
                 this.app.listen(port);
             }
-        }else {
+        } else {
             this.app.listen();
         }
         console.log('App is online!');

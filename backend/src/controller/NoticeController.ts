@@ -1,34 +1,31 @@
-import { Connection, Repository, getConnection, ObjectID, DeleteResult } from "typeorm";
+import { Repository, getConnection, DeleteResult, ObjectID, ObjectType } from "typeorm";
 
 import { Notice } from '../model/Notice';
 import GenericController from './GenericController';
+import { Request } from 'express';
 
 import { User } from '../model/User';
 
-interface ReqBody {
-    id: number;
-    titulo: string;
-    date: Date;
-    texto: string;
-    user: User;
-}
+export default class NoticeController extends GenericController<Notice> {
+    private notice : Notice;
 
-export default class UserController extends GenericController<Notice> {
     constructor() {
         super(Notice);
     }
 
-    public processBody(body): Notice | undefined {
-        const notice = new Notice();
-        notice.id = body.id;
-        notice.title = body.title;
-        notice.text = body.text;
-        notice.abstract = body.abstract;
-        notice.user = body.user;
-        notice.date = new Date;
+    public processData(body : Request["body"]): Notice | undefined {
+        this.notice.id = body.id;
+        this.notice.title = body.title;
+        this.notice.text = body.text;
+        this.notice.abstract = body.abstract;
+        this.notice.date = new Date;
 
-        if (notice.isValid())
-            return notice;
+        if (this.notice.isValid())
+            return this.notice;
         return undefined;
+    }
+
+    public async create(body : Request["body"], header : Request["headers"]): Promise<Notice[]>{
+
     }
 }

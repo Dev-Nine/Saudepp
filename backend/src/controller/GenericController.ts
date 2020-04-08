@@ -1,7 +1,7 @@
-import { Repository, getConnection, DeleteResult, ObjectID, ObjectType } from "typeorm";
-import { Request } from 'express';
+import { Repository, getConnection, DeleteResult, ObjectID, ObjectType, QueryFailedError } from "typeorm";
+import { Request, Response } from 'express';
 
-export default class UserController<T> {
+export default class GenericController<T> {
     private repository: Repository<T>;
     private classType: ObjectType<T>
 
@@ -10,40 +10,57 @@ export default class UserController<T> {
         this.repository = getConnection().getRepository(this.classType);
     }
 
-    public processBody(body : Request["body"]): T | undefined {
-        throw Error(`PROCESS BODY NOT IMPLEMENTED IN ${this.classType}`);
+    public processCompleteData(req : Request): T | undefined {
+        throw Error(`PROCESS COMPLETE DATA NOT IMPLEMENTED IN ${this.classType}`);
     }
 
-    public async getAll(): Promise<T[]> {
-        return this.repository.find();
+    public processData(req : Request): T | undefined {
+        throw Error(`PROCESS DATA NOT IMPLEMENTED IN ${this.classType}`);
     }
 
-    public async getByPk(id : number | string | ObjectID): Promise<T> {
-        return this.repository.findOne(id);
+    public async getAll(req : Request, res : Response): Promise<Response> {
+        const objects = await this.repository.find();
+        return res.json(objects);
     }
 
-    public async create(body : Request["body"]): Promise<T[]> {
-        const object: T = this.processBody(body);
+    public async getByPk(req : Request, res : Response): Promise<Response> {
+        const object: T = await this.repository.findOne(req.params["id"]);
+        return res.json(object);
+    }
+
+    public async create(req : Request, res : Response): Promise<Response> {
+        const object: T = this.processCompleteData(req);
 
         if (object) {
-            return this.repository.save([object]);
+            const result: T[] = await this.repository.save([object]);
+            return res.json(result);
         } 
+
         throw Error(`Error in the attributes from ${this.classType}`);
     }
 
-    public async edit(body : Request["body"], id : number | string | ObjectID): Promise<T> {
-        const object: T = this.processBody(body);
+    public async edit(req : Request, res : Response): Promise<Response> {
+        try{
+            const object: T = this.processData(req);
 
-        if (object) {
-            const user = await this.repository.findOne(id);
-            this.repository.merge(user, object);
-            return this.repository.save(user);
+            if (object) {
+                const foundObject = await this.repository.findOne(req.params["id"]);
+                this.repository.merge(foundObject, object);
+                const result = await this.repository.save(foundObject);
+                return res.json(result);
+            }
+            throw Error(`Error in the attributes from ${this.classType}`);
+        }catch(err){
+            console.log(err.message);
         }
-        throw Error(`Error in the attributes from ${this.classType}`);
     }
 
-    public async delete(id : number | string | ObjectID): Promise<DeleteResult> {
-        return this.repository.delete(id);
+    public async delete(req : Request, res : Response): Promise<Response> {
+        const result: DeleteResult = await this.repository.delete(req.params["id"]);
+        if(result.affected >= 1)
+            return res.status(200).send();
+        else
+            return res.status(404).send();
     }
 
 }

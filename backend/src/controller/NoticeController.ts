@@ -23,6 +23,7 @@ export default class UserController extends GenericController<Notice> {
         notice.id = body.id;
         notice.title = body.title;
         notice.text = body.text;
+        notice.abstract = body.abstract;
         notice.user = body.user;
         notice.date = new Date;
 

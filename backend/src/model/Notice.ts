@@ -11,6 +11,9 @@ export class Notice {
     title: string;
 
     @Column()
+    abstract: string;
+
+    @Column()
     date: Date;
 
     @Column()

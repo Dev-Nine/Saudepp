@@ -19,7 +19,9 @@ export class Notice {
     @Column()
     text: string;
 
-    @ManyToOne(type => User, user => user.notices)
+    @ManyToOne(type => User, user => user.notices, {
+        eager: true // carregar dados da foreign key
+    })
     user: User;
 
     public isValid(): boolean {

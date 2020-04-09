@@ -1,5 +1,5 @@
 import { Router, Response } from "express";
-import { QueryFailedError, getConnection } from "typeorm";
+import { QueryFailedError } from "typeorm";
 
 import UserController from "./controller/UserController";
 import NoticeController from "./controller/NoticeController";
@@ -32,75 +32,25 @@ export default class Routes {
         // USUARIOS
 
         //Return all users
-        this.routes.get("/users", async (req, res) => {
-            const users = await this.userController.getAll();
-            return res.json(users);
-        });
+        this.routes.get("/users", this.userController.getAll.bind(this.userController));
 
         //Return user by id
-        this.routes.get("/users/:id", async (req, res) => {
-            const user = await this.userController.getByPk(req.params.id);
-            return res.json(user);
-        });
+        this.routes.get("/users/:id", this.userController.getByPk.bind(this.userController));
 
         //Creating a user
-        this.routes.post("/users", async (req, res) => {
-            try {
-                const results = await this.userController.create(req.body);
-                return res.send(results);
-            } catch (err) {
-                return this.validateError(res, err);
-            }
-        });
+        this.routes.post("/users", this.userController.create.bind(this.userController));
 
         //Editing a user
-        this.routes.put("/users/:id", async (req, res) => {
-            try {
-                const results = await this.userController.edit(req.body, req.params.id);
-                return res.send(results);
-            } catch (err) {
-                return this.validateError(res, err);
-            }
-        });
+        this.routes.put("/users/:id", this.userController.edit.bind(this.userController));
 
         //Deleting a user
-        this.routes.delete("/users/:id", async (req, res) => {
-            const result = await this.userController.delete(req.params.id);
-            return res.send(result);
-        });
+        this.routes.delete("/users/:id", this.userController.delete.bind(this.userController));
 
         // NOTICIAS
 
-        //Return all notices
-        this.routes.get("/notices", async (req, res) => {
-            const notices = await this.noticeController.getAll();
-            return res.json(notices);
-        });
-
-        //Return notice by id
-        this.routes.get("/notice/:id", async (req, res) => {
-            const notice = await this.noticeController.getByPk(req.params.id);
-            return res.json(notice);
-        });
-
-        //Creating a notice
-        this.routes.post("/notices", async (req, res) => {
-            try {
-                const results = await this.noticeController.create(req.body);
-                return res.send(results);
-            } catch (err) {
-                return this.validateError(res, err);
-            }
-        });
-
-        //Editing a notice
-        this.routes.put("/notices", async (req, res) => {
-            try {
-                const results = await this.noticeController.edit(req.body, req.params.id);
-                return res.send(results);
-            } catch (err) {
-                return this.validateError(res, err);
-            }
-        });
+        this.routes.get("/notices", this.noticeController.getAll.bind(this.noticeController));
+        this.routes.get("/notices/:id", this.noticeController.getByPk.bind(this.noticeController));
+        this.routes.post("/notices", this.noticeController.create.bind(this.noticeController));
+        
     }
 }

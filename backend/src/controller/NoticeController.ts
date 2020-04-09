@@ -1,34 +1,63 @@
-import { Connection, Repository, getConnection, ObjectID, DeleteResult } from "typeorm";
-
 import { Notice } from '../model/Notice';
+import { Request, Response } from 'express';
 import GenericController from './GenericController';
-
 import { User } from '../model/User';
 
-interface ReqBody {
-    id: number;
-    titulo: string;
-    date: Date;
-    texto: string;
-    user: User;
-}
-
-export default class UserController extends GenericController<Notice> {
+export default class NoticeController extends GenericController<Notice> {
     constructor() {
         super(Notice);
     }
 
-    public processBody(body): Notice | undefined {
+    public validateGet(req : Request): number{ return 200 }
+
+    // semelhante para edição e delete
+    public validateCreate(req : Request): number{
+        const userId = req.headers.authorization;
+
+        if(userId == undefined)
+            return 401;
+        return 200;
+    }
+
+    public validateEdit(req : Request): number{
+        return this.validateCreate(req);
+    }
+
+    public validateDelete(req : Request): number{
+        return this.validateCreate(req);
+    }
+
+    public processCompleteData(req : Request): Notice | undefined {
         const notice = new Notice();
+        notice.user = new User();
+        const body = req["body"];
+        const header = req["headers"];
+
         notice.id = body.id;
         notice.title = body.title;
         notice.text = body.text;
+        notice.user.id = parseInt(header.authorization);
         notice.abstract = body.abstract;
-        notice.user = body.user;
         notice.date = new Date;
 
-        if (notice.isValid())
+        if(notice.isValid())
             return notice;
         return undefined;
+    }
+
+    public processData(req : Request): Notice {
+        const notice = new Notice();
+        notice.user = new User();
+        const body = req["body"];
+        const header = req["headers"];
+
+        notice.id = body.id;
+        notice.title = body.title;
+        notice.text = body.text;
+        notice.user.id = parseInt(header.authorization);
+        notice.abstract = body.abstract;
+        notice.date = new Date;
+
+        return notice;
     }
 }

@@ -1,12 +1,29 @@
 import { User } from '../model/User';
 import { Request, Response } from 'express';
-import { Notice } from '../model/Notice';
 import GenericController from './GenericController';
 
 export default class UserController extends GenericController<User> {
     constructor() {
         super(User);
     }
+
+    public validateGet(req : Request): number{ return 200 }
+
+    // semelhante para edição e delete
+    public validateCreate(req : Request): number{ 
+        const userId = req.headers.authorization;
+
+        if(userId == undefined)
+            return 401;
+        return 200; 
+    }
+
+    public validateEdit(req : Request): number{ 
+        return this.validateCreate(req);
+     }
+    public validateDelete(req : Request): number{ 
+        return this.validateCreate(req);
+     }
 
     public processCompleteData(req : Request): User | undefined {
         const user = new User;
@@ -23,7 +40,7 @@ export default class UserController extends GenericController<User> {
         return undefined;
     }
 
-    public processData(req : Request): User | undefined {
+    public processData(req : Request): User {
         const user = new User;
         const body = req["body"];
 
@@ -32,8 +49,6 @@ export default class UserController extends GenericController<User> {
         user.email = body.email;
         user.notices = body.notices;
         user.password = body.password;
-
-        console.log(user);
 
         return user; 
     }

@@ -3,17 +3,16 @@ import { QueryFailedError } from "typeorm";
 
 import UserController from "./controller/UserController";
 import NoticeController from "./controller/NoticeController";
-import { Notice } from "./model/Notice";
 
 export default class Routes {
     public routes: Router;
     private userController: UserController;
-    //private noticeController: NoticeController;
+    private noticeController: NoticeController;
 
     constructor() {
         this.routes = Router();
         this.userController = new UserController();
-        //this.noticeController = new NoticeController();
+        this.noticeController = new NoticeController();
     }
 
     public validateError(res: Response, err: Error): Response {
@@ -46,6 +45,12 @@ export default class Routes {
 
         //Deleting a user
         this.routes.delete("/users/:id", this.userController.delete.bind(this.userController));
+
+        // NOTICIAS
+
+        this.routes.get("/notices", this.noticeController.getAll.bind(this.noticeController));
+        this.routes.get("/notices/:id", this.noticeController.getByPk.bind(this.noticeController));
+        this.routes.post("/notices", this.noticeController.create.bind(this.noticeController));
         
     }
 }

@@ -1,31 +1,63 @@
-import { Repository, getConnection, DeleteResult, ObjectID, ObjectType } from "typeorm";
-
 import { Notice } from '../model/Notice';
+import { Request, Response } from 'express';
 import GenericController from './GenericController';
-import { Request } from 'express';
-
 import { User } from '../model/User';
 
 export default class NoticeController extends GenericController<Notice> {
-    private notice : Notice;
-
     constructor() {
         super(Notice);
     }
 
-    public processData(body : Request["body"]): Notice | undefined {
-        this.notice.id = body.id;
-        this.notice.title = body.title;
-        this.notice.text = body.text;
-        this.notice.abstract = body.abstract;
-        this.notice.date = new Date;
+    public validateGet(req : Request): number{ return 200 }
 
-        if (this.notice.isValid())
-            return this.notice;
+    // semelhante para edição e delete
+    public validateCreate(req : Request): number{
+        const userId = req.headers.authorization;
+
+        if(userId == undefined)
+            return 401;
+        return 200;
+    }
+
+    public validateEdit(req : Request): number{
+        return this.validateCreate(req);
+    }
+
+    public validateDelete(req : Request): number{
+        return this.validateCreate(req);
+    }
+
+    public processCompleteData(req : Request): Notice | undefined {
+        const notice = new Notice();
+        notice.user = new User();
+        const body = req["body"];
+        const header = req["headers"];
+
+        notice.id = body.id;
+        notice.title = body.title;
+        notice.text = body.text;
+        notice.user.id = parseInt(header.authorization);
+        notice.abstract = body.abstract;
+        notice.date = new Date;
+
+        if(notice.isValid())
+            return notice;
         return undefined;
     }
 
-    public async create(body : Request["body"], header : Request["headers"]): Promise<Notice[]>{
+    public processData(req : Request): Notice {
+        const notice = new Notice();
+        notice.user = new User();
+        const body = req["body"];
+        const header = req["headers"];
 
+        notice.id = body.id;
+        notice.title = body.title;
+        notice.text = body.text;
+        notice.user.id = parseInt(header.authorization);
+        notice.abstract = body.abstract;
+        notice.date = new Date;
+
+        return notice;
     }
 }

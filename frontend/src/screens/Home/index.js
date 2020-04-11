@@ -1,7 +1,14 @@
 import React from 'react'
 
+import './styles.css'
+
+import Notice from '../../components/Notice'
+
 export default function Home() {
    return (
-      <h1>Olá mundo</h1>
+      <div id='main'>
+         a
+
+      </div>
    )
 }

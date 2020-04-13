@@ -1,5 +1,6 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany} from "typeorm";
 import {User} from "./User";
+import {Comment} from "./Comment";
 
 @Entity()
 export class Notice {
@@ -18,6 +19,9 @@ export class Notice {
 
     @Column()
     text: string;
+
+    @OneToMany(type => Comment, comment => comment.notice)
+    comments: Comment[];
 
     @ManyToOne(type => User, user => user.notices, {
         eager: true // carregar dados da foreign key

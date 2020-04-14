@@ -3,29 +3,19 @@ import { QueryFailedError } from "typeorm";
 
 import UserController from "./controller/UserController";
 import NoticeController from "./controller/NoticeController";
+import CommentController from "./controller/CommentController";
 
 export default class Routes {
     public routes: Router;
     private userController: UserController;
     private noticeController: NoticeController;
+    private commentController: CommentController;
 
     constructor() {
         this.routes = Router();
         this.userController = new UserController();
         this.noticeController = new NoticeController();
-    }
-
-    public validateError(res: Response, err: Error): Response {
-        console.error(err);
-        if (err instanceof QueryFailedError) {
-            return res.status(400).json({
-                error: "Query Failed Error",
-            });
-        } else if (err instanceof Error) {
-            return res.status(400).json({
-                error: err.message,
-            });
-        }
+        this.commentController = new CommentController();
     }
 
     public defineRoutes() {
@@ -51,6 +41,16 @@ export default class Routes {
         this.routes.get("/notices", this.noticeController.getAll.bind(this.noticeController));
         this.routes.get("/notices/:id", this.noticeController.getByPk.bind(this.noticeController));
         this.routes.post("/notices", this.noticeController.create.bind(this.noticeController));
+        this.routes.put("/notices/:id", this.noticeController.edit.bind(this.noticeController));
+        this.routes.delete("/notices/:id", this.noticeController.delete.bind(this.noticeController));
+
+        // COMENTARIOS
+
+        this.routes.get("/comments", this.commentController.getAll.bind(this.commentController));
+        this.routes.get("/comments/:id", this.commentController.getByPk.bind(this.commentController));
+        this.routes.post("/comments", this.commentController.create.bind(this.commentController));
+        this.routes.put("/comments/:id", this.commentController.edit.bind(this.commentController));
+        this.routes.delete("/comments/:id", this.commentController.delete.bind(this.commentController));
         
     }
 }

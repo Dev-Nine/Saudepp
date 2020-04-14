@@ -1,5 +1,6 @@
 import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
 import {Notice} from './Notice';
+import {Comment} from './Comment';
 
 @Entity()
 export class User {
@@ -18,6 +19,9 @@ export class User {
 
     @OneToMany(type => Notice, notice => notice.user)
     notices: Notice[];
+
+    @OneToMany(type => Comment, comment => comment.author)
+    comments: Comment[];
 
     public isValid(): boolean {
         if (this.name && this.password && this.email) {

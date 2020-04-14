@@ -31,12 +31,11 @@ export default class NoticeController extends GenericController<Notice> {
         const notice = new Notice();
         notice.user = new User();
         const body = req["body"];
-        const header = req["headers"];
 
         notice.id = body.id;
         notice.title = body.title;
         notice.text = body.text;
-        notice.user.id = parseInt(header.authorization);
+        notice.user.id = parseInt(req.headers.authorization);
         notice.abstract = body.abstract;
         notice.date = new Date;
 
@@ -49,12 +48,11 @@ export default class NoticeController extends GenericController<Notice> {
         const notice = new Notice();
         notice.user = new User();
         const body = req["body"];
-        const header = req["headers"];
 
         notice.id = body.id;
         notice.title = body.title;
         notice.text = body.text;
-        notice.user.id = parseInt(header.authorization);
+        notice.user.id = parseInt(req.headers.authorization);
         notice.abstract = body.abstract;
         notice.date = new Date;
 

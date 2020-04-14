@@ -15,6 +15,14 @@ export default abstract class GenericController<T> {
     public abstract validateEdit(req : Request) : number;
     public abstract validateDelete(req : Request) : number;
 
+    private validateError(err : Error, res : Response): Response{
+        console.log(err.constructor.name);
+        if(err instanceof QueryFailedError)
+            return res.status(400).send( { error: 'Query error, authorization may be invalid' } );
+        return res.status(500).send();
+    }
+
+
     public processCompleteData(req : Request): T | undefined {
         throw Error(`PROCESS COMPLETE DATA NOT IMPLEMENTED IN ${this.classType}`);
     }
@@ -54,9 +62,7 @@ export default abstract class GenericController<T> {
 
             throw Error(`Error in the attributes from ${this.classType}`);
         }catch(err){
-            if(err instanceof QueryFailedError)
-                return res.status(400).send();
-            return res.status(500).send();
+            return this.validateError(err, res);
         }
     }
 
@@ -76,9 +82,7 @@ export default abstract class GenericController<T> {
             }
             throw Error(`Error in the attributes from ${this.classType}`);
         }catch(err){
-            if(err instanceof QueryFailedError)
-                return res.status(400).send();
-            return res.status(500).send();
+            return this.validateError(err, res);
         }
     }
 
@@ -95,9 +99,7 @@ export default abstract class GenericController<T> {
             else
                 return res.status(404).send();
         }catch(err){
-            if(err instanceof QueryFailedError)
-                return res.status(400).send();
-            return res.status(500).send();
+            return this.validateError(err, res);
         }
     }
 

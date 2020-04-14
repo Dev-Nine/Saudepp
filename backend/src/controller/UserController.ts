@@ -10,19 +10,17 @@ export default class UserController extends GenericController<User> {
     public validateGet(req : Request): number{ return 200 }
 
     // semelhante para edição e delete
-    public validateCreate(req : Request): number{ 
+    public validateCreate(req : Request): number{ return 200 }
+
+    public validateEdit(req : Request): number{ 
         const userId = req.headers.authorization;
 
         if(userId == undefined)
             return 401;
         return 200; 
-    }
-
-    public validateEdit(req : Request): number{ 
-        return this.validateCreate(req);
      }
     public validateDelete(req : Request): number{ 
-        return this.validateCreate(req);
+        return this.validateEdit(req);
      }
 
     public processCompleteData(req : Request): User | undefined {

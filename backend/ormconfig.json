@@ -5,17 +5,11 @@
    "username": "postgres",
    "password": "docker",
    "database": "typeorm",
-   "synchronize": true,
+   "synchronize": false,
    "logging": ["query", "error"],
-   "entities": [
-      "src/model/**/*.ts"
-   ],
-   "migrations": [
-      "src/migration/**/*.ts"
-   ],
-   "subscribers": [
-      "src/subscriber/**/*.ts"
-   ],
+   "entities": ["src/model/**/*.ts"],
+   "migrations": ["src/migration/**/*.ts"],
+   "subscribers": ["src/subscriber/**/*.ts"],
    "cli": {
       "entitiesDir": "src/model",
       "migrationsDir": "src/migration",

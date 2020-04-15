@@ -1,5 +1,5 @@
 import { getRepository } from 'typeorm';
-// import { compare } from 'bcryptjs';
+import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 
 import authConfig from '../config/auth';
@@ -25,7 +25,9 @@ export default class AuthenticateUserService {
          throw new Error('Incorrect email/password combination.')
       }
 
-      if (password !== user.password) {
+      const passwordMatched = await compare(password, user.password);
+      
+      if (!passwordMatched) {
          throw new Error('Incorrect email/password combination.')
       }
 

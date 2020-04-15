@@ -8,10 +8,10 @@ export class User {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ length: 50})
+    @Column({ length: 50 })
     name: string;
 
-    @Column()
+    @Column({ length: 8000 })
     password: string;
 
     @Column({ length: 50 })

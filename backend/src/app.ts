@@ -45,7 +45,8 @@ export default class App {
             }
             console.log('App is online!');
         } catch (err) {
-            console.error('Unaple to initiate the app!');
+            console.log(err.message);
+            console.error('Unable to initiate the app!');
             if (err instanceof QueryFailedError) {
                 console.error('There is a error on the typeorm query!');
             }

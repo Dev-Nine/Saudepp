@@ -17,6 +17,14 @@ interface Response {
 
 export default class AuthenticateUserService {
    public async execute({email, password}: Request): Promise<Response> {
+      // const queryBuilder = getRepository(User).createQueryBuilder();
+
+      // const teste = await queryBuilder.select("user.email", email)
+      //    .addSelect("user.password")
+      //    .getOne();
+
+      // console.log(teste);
+
       const userRepository = getRepository(User);
 
       const user = await userRepository.findOne({where: {email}});

@@ -15,12 +15,14 @@ export class Comment {
     date: Date;
 
     @ManyToOne(type => Notice, notice => notice.comments, {
-        eager: true // carregar dados da foreign key
+        eager: true, // carregar dados da foreign key
+        onDelete: "CASCADE"
     })
     notice: Notice;
 
     @ManyToOne(type => User, user => user.comments, {
-        eager: true // carregar dados da foreign key
+        eager: true, // carregar dados da foreign key
+        onDelete: "CASCADE"
     })
     author: User;
 

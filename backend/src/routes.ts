@@ -27,7 +27,7 @@ export default class Routes {
         // USUARIOS
 
         //Return all users
-        this.routes.get("/users", ensureAuthentication,this.userController.getAll.bind(this.userController));
+        this.routes.get("/users", this.userController.getAll.bind(this.userController));
 
         //Return user by id
         this.routes.get("/users/:id", this.userController.getByPk.bind(this.userController));

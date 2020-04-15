@@ -2,8 +2,11 @@ import * as express from 'express';
 import { Application } from 'express';
 import Routes  from './routes';
 
+
 import connection from './database/connection';
 import { QueryFailedError } from 'typeorm';
+
+import ensureAuthenticated from './middlewares/ensureAuthenticated'
 
 export default class App {
     public app: Application;
@@ -15,6 +18,7 @@ export default class App {
 
     private middlewares(): void {
         this.app.use(express.json());
+        // this.app.use(ensureAuthenticated)
     }
 
     private linkAllRoutes(): void {

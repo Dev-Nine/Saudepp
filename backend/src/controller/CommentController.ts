@@ -35,9 +35,9 @@ export default class CommentController extends GenericController<Comment> {
         const body = req["body"];
 
         comment.author.id = parseInt(req.headers.authorization);
-        comment.notice.id = parseInt(req.header('Notice-ID'));
+        comment.notice.id = body.notice_id;
         comment.content = body.content;
-        comment.date = new Date();
+        comment.date = body.date;
 
         if(comment.isValid())
             return comment;
@@ -51,9 +51,9 @@ export default class CommentController extends GenericController<Comment> {
         const body = req["body"];
 
         comment.author.id = parseInt(req.headers.authorization);
-        comment.notice.id = parseInt(req.header('Notice-ID'));
+        comment.notice.id = body.notice_id;
         comment.content = body.content;
-        comment.date = new Date();
+        comment.date = body.date;
 
         return comment;
     }

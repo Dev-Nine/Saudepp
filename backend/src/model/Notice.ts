@@ -30,7 +30,9 @@ export class Notice {
     })
     user: User;
 
-    @ManyToMany(type => Tag)
+    @ManyToMany(type => Tag, {
+        eager: true
+    })
     @JoinTable({
         name: 'tag_notice'
     })

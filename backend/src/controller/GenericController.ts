@@ -17,6 +17,7 @@ export default abstract class GenericController<T> {
 
     protected validateError(err : Error, res : Response): Response{
         console.log(err.constructor.name);
+        console.log(err.message);
         if(err instanceof QueryFailedError)
             return res.status(400).send( { error: 'Query error, authorization may be invalid' } );
         return res.status(500).send();

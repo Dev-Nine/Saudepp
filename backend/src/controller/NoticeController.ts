@@ -2,6 +2,8 @@ import { Notice } from '../model/Notice';
 import { Request, Response } from 'express';
 import GenericController from './GenericController';
 import { User } from '../model/User';
+import { Tag } from '../model/Tag';
+import { Comment } from '../model/Comment';
 
 export default class NoticeController extends GenericController<Notice> {
     constructor() {
@@ -32,6 +34,16 @@ export default class NoticeController extends GenericController<Notice> {
         notice.user = new User();
         const body = req["body"];
 
+        notice.tags = [];
+        if(body.tags === undefined)
+            return undefined;
+
+        for (const tagAttr of body.tags){
+            let tag = new Tag();
+            tag.id = tagAttr.id;
+            notice.tags.push(tag);
+        }
+
         notice.id = body.id;
         notice.title = body.title;
         notice.text = body.text;
@@ -49,12 +61,20 @@ export default class NoticeController extends GenericController<Notice> {
         notice.user = new User();
         const body = req["body"];
 
+        if(body.tags !== undefined){
+            notice.tags = [];
+            for (const tagAttr of body.tags){
+                let tag = new Tag();
+                tag.id = tagAttr.id;
+                notice.tags.push(tag);
+            }
+        }
+
         notice.id = body.id;
         notice.title = body.title;
         notice.text = body.text;
         notice.user.id = parseInt(req.headers.authorization);
         notice.abstract = body.abstract;
-        notice.comments = body.comments
 
         return notice;
     }

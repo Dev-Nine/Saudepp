@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, ManyToMany, JoinColumn} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, ManyToMany, JoinColumn, JoinTable} from "typeorm";
 import {User} from "./User";
 import {Comment} from "./Comment";
 import { Tag } from "./Tag";
@@ -31,11 +31,13 @@ export class Notice {
     user: User;
 
     @ManyToMany(type => Tag)
-    @JoinColumn()
+    @JoinTable({
+        name: 'tag_notice'
+    })
     tags: Tag[]
 
     public isValid(): boolean {
-        if (this.title && this.date && this.text && this.user) {
+        if (this.title && this.date && this.text && this.user && this.tags.length >= 1) {
             return true;
         } 
         return false;

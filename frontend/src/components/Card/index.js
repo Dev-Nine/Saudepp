@@ -6,7 +6,7 @@ import Notice from '../Notice'
 
 export default function Card({title, type, data}) {
    return (
-      <>
+      <div>
          <h1>{title}</h1>
          <hr />
          <ul>
@@ -15,6 +15,6 @@ export default function Card({title, type, data}) {
             <li><Notice /></li>
             <li><Notice /></li>
          </ul>
-      </>
+      </div>
    )
 }

@@ -52,3 +52,10 @@
 
    color: #787878;
 }
+
+/* @media (max-width: 1250px) {
+   #notice {
+      width: 300px;
+      background-color: #000;
+   }
+} */

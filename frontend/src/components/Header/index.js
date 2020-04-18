@@ -16,13 +16,11 @@ import './styles.css'
                         <p>Presidente Epitácio</p>
                     </div>
                     <nav className="nav-menu">
-                        <ul>
                             <a href="#">Notícias</a>
                             <a href="#">Perguntas</a>
                             <a href="#">Sobre nós</a>
                             <a href="#">Entreterimento</a>
                             <a href="#">Adicionar notícia</a>
-                        </ul>
                     </nav>
                 </div>
             </header>

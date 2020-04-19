@@ -5,7 +5,10 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Home from './screens/Home';
 import Login from './screens/Login';
 import Noticies from './screens/Noticies';
-import Register from './screens/Register';
+import Register from './screens/register';
+import RegisterProfessional from './screens/RegisterProfessional'
+import RegisterMedic from './screens/RegisterMedic';
+
 
 export default function Routes() {
    return (
@@ -15,6 +18,8 @@ export default function Routes() {
             <Route path="/Login" exact component={Login}/>
             <Route path="/Noticies" exact component={Noticies}/>
             <Route path="/Register" exact component={Register}/>
+            <Route path="/Register/professional" exact component={RegisterProfessional}/>
+            <Route pasth="/register/medic" exact component={RegisterMedic}/>
          </Switch>
       </BrowserRouter>
    )

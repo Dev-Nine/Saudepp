@@ -1,12 +1,9 @@
 import * as express from 'express';
 import { Application } from 'express';
 import Routes  from './routes';
-
-
 import connection from './database/connection';
 import { QueryFailedError } from 'typeorm';
 
-import ensureAuthenticated from './middlewares/ensureAuthenticated'
 
 export default class App {
     public app: Application;
@@ -18,7 +15,9 @@ export default class App {
 
     private middlewares(): void {
         this.app.use(express.json());
-        // this.app.use(ensureAuthenticated)
+        
+        // n faz sentido colocar aqui, se não nunca irão conseguir fazer login
+        // this.app.use(ensureAuthentication)
     }
 
     private linkAllRoutes(): void {
@@ -36,12 +35,12 @@ export default class App {
     
             if (port) {
                 if (args) {
-                    this.app.listen(port, args);
+                    this.app.listen(port, args, () => console.log(`App running on port ${port}`));
                 } else {
-                    this.app.listen(port);
+                    this.app.listen(port, () => console.log(`App running on port ${port}`));
                 }
             } else {
-                this.app.listen();
+                this.app.listen(() => console.log(`Port was not specified, running app`));
             }
             console.log('App is online!');
         } catch (err) {

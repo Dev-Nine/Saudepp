@@ -1,7 +1,7 @@
 import { User } from '../model/User';
 import { Request, Response } from 'express';
 import GenericController from './GenericController';
-import { hash } from 'bcryptjs';
+import * as bcrypt from 'bcryptjs';
 
 export default class UserController extends GenericController<User> {
     constructor() {
@@ -59,7 +59,7 @@ export default class UserController extends GenericController<User> {
             if(statusCode != 200)
                 return res.status(statusCode).send();
 
-            req["body"].password = await hash(req["body"].password, 8);
+            req["body"].password = await bcrypt.hash(req["body"].password, 8);
 
             const user: User = this.processCompleteData(req);
 
@@ -80,7 +80,7 @@ export default class UserController extends GenericController<User> {
             if(statusCode != 200)
                 return res.status(statusCode).send();
 
-            req["body"].password = await hash(req["body"].password, 8);
+            req["body"].password = await bcrypt.hash(req["body"].password, 8);
 
             const user: User = this.processData(req);
 

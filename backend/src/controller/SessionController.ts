@@ -6,7 +6,7 @@ export default class SessionController {
    public async auth (req: Request, res: Response): Promise<any> {
       try {
          const {email, password} = req.body;
-         const authenticateUser = new AuthenticateUserService()
+         const authenticateUser = new AuthenticateUserService();
 
          const {user, token} = await authenticateUser.execute({
             email,

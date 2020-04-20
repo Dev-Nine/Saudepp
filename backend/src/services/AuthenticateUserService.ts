@@ -1,6 +1,6 @@
-import { getRepository } from 'typeorm';
-import { compare } from 'bcryptjs';
-import { sign } from 'jsonwebtoken';
+import * as typeorm from 'typeorm';
+import * as bcrypt from 'bcryptjs';
+import * as jwt from 'jsonwebtoken';
 
 import authConfig from '../config/auth';
 import { User } from '../model/User';
@@ -25,25 +25,24 @@ export default class AuthenticateUserService {
 
       // console.log(teste);
 
-      const userRepository = getRepository(User);
-
-      const user = await userRepository.findOne({where: {email}});
+      const userRepository = typeorm.getRepository(User);
+      const user = await userRepository.findOne({select: ["id", "password"], where: {email}});
 
       if (!user) {
          throw new Error('Incorrect email/password combination.')
       }
 
-      const passwordMatched = await compare(password, user.password);
+      console.log("Given: " + password, user.password);
+      console.log(user);
+      const passwordMatched = await bcrypt.compare(password, user.password);
       
       if (!passwordMatched) {
          throw new Error('Incorrect email/password combination.')
       }
 
-      console.log()
-
       const {secret, expiresIn} = authConfig.jwt;
 
-      const token = sign({}, secret, {
+      const token = jwt.sign({}, secret, {
          subject: user.id.toString(),
          expiresIn,
       });

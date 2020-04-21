@@ -33,6 +33,7 @@ export default class UserController extends GenericController<User> {
         user.email = body.email;
         user.notices = body.notices;
         user.password = body.password;
+        user.type = body.type;
 
         if (user.isValid()) 
             return user; 
@@ -48,6 +49,10 @@ export default class UserController extends GenericController<User> {
         user.email = body.email;
         user.notices = body.notices;
         user.password = body.password;
+
+        // garantia
+        if(body.type >= 0 && body.type <= 3)
+            user.type = body.type;
 
         return user; 
     }

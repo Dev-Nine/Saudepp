@@ -17,6 +17,13 @@ export class User {
     @Column({ length: 50 })
     email: string;
 
+    @Column()
+    type: number;
+    // 0 -> admin
+    // 1 -> moderador
+    // 2 -> profissional
+    // 3 -> comum
+
     @OneToMany(type => Notice, notice => notice.user)
     notices: Notice[];
 
@@ -24,7 +31,9 @@ export class User {
     comments: Comment[];
 
     public isValid(): boolean {
-        if (this.name && this.password && this.email) {
+        if (this.name && this.password && this.email 
+            && this.type && this.type >= 0 && this.type <= 3) 
+        {
             return true;
         }
         return false;

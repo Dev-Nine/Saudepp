@@ -14,7 +14,7 @@ export class User {
     @Column({ length: 8000, select: false })
     password: string;
 
-    @Column({ length: 50 })
+    @Column({ unique: true, length: 50 })
     email: string;
 
     @Column()
@@ -32,7 +32,7 @@ export class User {
 
     public isValid(): boolean {
         if (this.name && this.password && this.email 
-            && this.type && this.type >= 0 && this.type <= 3) 
+            && !isNaN(this.type) && this.type >= 0 && this.type <= 3) 
         {
             return true;
         }

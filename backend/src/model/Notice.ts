@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, ManyToMany, JoinColumn, JoinTable} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, ManyToMany, JoinColumn, JoinTable, BeforeInsert} from "typeorm";
 import {User} from "./User";
 import {Comment} from "./Comment";
 import { Tag } from "./Tag";
@@ -38,10 +38,15 @@ export class Notice {
     })
     tags: Tag[]
 
+    @BeforeInsert()
+    updateDates() {
+      this.date = new Date;
+    }
+
     public isValid(): boolean {
-        if (this.title && this.date && this.text && this.user && this.tags.length >= 1) {
+        if (this.title && this.text && this.user && this.tags.length >= 1) {
             return true;
-        } 
+        }
         return false;
     }
 }

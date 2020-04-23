@@ -49,7 +49,6 @@ export default class NoticeController extends GenericController<Notice> {
         notice.text = body.text;
         notice.user.id = parseInt(req.headers.authorization);
         notice.abstract = body.abstract;
-        notice.date = new Date;
 
         if(notice.isValid())
             return notice;

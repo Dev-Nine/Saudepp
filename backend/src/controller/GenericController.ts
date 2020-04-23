@@ -16,12 +16,14 @@ export default abstract class GenericController<T> {
     public abstract validateDelete(req : Request) : number;
 
     protected validateError(err : Error, res : Response): Response{
-        console.log(err);
-        console.log(err.constructor.name);
+        console.log(err.stack);
+        console.log(err.name);
         console.log(err.message);
-        if(err instanceof QueryFailedError)
-            return res.status(400).send( { error: 'Query error, authorization may be invalid' } );
-        return res.status(500).send();
+        if(err instanceof QueryFailedError){
+            var errCode = err["code"];
+            console.log("Error code " + errCode);
+        }
+        return res.status(500).send({ name: err.name, message: err.message });
     }
 
 

@@ -1,56 +1,65 @@
-import React, {
-   InputHTMLAttributes,
-   useEffect,
-   useRef,
-   useState,
-   useCallback,
-} from 'react';
-import { IconBaseProps } from 'react-icons';
-import { FiAlertCircle } from 'react-icons/fi';
-import { useField } from '@unform/core';
+import styled, { css } from 'styled-components';
 
-import { Container, Error } from './styles';
+import Tooltip from '../Tooltip';
 
+export const Container = styled.div`
+   background: #FFF;
+   border-radius: 6px;
+   padding: 13px;
+   width: 100%;
+   border: 2px solid #FFF;
+   color: #939393;
+   display: flex;
+   align-items: center;
+   transition: border-color 0.4s;
 
-const Input = ({ name, icon: Icon, ...rest }) => {
-   const inputRef = useRef(null);
-   const [isFocused, setIsFocused] = useState(false);
-   const [isFilled, setIsFilled] = useState(false);
-   const { fieldName, defaultValue, error, registerField } = useField(name);
+   & + div {
+      margin-top: 8px;
+   }
+   ${(props) =>
+      props.isErrored &&
+      css`
+         border-color: #c53030;
+      `}
+   ${(props) =>
+      props.isFocused &&
+      css`
+         color: #77C6FF;
+         border-color: #77C6FF;
+      `}
+   ${(props) =>
+      props.isFilled &&
+      css`
+         color: #77C6FF;
+      `}
+   input {
+      color: #333;
+      flex: 1;
+      border: 0;
+      background: transparent;
+      & + input {
+         margin-top: 8px;
+      }
+      &::placeholder {
+         color: #939393;
+      }
+   }
+   svg {
+      margin-right: 16px;
+   }
+`;
 
-   const handleInputBlur = useCallback(() => {
-      setIsFocused(false);
-
-      setIsFilled(!!inputRef.current?.value);
-   }, []);
-
-   const handleInputFocus = useCallback(() => setIsFocused(true), []);
-
-   useEffect(() => {
-      registerField({
-         name: fieldName,
-         ref: inputRef.current,
-         path: 'value',
-      });
-   }, [fieldName, registerField]);
-
-   return (
-      <Container isErrored={!!error} isFilled={isFilled} isFocused={isFocused}>
-         {Icon && <Icon size={20} />}
-         <input
-            onFocus={() => handleInputFocus()}
-            onBlur={() => handleInputBlur()}
-            ref={inputRef}
-            {...rest}
-         />
-
-         {error && (
-            <Error title={error}>
-               <FiAlertCircle color="#c53030" size={20} />
-            </Error>
-         )}
-      </Container>
-   );
-};
-
-export default Input;
+export const Error = styled(Tooltip)`
+   height: 20px;
+   margin-left: 16px;
+   svg {
+      margin-right: 0;
+   }
+   span {
+      background: #c53030;
+      color: #fff;
+      &::before {
+         border-color: #c53030 transparent;
+      }
+   }
+`;

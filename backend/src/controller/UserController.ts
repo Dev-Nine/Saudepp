@@ -13,15 +13,19 @@ export default class UserController extends GenericController<User> {
     public validateCreate(req : Request): number{ return 200 }
 
     public validateEdit(req : Request): number{ 
-        const userId = req.headers.authorization;
 
-        if(userId == undefined)
-            return 401;
+        // deprecated: começar a usar o token de autenticacao
+        //const userId = req.headers.authorization;
+
+        //if(userId == undefined)
+        //    return 401;
+        console.log(req.user.id);
         return 200; 
     }
 
     public validateDelete(req : Request): number{ 
-        return this.validateEdit(req);
+        //return this.validateEdit(req);
+        return 200;
      }
 
     public processCompleteData(req : Request): User | undefined {
@@ -70,6 +74,8 @@ export default class UserController extends GenericController<User> {
 
             if (user) {
                 const result: User[] = await this.repository.save([user]);
+                delete result[0].id;
+                delete result[0].password;
                 return res.json(result);
             } 
 

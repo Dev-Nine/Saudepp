@@ -4,7 +4,7 @@ import { verify } from 'jsonwebtoken';
 import authConfig from '../config/auth';
 
 interface tokenPayload {
-   iat:number;
+   iat: number;
    exp: number;
    sub: string;
 }
@@ -12,12 +12,13 @@ interface tokenPayload {
 export default function ensureAuthentication(req: Request, res: Response, next: NextFunction):void {
    const authHeader = req.headers.authorization;
 
-   if (!authHeader) {
-      throw new Error('JWT Token is missing');
-   }
-
-   const [, token] = authHeader.split(' ');
    try {
+      if (!authHeader) {
+         throw new Error('JWT Token is missing');
+      }
+   
+      const [, token] = authHeader.split(' ');
+      
       const decoded = verify(token, authConfig.jwt.secret);
 
       const {sub} = decoded as tokenPayload;
@@ -29,6 +30,8 @@ export default function ensureAuthentication(req: Request, res: Response, next: 
       console.log(decoded);
       return next();
    } catch(err) {
-      throw new Error('Invalid JWT Token');
+      // http 403 = forbidden
+      console.log(err.message);
+      res.sendStatus(403);
    }
 }

@@ -1,13 +1,12 @@
 import React from 'react';
 import './styles.css'
+import Return from '../../components/return'
 
 export default function Login(){
 
     return (
         <>
-            <header className="return">
-                <a href="#">Voltar ao inicio</a>
-            </header>
+            <Return/>
 
             <div className="login-container">
                 <div className="content">

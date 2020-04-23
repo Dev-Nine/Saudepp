@@ -1,7 +1,7 @@
 import { User } from '../model/User';
 import { Request, Response } from 'express';
 import GenericController from './GenericController';
-import { hash } from 'bcryptjs';
+import * as bcrypt from 'bcryptjs';
 
 export default class UserController extends GenericController<User> {
     constructor() {
@@ -13,15 +13,19 @@ export default class UserController extends GenericController<User> {
     public validateCreate(req : Request): number{ return 200 }
 
     public validateEdit(req : Request): number{ 
-        const userId = req.headers.authorization;
 
-        if(userId == undefined)
-            return 401;
+        // deprecated: começar a usar o token de autenticacao
+        //const userId = req.headers.authorization;
+
+        //if(userId == undefined)
+        //    return 401;
+        console.log(req.user.id);
         return 200; 
     }
 
     public validateDelete(req : Request): number{ 
-        return this.validateEdit(req);
+        //return this.validateEdit(req);
+        return 200;
      }
 
     public processCompleteData(req : Request): User | undefined {
@@ -33,6 +37,7 @@ export default class UserController extends GenericController<User> {
         user.email = body.email;
         user.notices = body.notices;
         user.password = body.password;
+        user.type = body.type;
 
         if (user.isValid()) 
             return user; 
@@ -49,6 +54,10 @@ export default class UserController extends GenericController<User> {
         user.notices = body.notices;
         user.password = body.password;
 
+        // garantia
+        if(body.type >= 0 && body.type <= 3)
+            user.type = body.type;
+
         return user; 
     }
 
@@ -59,12 +68,14 @@ export default class UserController extends GenericController<User> {
             if(statusCode != 200)
                 return res.status(statusCode).send();
 
-            req["body"].password = await hash(req["body"].password, 8);
+            req["body"].password = await bcrypt.hash(req["body"].password, 8);
 
             const user: User = this.processCompleteData(req);
 
             if (user) {
                 const result: User[] = await this.repository.save([user]);
+                delete result[0].id;
+                delete result[0].password;
                 return res.json(result);
             } 
 
@@ -80,7 +91,7 @@ export default class UserController extends GenericController<User> {
             if(statusCode != 200)
                 return res.status(statusCode).send();
 
-            req["body"].password = await hash(req["body"].password, 8);
+            req["body"].password = await bcrypt.hash(req["body"].password, 8);
 
             const user: User = this.processData(req);
 

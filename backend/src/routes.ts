@@ -6,7 +6,7 @@ import NoticeController from "./controller/NoticeController";
 import CommentController from "./controller/CommentController";
 import SessionController from "./controller/SessionController";
 
-import ensureAuthentication from './middlewares/ensureAuthenticated'
+import ensureAuthentication from './middlewares/ensureAuthentication'
 import TagController from "./controller/TagController";
 import SubTagController from "./controller/SubTagController";
 
@@ -34,8 +34,8 @@ export default class Routes {
         this.routes.get("/users", this.userController.getAll.bind(this.userController));
         this.routes.get("/users/:id", this.userController.getByPk.bind(this.userController));
         this.routes.post("/users", this.userController.create.bind(this.userController));
-        this.routes.put("/users/:id", this.userController.edit.bind(this.userController));
-        this.routes.delete("/users/:id", this.userController.delete.bind(this.userController));
+        this.routes.put("/users/:id", ensureAuthentication, this.userController.edit.bind(this.userController));
+        this.routes.delete("/users/:id", ensureAuthentication, this.userController.delete.bind(this.userController));
 
         // NOTICIAS
         this.routes.get("/notices", this.noticeController.getAll.bind(this.noticeController));

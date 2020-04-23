@@ -16,6 +16,7 @@ export default abstract class GenericController<T> {
     public abstract validateDelete(req : Request) : number;
 
     protected validateError(err : Error, res : Response): Response{
+        console.log(err);
         console.log(err.constructor.name);
         console.log(err.message);
         if(err instanceof QueryFailedError)

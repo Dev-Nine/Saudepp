@@ -27,7 +27,7 @@ export default function ensureAuthentication(req: Request, res: Response, next: 
          id:sub
       };
 
-      console.log(decoded);
+      //console.log(decoded);
       return next();
    } catch(err) {
       // http 403 = forbidden

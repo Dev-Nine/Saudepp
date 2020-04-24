@@ -1,5 +1,5 @@
-import { Comment } from '../model/Comment';
 import { Request, Response } from 'express';
+import { Comment } from '../model/Comment';
 import GenericController from './GenericController';
 import { User } from '../model/User';
 import { Notice } from '../model/Notice';
@@ -34,10 +34,11 @@ export default class CommentController extends GenericController<Comment> {
         comment.notice = new Notice();
         const body = req["body"];
 
+
         comment.author.id = parseInt(req.headers.authorization);
-        comment.notice.id = body.notice_id;
+        comment.notice.id = parseInt(req.headers.notice.toString());
+
         comment.content = body.content;
-        comment.date = body.date;
 
         if(comment.isValid())
             return comment;
@@ -53,7 +54,6 @@ export default class CommentController extends GenericController<Comment> {
         comment.author.id = parseInt(req.headers.authorization);
         comment.notice.id = body.notice_id;
         comment.content = body.content;
-        comment.date = body.date;
 
         return comment;
     }

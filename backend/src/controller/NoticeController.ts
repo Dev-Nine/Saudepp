@@ -51,9 +51,11 @@ export default class NoticeController extends GenericController<Notice> {
         notice.abstract = body.abstract;
 
         const errors = await validate(notice);
-        if(errors.length > 0)
-            return notice;
-        return undefined;
+        if(errors.length > 0) {
+          console.log(errors);
+          return undefined;
+        }
+        return notice;
     }
 
     public async processData(req : Request): Promise<Notice> {

@@ -25,7 +25,10 @@ export class User {
     password: string;
 
     @Column({ unique: true, length: 50 })
+    @IsString()
     @IsEmail()
+    @MinLength(5) // so pra ter certeza kk
+    @MaxLength(50)
     email: string;
 
     @Column()

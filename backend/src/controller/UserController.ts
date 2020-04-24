@@ -35,9 +35,11 @@ export default class UserController extends GenericController<User> {
         user.type = body.type;
 
         const errors = await validate(user);
-        if (errors.length > 0)
-            return user;
-        return undefined;
+        if (errors.length > 0) {
+          console.log(errors);
+          return undefined;
+        }
+        return user;
     }
 
     public async processData(req : Request): Promise<User> {

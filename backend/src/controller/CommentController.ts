@@ -42,9 +42,11 @@ export default class CommentController extends GenericController<Comment> {
         comment.content = body.content;
 
         const errors = await validate(comment);
-        if(errors.length > 0)
-            return comment;
-        return undefined;
+        if(errors.length > 0) {
+          console.log(errors);
+          return undefined;
+        }
+        return comment;
     }
 
     public async processData(req : Request): Promise<Comment> {

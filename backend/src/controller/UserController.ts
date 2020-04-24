@@ -13,19 +13,13 @@ export default class UserController extends GenericController<User> {
     public validateCreate(req : Request): number{ return 200 }
 
     public validateEdit(req : Request): number{ 
-
-        // deprecated: começar a usar o token de autenticacao
-        //const userId = req.headers.authorization;
-
-        //if(userId == undefined)
-        //    return 401;
-        console.log(req.user.id);
-        return 200; 
+        if(req.user.id == req.params.id)
+            return 200; 
+        return 403;
     }
 
     public validateDelete(req : Request): number{ 
-        //return this.validateEdit(req);
-        return 200;
+        return this.validateEdit(req);
      }
 
     public processCompleteData(req : Request): User | undefined {
@@ -91,14 +85,19 @@ export default class UserController extends GenericController<User> {
             if(statusCode != 200)
                 return res.status(statusCode).send();
 
-            req["body"].password = await bcrypt.hash(req["body"].password, 8);
+            if(req["body"].password !== undefined)
+                req["body"].password = await bcrypt.hash(req["body"].password, 8);
 
             const user: User = this.processData(req);
 
             if (user) {
                 const foundUser = await this.repository.findOne(req.params["id"]);
                 this.repository.merge(foundUser, user);
+
                 const result = await this.repository.save(foundUser);
+                delete result.id;
+                delete result.password;
+
                 return res.json(result);
             }
             throw Error(`Error in the attributes from ${this.classType}`);

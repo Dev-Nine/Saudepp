@@ -1,4 +1,5 @@
 import {Entity, Column, PrimaryColumn, ManyToOne} from "typeorm";
+import { IsString, MinLength } from 'class-validator';
 import { Tag } from "./Tag";
 
 @Entity()
@@ -8,6 +9,8 @@ export class SubTag {
     id: string;
 
     @Column()
+    @IsString()
+    @MinLength(3)
     description: string;
 
     @ManyToOne(type => Tag, tag => tag.subTags)
@@ -16,7 +19,7 @@ export class SubTag {
     public isValid(): boolean {
         if (this.id && this.description && this.tag) {
             return true;
-        } 
+        }
         return false;
     }
 }

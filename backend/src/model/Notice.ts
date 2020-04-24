@@ -1,4 +1,5 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, ManyToMany, JoinTable, BeforeInsert} from "typeorm";
+import { IsDate, IsString, MinLength } from 'class-validator';
 import {User} from "./User";
 import {Comment} from "./Comment";
 import { Tag } from "./Tag";
@@ -10,15 +11,19 @@ export class Notice {
     id: number;
 
     @Column()
+    @IsString()
     title: string;
 
     @Column()
+    @IsString()
     abstract: string;
 
     @Column()
+    @IsDate()
     date: Date;
 
     @Column()
+    @IsString()
     text: string;
 
     @OneToMany(type => Comment, comment => comment.notice)
@@ -38,8 +43,7 @@ export class Notice {
     })
     tags: Tag[]
 
-    @BeforeInsert()
-    updateDates() {
+    constructor() {
       this.date = new Date;
     }
 

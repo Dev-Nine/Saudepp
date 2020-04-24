@@ -30,7 +30,8 @@ export class Comment {
     })
     author: User;
 
-    constructor() {
+    @BeforeInsert()
+    updateDates() {
       this.date = new Date;
     }
 

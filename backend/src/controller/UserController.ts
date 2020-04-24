@@ -1,7 +1,8 @@
-import { User } from '../model/User';
 import { Request, Response } from 'express';
-import GenericController from './GenericController';
 import * as bcrypt from 'bcryptjs';
+import { validate } from 'class-validator';
+import { User } from '../model/User';
+import GenericController from './GenericController';
 
 export default class UserController extends GenericController<User> {
     constructor() {
@@ -12,17 +13,17 @@ export default class UserController extends GenericController<User> {
 
     public validateCreate(req : Request): number{ return 200 }
 
-    public validateEdit(req : Request): number{ 
+    public validateEdit(req : Request): number{
         if(req.user.id == req.params.id)
-            return 200; 
+            return 200;
         return 403;
     }
 
-    public validateDelete(req : Request): number{ 
+    public validateDelete(req : Request): number{
         return this.validateEdit(req);
      }
 
-    public processCompleteData(req : Request): User | undefined {
+    public async processCompleteData(req : Request): Promise<User | undefined> {
         const user = new User;
         const body = req["body"];
 
@@ -33,12 +34,13 @@ export default class UserController extends GenericController<User> {
         user.password = body.password;
         user.type = body.type;
 
-        if (user.isValid()) 
-            return user; 
+        const errors = await validate(user);
+        if (errors.length > 0)
+            return user;
         return undefined;
     }
 
-    public processData(req : Request): User {
+    public async processData(req : Request): Promise<User> {
         const user = new User;
         const body = req["body"];
 
@@ -52,7 +54,7 @@ export default class UserController extends GenericController<User> {
         if(body.type >= 0 && body.type <= 3)
             user.type = body.type;
 
-        return user; 
+        return user;
     }
 
     public async create(req : Request, res : Response) : Promise<Response>{
@@ -64,14 +66,14 @@ export default class UserController extends GenericController<User> {
 
             req["body"].password = await bcrypt.hash(req["body"].password, 8);
 
-            const user: User = this.processCompleteData(req);
+            const user: User = await this.processCompleteData(req);
 
             if (user) {
                 const result: User[] = await this.repository.save([user]);
                 delete result[0].id;
                 delete result[0].password;
                 return res.json(result);
-            } 
+            }
 
             throw Error(`Error in the attributes from ${this.classType}`);
         }catch(err){
@@ -88,7 +90,7 @@ export default class UserController extends GenericController<User> {
             if(req["body"].password !== undefined)
                 req["body"].password = await bcrypt.hash(req["body"].password, 8);
 
-            const user: User = this.processData(req);
+            const user: User = await this.processData(req);
 
             if (user) {
                 const foundUser = await this.repository.findOne(req.params["id"]);

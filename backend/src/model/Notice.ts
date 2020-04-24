@@ -43,7 +43,8 @@ export class Notice {
     })
     tags: Tag[]
 
-    constructor() {
+    @BeforeInsert()
+    updateDates() {
       this.date = new Date;
     }
 

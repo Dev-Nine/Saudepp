@@ -27,11 +27,11 @@ export default abstract class GenericController<T> {
     }
 
 
-    public processCompleteData(req : Request): T | undefined {
+    public async processCompleteData(req : Request): Promise<T | undefined> {
         throw Error(`PROCESS COMPLETE DATA NOT IMPLEMENTED IN ${this.classType}`);
     }
 
-    public processData(req : Request): T {
+    public async processData(req : Request): Promise<T> {
         throw Error(`PROCESS DATA NOT IMPLEMENTED IN ${this.classType}`);
     }
 
@@ -57,12 +57,12 @@ export default abstract class GenericController<T> {
             if(statusCode != 200)
                 return res.status(statusCode).send();
 
-            const object: T = this.processCompleteData(req);
+            const object: T = await this.processCompleteData(req);
 
             if (object) {
                 const result: T[] = await this.repository.save([object]);
                 return res.json(result);
-            } 
+            }
 
             throw Error(`Error in the attributes from ${this.classType}`);
         }catch(err){
@@ -76,7 +76,7 @@ export default abstract class GenericController<T> {
             if(statusCode != 200)
                 return res.status(statusCode).send();
 
-            const object: T = this.processData(req);
+            const object: T = await this.processData(req);
 
             if (object) {
                 const foundObject = await this.repository.findOne(req.params["id"]);

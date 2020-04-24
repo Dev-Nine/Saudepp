@@ -1,6 +1,6 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne} from "typeorm";
-import {Notice} from "./Notice";
-import {User} from "./User";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, BeforeInsert } from "typeorm";
+import { Notice } from "./Notice";
+import { User } from "./User";
 
 @Entity()
 export class Comment {
@@ -26,10 +26,15 @@ export class Comment {
     })
     author: User;
 
+    @BeforeInsert()
+    updateDates() {
+      this.date = new Date;
+    }
+
     public isValid(): boolean {
-        if (this.content && this.date && this.notice && this.author) {
+        if (this.content && this.notice && this.author) {
             return true;
-        } 
+        }
         return false;
     }
 }

@@ -1,3 +1,4 @@
+import { IsString, IsDate, MinLength } from 'class-validator';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, BeforeInsert } from "typeorm";
 import { Notice } from "./Notice";
 import { User } from "./User";
@@ -9,6 +10,8 @@ export class Comment {
     id: number;
 
     @Column()
+    @IsString()
+    @MinLength(1)
     content: string;
 
     @Column()
@@ -30,11 +33,5 @@ export class Comment {
     updateDates() {
       this.date = new Date;
     }
-
-    public isValid(): boolean {
-        if (this.content && this.notice && this.author) {
-            return true;
-        }
-        return false;
-    }
+    
 }

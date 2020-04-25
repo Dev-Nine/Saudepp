@@ -1,6 +1,7 @@
 import { Tag } from '../model/Tag';
 import { SubTag } from '../model/SubTag';
 import { Request, Response } from 'express';
+import { validate } from 'class-validator';
 import GenericController from './GenericController';
 
 export default class SubTagController extends GenericController<SubTag> {
@@ -27,7 +28,7 @@ export default class SubTagController extends GenericController<SubTag> {
         return this.validateCreate(req);
     }
 
-    public processCompleteData(req : Request): SubTag | undefined {
+    public async processCompleteData(req : Request): Promise<SubTag> {
         const subTag = new SubTag();
         const body = req["body"];
         subTag.tag = new Tag();
@@ -36,12 +37,10 @@ export default class SubTagController extends GenericController<SubTag> {
         subTag.tag.id = body.tag_id;
         subTag.description = body.description;
 
-        if(subTag.isValid())
-            return subTag;
-        return undefined;
+        return subTag;
     }
 
-    public processData(req : Request): SubTag {
+    public async processData(req : Request): Promise<SubTag> {
         const subTag = new SubTag();
         const body = req["body"];
         subTag.tag = new Tag();

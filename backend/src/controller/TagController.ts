@@ -1,6 +1,7 @@
 import { Tag } from '../model/Tag';
 import { Request, Response } from 'express';
 import GenericController from './GenericController';
+import { validate } from 'class-validator';
 
 export default class TagController extends GenericController<Tag> {
     constructor() {
@@ -26,19 +27,17 @@ export default class TagController extends GenericController<Tag> {
         return this.validateCreate(req);
     }
 
-    public processCompleteData(req : Request): Tag | undefined {
+    public async processCompleteData(req : Request): Promise<Tag> {
         const tag = new Tag();
         const body = req["body"];
 
         tag.id = body.id;
         tag.description = body.description;
 
-        if(tag.isValid())
-            return tag;
-        return undefined;
+        return tag;
     }
 
-    public processData(req : Request): Tag {
+    public async processData(req : Request): Promise<Tag> {
         const tag = new Tag();
         const body = req["body"];
 

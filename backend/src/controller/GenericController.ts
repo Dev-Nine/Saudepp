@@ -1,5 +1,6 @@
 import { Repository, getConnection, DeleteResult, ObjectID, ObjectType, QueryFailedError } from "typeorm";
 import { Request, Response } from 'express';
+import { validate } from 'class-validator';
 
 export default abstract class GenericController<T> {
     protected repository: Repository<T>;
@@ -26,12 +27,30 @@ export default abstract class GenericController<T> {
         return res.status(500).send({ name: err.name, message: err.message });
     }
 
+    protected async validateData(object: T): Promise<string[]| undefined> {
+        const errors = await validate(object);
+        if(errors.length > 0) {
+            console.log(errors);
+            const errorList = [];
 
-    public processCompleteData(req : Request): T | undefined {
+            for (const {property, constraints } of errors) {
+                errorList.push({
+                    causa: property,
+                    violacao: constraints}
+                );
+            }
+
+            return errorList;
+        }
+        return undefined;
+    }
+
+
+    public async processCompleteData(req : Request): Promise<T> {
         throw Error(`PROCESS COMPLETE DATA NOT IMPLEMENTED IN ${this.classType}`);
     }
 
-    public processData(req : Request): T {
+    public async processData(req : Request): Promise<T> {
         throw Error(`PROCESS DATA NOT IMPLEMENTED IN ${this.classType}`);
     }
 
@@ -57,14 +76,20 @@ export default abstract class GenericController<T> {
             if(statusCode != 200)
                 return res.status(statusCode).send();
 
-            const object: T = this.processCompleteData(req);
+            //Processa a data do objeto
+            const object: T = await this.processCompleteData(req);
 
-            if (object) {
-                const result: T[] = await this.repository.save([object]);
-                return res.json(result);
-            } 
+            //Verifica se existe erros utilizando o class-validator
+            const errors = await this.validateData(object);
+            //Se ocorrer um erro, retornar com o status 400 o(s) motivo(s)
+            if (errors)
+                return res.status(400).json({ error: errors });
 
-            throw Error(`Error in the attributes from ${this.classType}`);
+            //Como não ocorreu um erro, salvar o objeto
+            const result: T[] = await this.repository.save([object]);
+            return res.json(result);
+
+
         }catch(err){
             return this.validateError(err, res);
         }
@@ -76,15 +101,17 @@ export default abstract class GenericController<T> {
             if(statusCode != 200)
                 return res.status(statusCode).send();
 
-            const object: T = this.processData(req);
+            const object: T = await this.processData(req);
 
-            if (object) {
-                const foundObject = await this.repository.findOne(req.params["id"]);
-                this.repository.merge(foundObject, object);
-                const result = await this.repository.save(foundObject);
-                return res.json(result);
-            }
-            throw Error(`Error in the attributes from ${this.classType}`);
+            const errors = this.validateData(object);
+            if (errors)
+                return res.status(400).json({error: errors});
+
+            const foundObject = await this.repository.findOne(req.params["id"]);
+            this.repository.merge(foundObject, object);
+            const result = await this.repository.save(foundObject);
+            return res.json(result);
+
         }catch(err){
             return this.validateError(err, res);
         }

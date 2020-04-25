@@ -3,6 +3,7 @@ import { Comment } from '../model/Comment';
 import GenericController from './GenericController';
 import { User } from '../model/User';
 import { Notice } from '../model/Notice';
+import { validate } from 'class-validator';
 
 export default class CommentController extends GenericController<Comment> {
     constructor() {
@@ -28,7 +29,7 @@ export default class CommentController extends GenericController<Comment> {
         return this.validateCreate(req);
     }
 
-    public processCompleteData(req : Request): Comment | undefined {
+    public async processCompleteData(req : Request): Promise<Comment> {
         const comment = new Comment();
         comment.author = new User();
         comment.notice = new Notice();
@@ -40,12 +41,10 @@ export default class CommentController extends GenericController<Comment> {
 
         comment.content = body.content;
 
-        if(comment.isValid())
-            return comment;
-        return undefined;
+        return comment;
     }
 
-    public processData(req : Request): Comment {
+    public async processData(req : Request): Promise<Comment> {
         const comment = new Comment();
         comment.author = new User();
         comment.notice = new Notice();

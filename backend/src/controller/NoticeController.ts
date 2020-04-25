@@ -1,9 +1,9 @@
 import { Notice } from '../model/Notice';
 import { Request, Response } from 'express';
 import GenericController from './GenericController';
+import { validate } from 'class-validator';
 import { User } from '../model/User';
 import { Tag } from '../model/Tag';
-import { Comment } from '../model/Comment';
 
 export default class NoticeController extends GenericController<Notice> {
     constructor() {
@@ -29,7 +29,7 @@ export default class NoticeController extends GenericController<Notice> {
         return this.validateCreate(req);
     }
 
-    public processCompleteData(req : Request): Notice | undefined {
+    public async processCompleteData(req : Request): Promise<Notice> {
         const notice = new Notice();
         notice.user = new User();
         const body = req["body"];
@@ -49,13 +49,12 @@ export default class NoticeController extends GenericController<Notice> {
         notice.text = body.text;
         notice.user.id = parseInt(req.headers.authorization);
         notice.abstract = body.abstract;
+        notice.date = new Date;
 
-        if(notice.isValid())
-            return notice;
-        return undefined;
+        return notice;
     }
 
-    public processData(req : Request): Notice {
+    public async processData(req : Request): Promise<Notice> {
         const notice = new Notice();
         notice.user = new User();
         const body = req["body"];

@@ -27,6 +27,24 @@ export default abstract class GenericController<T> {
         return res.status(500).send({ name: err.name, message: err.message });
     }
 
+    protected async validateData(object: T): Promise<string[]| undefined> {
+        const errors = await validate(object);
+        if(errors.length > 0) {
+            console.log(errors);
+            const errorList = [];
+
+            for (const {property, constraints } of errors) {
+                errorList.push({
+                    causa: property,
+                    violacao: constraints}
+                );
+            }
+
+            return errorList;
+        }
+        return undefined;
+    }
+
 
     public async processCompleteData(req : Request): Promise<T> {
         throw Error(`PROCESS COMPLETE DATA NOT IMPLEMENTED IN ${this.classType}`);
@@ -62,18 +80,15 @@ export default abstract class GenericController<T> {
             const object: T = await this.processCompleteData(req);
 
             //Verifica se existe erros utilizando o class-validator
-            const errors = await validate(object);
-            console.log(errors);
-            if (errors.length === 0) {
-                const result: T[] = await this.repository.save([object]);
-                return res.json(result);
+            const errors = await this.validateData(object);
+            //Se ocorrer um erro, retornar com o status 400 o(s) motivo(s)
+            if (errors)
+                return res.status(400).json({ error: errors });
 
-                throw Error(`Error in the attributes from ${this.classType}`);
-            } else {
-                return res.json({
-                    error: 'Um erro ocorreu!'
-                });
-            }
+            //Como não ocorreu um erro, salvar o objeto
+            const result: T[] = await this.repository.save([object]);
+            return res.json(result);
+
 
         }catch(err){
             return this.validateError(err, res);
@@ -87,14 +102,16 @@ export default abstract class GenericController<T> {
                 return res.status(statusCode).send();
 
             const object: T = await this.processData(req);
-            const errors = await validate(object);
-            if (errors.length === 0) {
-                const foundObject = await this.repository.findOne(req.params["id"]);
-                this.repository.merge(foundObject, object);
-                const result = await this.repository.save(foundObject);
-                return res.json(result);
-            }
-            throw Error(`Error in the attributes from ${this.classType}`);
+
+            const errors = this.validateData(object);
+            if (errors)
+                return res.status(400).json({error: errors});
+
+            const foundObject = await this.repository.findOne(req.params["id"]);
+            this.repository.merge(foundObject, object);
+            const result = await this.repository.save(foundObject);
+            return res.json(result);
+
         }catch(err){
             return this.validateError(err, res);
         }

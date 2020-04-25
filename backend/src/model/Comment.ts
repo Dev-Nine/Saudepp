@@ -33,11 +33,5 @@ export class Comment {
     updateDates() {
       this.date = new Date;
     }
-
-    public isValid(): boolean {
-        if (this.content && this.notice && this.author) {
-            return true;
-        }
-        return false;
-    }
+    
 }

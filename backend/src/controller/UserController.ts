@@ -65,20 +65,15 @@ export default class UserController extends GenericController<User> {
 
             const user: User = await this.processCompleteData(req);
 
-            const errors = await validate(user);
-            if (errors.length == 0) {
-                const result: User[] = await this.repository.save([user]);
-                delete result[0].id;
-                delete result[0].password;
-                return res.json(result);
-            } else {
-              console.log(errors);
-              res.json({
-                message: 'Ocorreu um erro nos atributos!'
-              });
-            }
+            const errors = await this.validateData(user);
+            if (errors)
+                return res.status(400).send({ error: errors });
 
-            throw Error(`Error in the attributes from ${this.classType}`);
+            const result: User[] = await this.repository.save([user]);
+            delete result[0].id;
+            delete result[0].password;
+            return res.json(result);
+
         }catch(err){
             return this.validateError(err, res);
         }
@@ -95,17 +90,18 @@ export default class UserController extends GenericController<User> {
 
             const user: User = await this.processData(req);
 
-            if (user) {
-                const foundUser = await this.repository.findOne(req.params["id"]);
-                this.repository.merge(foundUser, user);
+            const errors = await validate(user);
+            if (errors)
+                return res.status(400).json({ error: errors})
 
-                const result = await this.repository.save(foundUser);
-                delete result.id;
-                delete result.password;
+            const foundUser = await this.repository.findOne(req.params["id"]);
+            this.repository.merge(foundUser, user);
 
-                return res.json(result);
-            }
-            throw Error(`Error in the attributes from ${this.classType}`);
+            const result = await this.repository.save(foundUser);
+            delete result.id;
+            delete result.password;
+
+            return res.json(result);
         }catch(err){
             return this.validateError(err, res);
         }

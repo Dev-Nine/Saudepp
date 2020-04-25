@@ -43,12 +43,4 @@ export class User {
     @OneToMany(type => Comment, comment => comment.author)
     comments: Comment[];
 
-    public isValid(): boolean {
-        if (this.name && this.password && this.email
-            && !isNaN(this.type) && this.type >= 0 && this.type <= 3)
-        {
-            return true;
-        }
-        return false;
-    }
 }

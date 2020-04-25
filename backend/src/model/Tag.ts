@@ -18,10 +18,4 @@ export class Tag {
     })
     subTags: SubTag[];
 
-    public isValid(): boolean {
-        if (this.id && this.description) {
-            return true;
-        }
-        return false;
-    }
 }

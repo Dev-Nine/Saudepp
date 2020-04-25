@@ -16,10 +16,4 @@ export class SubTag {
     @ManyToOne(type => Tag, tag => tag.subTags)
     tag: Tag;
 
-    public isValid(): boolean {
-        if (this.id && this.description && this.tag) {
-            return true;
-        }
-        return false;
-    }
 }

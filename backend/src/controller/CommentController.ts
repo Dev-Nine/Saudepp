@@ -33,6 +33,7 @@ export default class CommentController extends GenericController<Comment> {
         const comment = new Comment();
         comment.author = new User();
         comment.notice = new Notice();
+        comment.date = new Date;
         const body = req["body"];
 
 

@@ -11,12 +11,8 @@ export class User {
 
     @Column({ length: 50 })
     @IsString()
-    @MinLength(5, {
-      message: 'O Nome precisa ter no minimo 5 caracteres!'
-    })
-    @MaxLength(50, {
-      message: 'O nome ultrapassa o tamanho limite!'
-    })
+    @MinLength(5)
+    @MaxLength(50)
     name: string;
 
     @Column({ length: 8000, select: false })

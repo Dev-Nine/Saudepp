@@ -15,7 +15,6 @@ export class Comment {
     content: string;
 
     @Column()
-    @IsDate()
     date: Date;
 
     @ManyToOne(type => Notice, notice => notice.comments, {

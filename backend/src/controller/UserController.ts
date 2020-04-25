@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { validate } from 'class-validator';
 import * as bcrypt from 'bcryptjs';
 import { User } from '../model/User';
 import GenericController from './GenericController';
@@ -64,11 +65,17 @@ export default class UserController extends GenericController<User> {
 
             const user: User = await this.processCompleteData(req);
 
-            if (user) {
+            const errors = await validate(user);
+            if (errors.length == 0) {
                 const result: User[] = await this.repository.save([user]);
                 delete result[0].id;
                 delete result[0].password;
                 return res.json(result);
+            } else {
+              console.log(errors);
+              res.json({
+                message: 'Ocorreu um erro nos atributos!'
+              });
             }
 
             throw Error(`Error in the attributes from ${this.classType}`);

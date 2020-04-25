@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import * as bcrypt from 'bcryptjs';
-import { validate } from 'class-validator';
 import { User } from '../model/User';
 import GenericController from './GenericController';
 
@@ -23,7 +22,7 @@ export default class UserController extends GenericController<User> {
         return this.validateEdit(req);
      }
 
-    public async processCompleteData(req : Request): Promise<User | undefined> {
+    public async processCompleteData(req : Request): Promise<User> {
         const user = new User;
         const body = req["body"];
 
@@ -34,11 +33,6 @@ export default class UserController extends GenericController<User> {
         user.password = body.password;
         user.type = body.type;
 
-        const errors = await validate(user);
-        if (errors.length > 0) {
-          console.log(errors);
-          return undefined;
-        }
         return user;
     }
 

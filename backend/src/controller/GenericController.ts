@@ -1,5 +1,6 @@
 import { Repository, getConnection, DeleteResult, ObjectID, ObjectType, QueryFailedError } from "typeorm";
 import { Request, Response } from 'express';
+import { validate } from 'class-validator';
 
 export default abstract class GenericController<T> {
     protected repository: Repository<T>;
@@ -27,7 +28,7 @@ export default abstract class GenericController<T> {
     }
 
 
-    public async processCompleteData(req : Request): Promise<T | undefined> {
+    public async processCompleteData(req : Request): Promise<T> {
         throw Error(`PROCESS COMPLETE DATA NOT IMPLEMENTED IN ${this.classType}`);
     }
 
@@ -57,14 +58,23 @@ export default abstract class GenericController<T> {
             if(statusCode != 200)
                 return res.status(statusCode).send();
 
+            //Processa a data do objeto
             const object: T = await this.processCompleteData(req);
 
-            if (object) {
+            //Verifica se existe erros utilizando o class-validator
+            const errors = await validate(object);
+            console.log(errors);
+            if (errors.length === 0) {
                 const result: T[] = await this.repository.save([object]);
                 return res.json(result);
+
+                throw Error(`Error in the attributes from ${this.classType}`);
+            } else {
+                return res.json({
+                    error: 'Um erro ocorreu!'
+                });
             }
 
-            throw Error(`Error in the attributes from ${this.classType}`);
         }catch(err){
             return this.validateError(err, res);
         }
@@ -77,8 +87,8 @@ export default abstract class GenericController<T> {
                 return res.status(statusCode).send();
 
             const object: T = await this.processData(req);
-
-            if (object) {
+            const errors = await validate(object);
+            if (errors.length === 0) {
                 const foundObject = await this.repository.findOne(req.params["id"]);
                 this.repository.merge(foundObject, object);
                 const result = await this.repository.save(foundObject);

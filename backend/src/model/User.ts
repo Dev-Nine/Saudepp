@@ -1,4 +1,4 @@
-import { MinLength, MaxLength, Length, IsInt, IsEmail, IsString, Min, Max } from 'class-validator';
+import { MinLength, MaxLength, IsInt, IsEmail, IsString, Min, Max } from 'class-validator';
 import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
 import { Notice } from './Notice';
 import { Comment } from './Comment';
@@ -21,7 +21,7 @@ export class User {
 
     @Column({ length: 8000, select: false })
     @IsString()
-    @Length(8000)
+    @MaxLength(8000)
     password: string;
 
     @Column({ unique: true, length: 50 })

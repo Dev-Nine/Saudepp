@@ -28,7 +28,7 @@ export default class SubTagController extends GenericController<SubTag> {
         return this.validateCreate(req);
     }
 
-    public async processCompleteData(req : Request): Promise<SubTag | undefined> {
+    public async processCompleteData(req : Request): Promise<SubTag> {
         const subTag = new SubTag();
         const body = req["body"];
         subTag.tag = new Tag();
@@ -37,11 +37,6 @@ export default class SubTagController extends GenericController<SubTag> {
         subTag.tag.id = body.tag_id;
         subTag.description = body.description;
 
-        const errors = await validate(subTag);
-        if(errors.length > 0) {
-          console.log(errors);
-          return undefined;
-        }
         return subTag;
     }
 

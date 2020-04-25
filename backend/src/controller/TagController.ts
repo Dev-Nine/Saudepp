@@ -27,18 +27,13 @@ export default class TagController extends GenericController<Tag> {
         return this.validateCreate(req);
     }
 
-    public async processCompleteData(req : Request): Promise<Tag | undefined> {
+    public async processCompleteData(req : Request): Promise<Tag> {
         const tag = new Tag();
         const body = req["body"];
 
         tag.id = body.id;
         tag.description = body.description;
 
-        const errors = await validate(tag);
-        if(errors.length > 0) {
-          console.log(errors);
-          return undefined
-        }
         return tag;
     }
 

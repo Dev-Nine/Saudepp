@@ -29,7 +29,7 @@ export default class NoticeController extends GenericController<Notice> {
         return this.validateCreate(req);
     }
 
-    public async processCompleteData(req : Request): Promise<Notice | undefined> {
+    public async processCompleteData(req : Request): Promise<Notice> {
         const notice = new Notice();
         notice.user = new User();
         const body = req["body"];
@@ -50,11 +50,6 @@ export default class NoticeController extends GenericController<Notice> {
         notice.user.id = parseInt(req.headers.authorization);
         notice.abstract = body.abstract;
 
-        const errors = await validate(notice);
-        if(errors.length > 0) {
-          console.log(errors);
-          return undefined;
-        }
         return notice;
     }
 

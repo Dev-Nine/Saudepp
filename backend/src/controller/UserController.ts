@@ -9,17 +9,17 @@ export default class UserController extends GenericController<User> {
         super(User);
     }
 
-    public validateGet(req : Request): number{ return 200 }
+    public async validateGet(req : Request): Promise<number>{ return 200 }
 
-    public validateCreate(req : Request): number{ return 200 }
+    public async validateCreate(req : Request): Promise<number>{ return 200 }
 
-    public validateEdit(req : Request): number{
+    public async validateEdit(req : Request): Promise<number>{
         if(req.user.id == req.params.id)
             return 200;
         return 403;
     }
 
-    public validateDelete(req : Request): number{
+    public async validateDelete(req : Request): Promise<number>{
         return this.validateEdit(req);
      }
 
@@ -56,7 +56,7 @@ export default class UserController extends GenericController<User> {
 
     public async create(req : Request, res : Response) : Promise<Response>{
         try{
-            const statusCode = this.validateCreate(req);
+            const statusCode = await this.validateCreate(req);
 
             if(statusCode != 200)
                 return res.status(statusCode).send();
@@ -81,7 +81,7 @@ export default class UserController extends GenericController<User> {
 
     public async edit(req : Request, res : Response): Promise<Response> {
         try{
-            const statusCode = this.validateEdit(req);
+            const statusCode = await this.validateEdit(req);
             if(statusCode != 200)
                 return res.status(statusCode).send();
 

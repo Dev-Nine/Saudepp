@@ -11,10 +11,10 @@ export default abstract class GenericController<T> {
         this.repository = getConnection().getRepository(this.classType);
     }
 
-    public abstract validateGet(req : Request) : number;
-    public abstract validateCreate(req : Request) : number;
-    public abstract validateEdit(req : Request) : number;
-    public abstract validateDelete(req : Request) : number;
+    public abstract async validateGet(req : Request) : Promise<number>;
+    public abstract async validateCreate(req : Request) : Promise<number>;
+    public abstract async validateEdit(req : Request) : Promise<number>;
+    public abstract async validateDelete(req : Request) : Promise<number>;
 
     protected validateError(err : Error, res : Response): Response{
         console.log(err.stack);
@@ -72,7 +72,7 @@ export default abstract class GenericController<T> {
 
     public async create(req : Request, res : Response): Promise<Response> {
         try{
-            const statusCode = this.validateCreate(req);
+            const statusCode = await this.validateCreate(req);
             if(statusCode != 200)
                 return res.status(statusCode).send();
 
@@ -97,7 +97,7 @@ export default abstract class GenericController<T> {
 
     public async edit(req : Request, res : Response): Promise<Response> {
         try{
-            const statusCode = this.validateEdit(req);
+            const statusCode = await this.validateEdit(req);
             if(statusCode != 200)
                 return res.status(statusCode).send();
 
@@ -119,7 +119,7 @@ export default abstract class GenericController<T> {
 
     public async delete(req : Request, res : Response): Promise<Response> {
         try{
-            const statusCode = this.validateCreate(req);
+            const statusCode = await this.validateCreate(req);
 
             if(statusCode != 200)
                 return res.status(statusCode).send();

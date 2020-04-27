@@ -10,10 +10,10 @@ export default class NoticeController extends GenericController<Notice> {
         super(Notice);
     }
 
-    public validateGet(req : Request): number{ return 200 }
+    public async validateGet(req : Request): Promise<number>{ return 200 }
 
     // semelhante para edição e delete
-    public validateCreate(req : Request): number{
+    public async validateCreate(req : Request): Promise<number>{
         const userId = req.headers.authorization;
 
         if(userId == undefined)
@@ -21,11 +21,11 @@ export default class NoticeController extends GenericController<Notice> {
         return 200;
     }
 
-    public validateEdit(req : Request): number{
+    public async validateEdit(req : Request): Promise<number>{
         return this.validateCreate(req);
     }
 
-    public validateDelete(req : Request): number{
+    public async validateDelete(req : Request): Promise<number>{
         return this.validateCreate(req);
     }
 

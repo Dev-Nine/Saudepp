@@ -11,7 +11,24 @@ export default class UserController extends GenericController<User> {
 
     public async validateGet(req : Request): Promise<number>{ return 200 }
 
-    public async validateCreate(req : Request): Promise<number>{ return 200 }
+    public async validateCreate(req : Request): Promise<number>{
+        const { type } : User = await this.repository.findOne(req.user.id);
+
+        // por enquanto isso é valido somente nessa fase de testes
+        if(req.body.type == 0)
+            return 200;
+
+        // usuario adm nao pode ser criado por qualquer usuario
+        // usuario "mod" nao é criado diretamente, é transformado de um usuario existente
+        if(req.body.type == 0 || req.body.type == 1)
+            return 403;
+
+        // somente usuario adm pode criar profissionais
+        if(type != 0 && req.body.type == 2)
+            return 403;
+
+        return 200;
+    }
 
     public async validateEdit(req : Request): Promise<number>{
         if(req.user.id == req.params.id)

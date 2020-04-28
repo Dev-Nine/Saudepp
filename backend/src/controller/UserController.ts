@@ -64,7 +64,6 @@ export default class UserController extends GenericController<User> {
         user.notices = body.notices;
         user.password = body.password;
 
-        // garantia
         if(body.type >= 0 && body.type <= 3)
             user.type = body.type;
 

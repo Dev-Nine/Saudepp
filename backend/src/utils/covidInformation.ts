@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import axios from 'axios';
-import * as cheerio from 'cheerio';
 
 export default async function convidInformation (req: Request, res: Response) {
     const response = await axios.get('https://xx9p7hp1p7.execute-api.us-east-1.amazonaws.com/prod/PortalGeral', {

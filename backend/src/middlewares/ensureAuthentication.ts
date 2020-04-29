@@ -25,7 +25,8 @@ export default function ensureAuthentication(req: Request, res: Response, next: 
 
       const {sub} = decoded as tokenPayload;
 
-      getConnection().getRepository(User).findOne(sub).then(function(user : User){
+      getConnection().getRepository(User).findOne(sub)
+         .then(function(user : User){
          req.user = {
             id : sub,
             type: user.type

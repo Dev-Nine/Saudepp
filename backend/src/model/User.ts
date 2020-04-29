@@ -20,7 +20,7 @@ export class User {
     @MaxLength(8000)
     password: string;
 
-    @Column({ unique: true, length: 50 })
+    @Column({ unique: true, length: 50, select: false })
     @IsString()
     @IsEmail()
     @MinLength(5) // so pra ter certeza kk

@@ -36,17 +36,17 @@ export default class UserController extends GenericController<User> {
         const loggedUser : User = await this.repository.findOne(req.user.id);
         const editedUser : User = await this.repository.findOne(req.params.id);
 
-        // jamais editar um usuario para se tornar adm
-        if(req.body.type == 0 || editedUser.type == 0)
-            return 403;
-
         // o proprio usuario pode alterar sua conta, entrentanto:
         // nao pode alterar o seu tipo
         if(req.user.id == req.params.id){
-            if(req.body.type != loggedUser.type)
+            if(req.body.type && req.body.type != loggedUser.type)
                 return 403;
             return 200;
         }
+
+        // jamais editar um usuario para se tornar adm
+        if(req.body.type == 0)
+            return 403;
 
         // se for um usuario adm logado
         if(loggedUser.type == 0){

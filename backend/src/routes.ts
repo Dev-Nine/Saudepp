@@ -5,10 +5,12 @@ import UserController from "./controller/UserController";
 import NoticeController from "./controller/NoticeController";
 import CommentController from "./controller/CommentController";
 import SessionController from "./controller/SessionController";
-
-import ensureAuthentication from './middlewares/ensureAuthentication'
 import TagController from "./controller/TagController";
 import SubTagController from "./controller/SubTagController";
+
+import covidInformation from './utils/covidInformation'; 
+
+import ensureAuthentication from './middlewares/ensureAuthentication'
 
 export default class Routes {
     public routes: Router;
@@ -60,6 +62,9 @@ export default class Routes {
 
         // SESSÕES (LOGIN)
         this.routes.post("/sessions", this.sessionController.auth.bind(this.sessionController));
-        
+    
+        // COVID (INFO)
+        this.routes.get('/covid', covidInformation);       
+
     }
 }

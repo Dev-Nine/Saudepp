@@ -1,7 +1,9 @@
+import { getConnection } from 'typeorm';
 import { Request, Response, NextFunction } from 'express';
 import { verify } from 'jsonwebtoken';
 
 import authConfig from '../config/auth';
+import { User } from '../model/User';
 
 interface tokenPayload {
    iat: number;
@@ -23,12 +25,16 @@ export default function ensureAuthentication(req: Request, res: Response, next: 
 
       const {sub} = decoded as tokenPayload;
 
-      req.user = {
-         id:sub
-      };
+      getConnection().getRepository(User).findOne(sub).then(function(user : User){
+         req.user = {
+            id : sub,
+            type: user.type
+         };
 
-      //console.log(decoded);
-      return next();
+         //console.log(decoded);
+         return next();
+      });
+      
    } catch(err) {
       // http 403 = forbidden
       console.log(err.message);

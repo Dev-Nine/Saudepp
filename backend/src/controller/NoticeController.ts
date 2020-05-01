@@ -1,15 +1,9 @@
 import { Notice } from '../model/Notice';
 import { Request, Response } from 'express';
-import GenericController from './GenericController';
-import { validate } from 'class-validator';
 import { User } from '../model/User';
 import { Tag } from '../model/Tag';
 
-export default class NoticeController extends GenericController<Notice> {
-    constructor() {
-        super(Notice);
-    }
-
+export default class NoticeController {
     public async validateGet(req : Request): Promise<number>{ return 200 }
 
     // semelhante para edição e delete

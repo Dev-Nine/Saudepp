@@ -1,14 +1,10 @@
 import { Request, Response } from 'express';
 import { Comment } from '../model/Comment';
-import GenericController from './GenericController';
 import { User } from '../model/User';
 import { Notice } from '../model/Notice';
 import { validate } from 'class-validator';
 
-export default class CommentController extends GenericController<Comment> {
-    constructor() {
-        super(Comment);
-    }
+export default class CommentController {
 
     public async validateGet(req : Request): Promise<number>{ return 200 }
 

@@ -1,12 +1,8 @@
 import { Tag } from '../model/Tag';
 import { Request, Response } from 'express';
-import GenericController from './GenericController';
 import { validate } from 'class-validator';
 
-export default class TagController extends GenericController<Tag> {
-    constructor() {
-        super(Tag);
-    }
+export default class TagController {
 
     public async validateGet(req : Request): Promise<number>{ return 200 }
 

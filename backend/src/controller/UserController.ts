@@ -1,16 +1,21 @@
+import { Repository, getConnection, DeleteResult } from "typeorm";
 import { Request, Response } from 'express';
-import { validate } from 'class-validator';
 import * as bcrypt from 'bcryptjs';
 import { User } from '../model/User';
-import GenericController from './GenericController';
 
-export default class UserController extends GenericController<User> {
-    constructor() {
-        super(User);
+// unused
+//import { validate } from 'class-validator';
+//import { resolveSoa } from "dns";
+
+export default class UserController {
+    private repository : Repository<User>;
+
+    constructor(){
+        this.repository = getConnection().getRepository(User);
     }
 
     // perfis de usuarios vao poder ser acessados por pessoas sem conta
-    // cuidado para nao retornar o email do individuo
+    // cuidado para nao retornar senha e o email do individuo
     public async validateGet(req : Request): Promise<number>{ return 200 }
 
     public async validateCreate(req : Request): Promise<number>{
@@ -69,7 +74,7 @@ export default class UserController extends GenericController<User> {
 
     public async validateDelete(req : Request): Promise<number>{
         const loggedUser : User = await this.repository.findOne(req.user.id);
-        const editedUser : User = await this.repository.findOne(req.params.id);
+        const deletedUser : User = await this.repository.findOne(req.params.id);
 
         // o proprio usuario pode excluir sua conta
         if(req.user.id == req.params.id)
@@ -77,13 +82,13 @@ export default class UserController extends GenericController<User> {
 
         // adm pode excluir a conta de qualquer um
         // exceto outros adms lol
-        if(loggedUser.type == 0 && editedUser.type != 0)
+        if(loggedUser.type == 0 && deletedUser.type != 0)
             return 200;
 
         return 403;
-     }
+    }
 
-    public async processCompleteData(req : Request): Promise<User> {
+    public async processCreateData(req : Request): Promise<User> {
         const user = new User;
         const body = req["body"];
 
@@ -97,7 +102,7 @@ export default class UserController extends GenericController<User> {
         return user;
     }
 
-    public async processData(req : Request): Promise<User> {
+    public async processEditData(req : Request): Promise<User> {
         const user = new User;
         const body = req["body"];
 
@@ -113,6 +118,22 @@ export default class UserController extends GenericController<User> {
         return user;
     }
 
+    public async getAll(req : Request, res : Response) : Promise<Response> {
+        const users = this.repository.find();
+        if(users)
+            return res.json(users);
+        else
+            return res.status(404).send( { error: 'Not found'} );
+    }
+
+    public async getByPk(req : Request, res : Response) : Promise<Response> {
+        const user = this.repository.findOne(req.params["id"]);
+        if(user)
+            return res.json(user);
+        else
+            return res.status(404).send( { error: 'Not found'} );
+    }
+
     public async create(req : Request, res : Response) : Promise<Response>{
         try{
             const statusCode = await this.validateCreate(req);
@@ -122,11 +143,11 @@ export default class UserController extends GenericController<User> {
 
             req["body"].password = await bcrypt.hash(req["body"].password, 8);
 
-            const user: User = await this.processCompleteData(req);
+            const user: User = await this.processCreateData(req);
 
-            const errors = await this.validateData(user);
-            if (errors)
-                return res.status(400).send({ error: errors });
+            //const errors = await this.validateData(user);
+            //if (errors)
+            //    return res.status(400).send({ error: errors });
 
             const result: User[] = await this.repository.save([user]);
             delete result[0].id;
@@ -134,7 +155,7 @@ export default class UserController extends GenericController<User> {
             return res.json(result);
 
         }catch(err){
-            return this.validateError(err, res);
+            return res.status(403).json(err);
         }
     }
 
@@ -147,11 +168,11 @@ export default class UserController extends GenericController<User> {
             if(req["body"].password !== undefined)
                 req["body"].password = await bcrypt.hash(req["body"].password, 8);
 
-            const user: User = await this.processData(req);
+            const user: User = await this.processEditData(req);
 
-            const errors = await validate(user);
-            if (errors)
-                return res.status(400).json({ error: errors})
+            //const errors = await validate(user);
+            //if (errors)
+            //    return res.status(400).json({ error: errors})
 
             const foundUser = await this.repository.findOne(req.params["id"]);
             this.repository.merge(foundUser, user);
@@ -162,7 +183,23 @@ export default class UserController extends GenericController<User> {
 
             return res.json(result);
         }catch(err){
-            return this.validateError(err, res);
+            return res.status(403).json(err);
+        }
+    }
+
+    public async delete(req : Request, res : Response): Promise<Response> {
+        try{
+            const statusCode = await this.validateDelete(req);
+            if(statusCode != 200)
+                return res.status(statusCode).send();
+
+            const result: DeleteResult = await this.repository.delete(req.params["id"]);
+            if(result.affected >= 1)
+                return res.status(200).send();
+            else
+                return res.status(404).send();
+        }catch(err){
+            return res.status(403).json(err);
         }
     }
 }

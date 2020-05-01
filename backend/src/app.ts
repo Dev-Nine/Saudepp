@@ -1,9 +1,11 @@
-import * as express from 'express';
 import { Application } from 'express';
+import { QueryFailedError } from 'typeorm';
+import { scheduleJob } from 'node-schedule';
+import * as express from 'express';
+
 import Routes  from './routes';
 import connection from './database/connection';
-import { QueryFailedError } from 'typeorm';
-
+import workerCovidInfo from './services/workerCovidInfo';
 
 export default class App {
     public app: Application;
@@ -20,6 +22,11 @@ export default class App {
         // this.app.use(ensureAuthentication)
     }
 
+    private workers(): void {
+        //second minute hour day-of-month month day-of-week
+        scheduleJob('0 0 * * * *', workerCovidInfo);
+    }
+
     private linkAllRoutes(): void {
         this.routes = new Routes();
         this.routes.defineRoutes();
@@ -32,6 +39,7 @@ export default class App {
             
             this.middlewares();
             this.linkAllRoutes();
+            this.workers();
     
             if (port) {
                 if (args) {

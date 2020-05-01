@@ -1,5 +1,5 @@
 import { Router, Response } from "express";
-import { QueryFailedError } from "typeorm";
+import { QueryFailedError, getRepository, getConnection } from "typeorm";
 
 import UserController from "./controller/UserController";
 import NoticeController from "./controller/NoticeController";
@@ -8,9 +8,8 @@ import SessionController from "./controller/SessionController";
 import TagController from "./controller/TagController";
 import SubTagController from "./controller/SubTagController";
 
-import covidInformation from './utils/covidInformation'; 
-
 import ensureAuthentication from './middlewares/ensureAuthentication'
+import { CovidInfo } from "./model/CovidInfo";
 
 export default class Routes {
     public routes: Router;
@@ -64,7 +63,24 @@ export default class Routes {
         this.routes.post("/sessions", this.sessionController.auth.bind(this.sessionController));
     
         // COVID (INFO)
-        this.routes.get('/covid', covidInformation);       
+        this.routes.get('/covid', async function getInfo (req, res) {
+            const query = getConnection().getRepository(CovidInfo);
+
+            //Get the last request saved
+            const result = await query.findOne({
+                order: {
+                    id: 'DESC',
+                }
+            });
+
+            // console.log(result);
+
+            if (result)
+                return res.json(result);
+            else 
+                return res.status(400).send( { error: "A error ocurred!" });
+                
+        });       
 
     }
 }

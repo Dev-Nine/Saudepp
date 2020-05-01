@@ -12,7 +12,6 @@ import verifyAuthentication from './middlewares/verifyAuthentication'
 import TagController from "./controller/TagController";
 import SubTagController from "./controller/SubTagController";
 
-import ensureAuthentication from './middlewares/ensureAuthentication'
 import { CovidInfo } from "./model/CovidInfo";
 
 export default class Routes {

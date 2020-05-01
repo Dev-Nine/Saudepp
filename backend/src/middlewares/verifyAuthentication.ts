@@ -15,9 +15,8 @@ export default function ensureAuthentication(req: Request, res: Response, next: 
    const authHeader = req.headers.authorization;
 
    try {
-      if (!authHeader) {
-         throw new Error('JWT Token is missing');
-      }
+      if (!authHeader)
+         return next();
    
       const [, token] = authHeader.split(' ');
       

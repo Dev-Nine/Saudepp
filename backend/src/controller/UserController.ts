@@ -14,10 +14,6 @@ export default class UserController {
         this.repository = getConnection().getRepository(User);
     }
 
-    // perfis de usuarios vao poder ser acessados por pessoas sem conta
-    // cuidado para nao retornar senha e o email do individuo
-    public async validateGet(req : Request): Promise<number>{ return 200 }
-
     public async validateCreate(req : Request): Promise<number>{
         // por enquanto isso é valido somente nessa fase de testes
         if(req.body.type == 0)
@@ -26,32 +22,29 @@ export default class UserController {
         // usuario adm nao pode ser criado por qualquer usuario
         // usuario "mod" nao é criado diretamente, é transformado de um usuario existente
         if(req.body.type == 0 || req.body.type == 1)
-        return 403;
+            return 403;
 
         // permissoes de usuario nao autenticado
-        if(!req.user.id){
+        if(!req.user){
             if(req.body.type == 3)
                 return 200;
             return 403;
         }
 
-        const { type } : User = await this.repository.findOne(req.user.id);
-
         // somente usuario adm pode criar profissionais
-        if(type != 0 && req.body.type == 2)
+        if(req.user.type != 0 && req.body.type == 2)
             return 403;
 
         return 200;
     }
 
     public async validateEdit(req : Request): Promise<number>{
-        const loggedUser : User = await this.repository.findOne(req.user.id);
         const editedUser : User = await this.repository.findOne(req.params.id);
 
         // o proprio usuario pode alterar sua conta, entrentanto:
         // nao pode alterar o seu tipo
         if(req.user.id == req.params.id){
-            if(req.body.type && req.body.type != loggedUser.type)
+            if(req.body.type && req.body.type != req.user.type)
                 return 403;
             return 200;
         }
@@ -61,7 +54,7 @@ export default class UserController {
             return 403;
 
         // se for um usuario adm logado
-        if(loggedUser.type == 0){
+        if(req.user.type == 0){
             // profissional nao é editado, mas sim criado
             if(req.body.type == 2 || editedUser.type == 2)
                 return 403;
@@ -73,7 +66,6 @@ export default class UserController {
     }
 
     public async validateDelete(req : Request): Promise<number>{
-        const loggedUser : User = await this.repository.findOne(req.user.id);
         const deletedUser : User = await this.repository.findOne(req.params.id);
 
         // o proprio usuario pode excluir sua conta
@@ -82,7 +74,7 @@ export default class UserController {
 
         // adm pode excluir a conta de qualquer um
         // exceto outros adms lol
-        if(loggedUser.type == 0 && deletedUser.type != 0)
+        if(req.user.type == 0 && deletedUser.type != 0)
             return 200;
 
         return 403;
@@ -119,15 +111,15 @@ export default class UserController {
     }
 
     public async getAll(req : Request, res : Response) : Promise<Response> {
-        const users = this.repository.find();
-        if(users)
+        const users = await this.repository.find();
+        if(users && users.length > 0)
             return res.json(users);
         else
             return res.status(404).send( { error: 'Not found'} );
     }
 
     public async getByPk(req : Request, res : Response) : Promise<Response> {
-        const user = this.repository.findOne(req.params["id"]);
+        const user = await this.repository.findOne(req.params["id"]);
         if(user)
             return res.json(user);
         else
@@ -138,8 +130,10 @@ export default class UserController {
         try{
             const statusCode = await this.validateCreate(req);
 
-            if(statusCode != 200)
+            if(statusCode != 200){
+                console.log("a");
                 return res.status(statusCode).send();
+            }
 
             req["body"].password = await bcrypt.hash(req["body"].password, 8);
 
@@ -155,7 +149,11 @@ export default class UserController {
             return res.json(result);
 
         }catch(err){
-            return res.status(403).json(err);
+            if(err instanceof Error){
+                console.log(err.stack);
+                console.log(err.message);
+            }
+            return res.status(400).send();
         }
     }
 
@@ -183,7 +181,11 @@ export default class UserController {
 
             return res.json(result);
         }catch(err){
-            return res.status(403).json(err);
+            if(err instanceof Error){
+                console.log(err.stack);
+                console.log(err.message);
+            }
+            return res.status(400).send();
         }
     }
 
@@ -199,7 +201,11 @@ export default class UserController {
             else
                 return res.status(404).send();
         }catch(err){
-            return res.status(403).json(err);
+            if(err instanceof Error){
+                console.log(err.stack);
+                console.log(err.message);
+            }
+            return res.status(400).send();
         }
     }
 }

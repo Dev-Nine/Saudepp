@@ -37,8 +37,9 @@ export default function ensureAuthentication(req: Request, res: Response, next: 
       });
       
    } catch(err) {
+      // http 401 = unauthorized
       // http 403 = forbidden
       console.log(err.message);
-      res.sendStatus(403);
+      res.sendStatus(401);
    }
 }

@@ -41,12 +41,19 @@ export default class Routes {
         this.routes.put("/users/:id", ensureAuthentication, this.userController.edit.bind(this.userController));
         this.routes.delete("/users/:id", ensureAuthentication, this.userController.delete.bind(this.userController));
 
+        // TAG
+        this.routes.get("/tags", this.tagController.getAll.bind(this.tagController));
+        this.routes.get("/tags/:id", this.tagController.getByPk.bind(this.tagController));
+        this.routes.post("/tags", ensureAuthentication, this.tagController.create.bind(this.tagController));
+        this.routes.put("/tags/:id", ensureAuthentication, this.tagController.edit.bind(this.tagController));
+        this.routes.delete("/tags/:id", ensureAuthentication, this.tagController.delete.bind(this.tagController));
+
         // NOTICIAS
-        //this.routes.get("/notices", this.noticeController.getAll.bind(this.noticeController));
-        //this.routes.get("/notices/:id",this.noticeController.getByPk.bind(this.noticeController));
-        //this.routes.post("/notices", this.noticeController.create.bind(this.noticeController));
-        //this.routes.put("/notices/:id", this.noticeController.edit.bind(this.noticeController));
-        //this.routes.delete("/notices/:id", this.noticeController.delete.bind(this.noticeController));
+        this.routes.get("/notices", this.noticeController.getAll.bind(this.noticeController));
+        this.routes.get("/notices/:id",this.noticeController.getByPk.bind(this.noticeController));
+        this.routes.post("/notices", ensureAuthentication, this.noticeController.create.bind(this.noticeController));
+        this.routes.put("/notices/:id", ensureAuthentication, this.noticeController.edit.bind(this.noticeController));
+        this.routes.delete("/notices/:id", ensureAuthentication, this.noticeController.delete.bind(this.noticeController));
 
         // COMENTARIOS
         //this.routes.get("/comments", this.commentController.getAll.bind(this.commentController));
@@ -54,13 +61,6 @@ export default class Routes {
         //this.routes.post("/comments", this.commentController.create.bind(this.commentController));
         //this.routes.put("/comments/:id", this.commentController.edit.bind(this.commentController));
         //this.routes.delete("/comments/:id", this.commentController.delete.bind(this.commentController));
-
-        // TAG
-        //this.routes.get("/tags", this.tagController.getAll.bind(this.tagController));
-        //this.routes.get("/tags/:id", this.tagController.getByPk.bind(this.tagController));
-        //this.routes.post("/tags", this.tagController.create.bind(this.tagController));
-        //this.routes.put("/tags/:id", this.tagController.edit.bind(this.tagController));
-        //this.routes.delete("/tags/:id", this.tagController.delete.bind(this.tagController));
 
         // SESSÕES (LOGIN)
         this.routes.post("/sessions", this.sessionController.auth.bind(this.sessionController));

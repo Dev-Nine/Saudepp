@@ -27,13 +27,17 @@ export default function ensureAuthentication(req: Request, res: Response, next: 
 
       getConnection().getRepository(User).findOne(sub)
          .then(function(user : User){
-         req.user = {
-            id : sub,
-            type: user.type
-         };
-
-         //console.log(decoded);
-         return next();
+         if(user !== undefined){
+            req.user = {
+               id : sub,
+               type: user.type
+            };
+         
+            //console.log(decoded);
+            return next();
+         }else{
+            res.status(403).send({error: "Invalid authorization"});
+         }
       });
       
    } catch(err) {

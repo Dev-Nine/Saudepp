@@ -84,12 +84,12 @@ export default class UserController {
         const user = new User;
         const body = req["body"];
 
-        user.id = body.id;
         user.name = body.name;
         user.email = body.email;
-        user.notices = body.notices;
         user.password = body.password;
-        user.type = body.type;
+
+        if(body.type >= 0 && body.type <= 3)
+            user.type = body.type;
 
         return user;
     }
@@ -98,10 +98,8 @@ export default class UserController {
         const user = new User;
         const body = req["body"];
 
-        user.id = body.id;
         user.name = body.name;
         user.email = body.email;
-        user.notices = body.notices;
         user.password = body.password;
 
         if(body.type >= 0 && body.type <= 3)

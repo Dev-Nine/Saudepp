@@ -1,6 +1,7 @@
 import { Repository, getConnection, DeleteResult } from "typeorm";
 import { Request, Response } from 'express';
 import { Tag } from '../model/Tag';
+import { UserRole } from '../model/User';
 
 export default class TagController {
     private repository : Repository<Tag>;
@@ -12,14 +13,14 @@ export default class TagController {
     // semelhante para edição e delete
     public async validateCreate(req : Request): Promise<number>{
         // somente usuario adm e profissional pode criar tag
-        if(req.user.type == 0 || req.user.type == 2)
+        if(req.user.type == UserRole.ADMIN || req.user.type == UserRole.PROFISSIONAL)
             return 200;
         return 403;
     }
 
     public async validateEdit(req : Request): Promise<number>{
-        // somente usuario adm pode alterar
-        if(req.user.type == 0)
+        // somente usuario adm ou moderador pode alterar
+        if(req.user.type == UserRole.ADMIN || req.user.type == UserRole.MODERADOR)
             return 200;
         return 403;
     }

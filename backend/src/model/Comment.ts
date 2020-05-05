@@ -28,7 +28,7 @@ export class Comment {
         eager: true, // carregar dados da foreign key
         onDelete: "CASCADE"
     })
-    author: User;
+    user: User;
 
     @BeforeInsert()
     updateDates() {

@@ -48,7 +48,7 @@ export class User {
     @OneToMany(type => Notice, notice => notice.user)
     notices: Notice[];
 
-    @OneToMany(type => Comment, comment => comment.author)
+    @OneToMany(type => Comment, comment => comment.user)
     comments: Comment[];
 
 }

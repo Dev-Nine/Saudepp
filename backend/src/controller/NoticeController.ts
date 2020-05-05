@@ -1,7 +1,7 @@
 import { Repository, getConnection, DeleteResult } from "typeorm";
 import { Notice } from '../model/Notice';
 import { Request, Response } from 'express';
-import { User } from '../model/User';
+import { User, UserRole } from '../model/User';
 import { Tag } from '../model/Tag';
 import { SubTag } from '../model/SubTag';
 
@@ -15,28 +15,31 @@ export default class NoticeController {
     // semelhante para edição e delete
     public async validateCreate(req : Request): Promise<number>{
         // somente usuario adm e profissional pode postar uma noticia
-        if(req.user.type == 0 || req.user.type == 2)
+        if(req.user.type == UserRole.ADMIN || req.user.type == UserRole.PROFISSIONAL)
             return 200;
         return 403;
     }
 
     public async validateEdit(req : Request): Promise<number>{
-        // adm pode editar qualquer noticia
-        if(req.user.type == 0)
+        // somente o próprio usuário que criou pode alterar
+        const editedNotice : Notice = await this.repository.findOne(req.params["id"]);
+        if(parseInt(req.user.id) == editedNotice.user.id)
             return 200;
-        
-        // novamente, somente profissional
-        if(req.user.type == 2){
-            const editedNotice : Notice = await this.repository.findOne(req.params["id"]);
-            if(parseInt(req.user.id) == editedNotice.user.id)
-                return 200;
-        }
 
         return 403;
     }
 
     public async validateDelete(req : Request): Promise<number>{
-        return this.validateEdit(req);
+        // adm e mod pode excluir qualquer noticia
+        if(req.user.type == UserRole.ADMIN || req.user.type == UserRole.MODERADOR)
+            return 200;
+        
+        // somente o proprio usuario pode excluir a sua noticia
+        const editedNotice : Notice = await this.repository.findOne(req.params["id"]);
+        if(parseInt(req.user.id) == editedNotice.user.id)
+            return 200;
+
+        return 403;
     }
 
     public async getAll(req : Request, res : Response) : Promise<Response> {

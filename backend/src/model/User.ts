@@ -3,6 +3,13 @@ import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
 import { Notice } from './Notice';
 import { Comment } from './Comment';
 
+export enum UserRole {
+    ADMIN = 0,
+    MODERADOR = 1,
+    PROFISSIONAL = 2,
+    COMUM = 3,
+}
+
 @Entity()
 export class User {
 
@@ -27,15 +34,16 @@ export class User {
     @MaxLength(50)
     email: string;
 
-    @Column()
+    @Column({
+        type: "enum",
+        enum: UserRole,
+        default: UserRole.COMUM
+    })
     @IsInt()
     @Min(0)
     @Max(3)
-    type: number;
-    // 0 -> admin
-    // 1 -> moderador
-    // 2 -> profissional
-    // 3 -> comum
+    type: UserRole;
+    
 
     @OneToMany(type => Notice, notice => notice.user)
     notices: Notice[];

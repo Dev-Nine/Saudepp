@@ -1,7 +1,7 @@
 import { Repository, getConnection, DeleteResult } from "typeorm";
 import { Request, Response } from 'express';
 import * as bcrypt from 'bcryptjs';
-import { User } from '../model/User';
+import { User, UserRole } from '../model/User';
 
 // unused
 //import { validate } from 'class-validator';
@@ -16,23 +16,23 @@ export default class UserController {
 
     public async validateCreate(req : Request): Promise<number>{
         // por enquanto isso é valido somente nessa fase de testes
-        if(req.body.type == 0)
+        if(req.body.type == UserRole.ADMIN)
             return 200;
         
         // usuario adm nao pode ser criado por qualquer usuario
         // usuario "mod" nao é criado diretamente, é transformado de um usuario existente
-        if(req.body.type == 0 || req.body.type == 1)
+        if(req.body.type == UserRole.ADMIN || req.body.type == UserRole.MODERADOR)
             return 403;
 
         // permissoes de usuario nao autenticado
         if(!req.user){
-            if(req.body.type == 3)
+            if(req.body.type == UserRole.COMUM)
                 return 200;
             return 403;
         }
 
         // somente usuario adm pode criar profissionais
-        if(req.user.type != 0 && req.body.type == 2)
+        if(req.user.type != UserRole.ADMIN && req.body.type == UserRole.PROFISSIONAL)
             return 403;
 
         return 200;
@@ -50,15 +50,15 @@ export default class UserController {
         }
 
         // jamais editar um usuario para se tornar adm
-        if(req.body.type == 0)
+        if(req.body.type == UserRole.ADMIN)
             return 403;
 
         // se for um usuario adm logado
-        if(req.user.type == 0){
+        if(req.user.type == UserRole.ADMIN){
             // profissional nao é editado, mas sim criado
-            if(req.body.type == 2 || editedUser.type == 2)
+            if(req.body.type == UserRole.PROFISSIONAL || editedUser.type == UserRole.PROFISSIONAL)
                 return 403;
-            else if(editedUser.type == 1 || editedUser.type == 3)
+            else if(editedUser.type == UserRole.MODERADOR || editedUser.type == UserRole.COMUM)
                 return 200;
         }
             
@@ -74,7 +74,7 @@ export default class UserController {
 
         // adm pode excluir a conta de qualquer um
         // exceto outros adms lol
-        if(req.user.type == 0 && deletedUser.type != 0)
+        if(req.user.type == UserRole.ADMIN && deletedUser.type != UserRole.ADMIN)
             return 200;
 
         return 403;

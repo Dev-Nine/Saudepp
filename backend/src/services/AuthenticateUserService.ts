@@ -26,14 +26,15 @@ export default class AuthenticateUserService {
       // console.log(teste);
 
       const userRepository = typeorm.getRepository(User);
-      const user = await userRepository.findOne({select: ["id", "password"], where: {email}});
+      const user = await userRepository.findOne({select: ["id", "name", "email", "password"], 
+         where: {email}});
 
       if (!user) {
          throw new Error('Incorrect email/password combination.')
       }
 
-      console.log("Given: " + password, user.password);
-      console.log(user);
+      //console.log("Given: " + password, user.password);
+      //console.log(user);
       const passwordMatched = await bcrypt.compare(password, user.password);
       
       if (!passwordMatched) {

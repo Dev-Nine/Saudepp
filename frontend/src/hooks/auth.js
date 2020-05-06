@@ -27,7 +27,7 @@ const AuthProvider = ({children}) => {
       localStorage.setItem('@Saude:token', token);
       localStorage.setItem('@Saude:user', JSON.stringify(user));
 
-      setData({token, user})
+       setData({token, user})
       console.log(token, user)
    }, [])
 

@@ -1,11 +1,23 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 
 import './styles.css'
 
 import Card from '../../components/Card'
 import Header from '../../components/Header';
+import api from '../../utils/api';
 
 export default function Home() {
+   const [covid, setCovid] = useState({})
+
+   useEffect( () => {
+      async function loadCovidData() {
+         const response = await api.get('/covid')
+         setCovid(response.data); 
+      }
+
+      loadCovidData()
+   }, [])
+
    return (
       <>
          <Header />
@@ -21,10 +33,10 @@ export default function Home() {
                      Se <strong>PREVINA</strong>
                   </span>
                   <span>
-                     78.162 Casos confirmados
+                     {covid.contagion} Casos confirmados
                   </span>
                   <span>
-                     5.466 Óbitos confirmados
+                     {covid.deaths} Óbitos confirmados
                   </span>
             </div>
 

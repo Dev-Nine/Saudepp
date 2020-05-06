@@ -40,6 +40,9 @@ export default class App {
             this.middlewares();
             this.linkAllRoutes();
             this.workers();
+
+            // Para inserir a informação sobre o corona quando iniciar o sistema
+            await workerCovidInfo();
     
             if (port) {
                 if (args) {

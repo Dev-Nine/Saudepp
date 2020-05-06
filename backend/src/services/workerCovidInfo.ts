@@ -10,11 +10,11 @@ export default async function workerCovidInfo () {
     
     console.log(response.data);
 
-    const { total_confirmado, total_obitos, createdAt, total_letalidade, updatedAt } = response.data.results[0];
+    const { total_confirmado, total_obitos, total_letalidade, updatedAt } = response.data.results[0];
 
     const covid = new CovidInfo();
-    covid.contagion = parseInt(total_confirmado);
-    covid.deaths = parseInt(total_obitos);
+    covid.contagion = parseInt(total_confirmado.replace('.',''));
+    covid.deaths = parseInt(total_obitos.replace('.',''));
     covid.letality = total_letalidade;
     covid.date = new Date(updatedAt);
 

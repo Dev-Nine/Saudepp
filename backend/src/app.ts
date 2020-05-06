@@ -2,6 +2,7 @@ import { Application } from 'express';
 import { QueryFailedError } from 'typeorm';
 import { scheduleJob } from 'node-schedule';
 import * as express from 'express';
+const cors = require('cors');
 
 import Routes  from './routes';
 import connection from './database/connection';
@@ -17,6 +18,7 @@ export default class App {
 
     private middlewares(): void {
         this.app.use(express.json());
+        this.app.use(cors());
         
         // n faz sentido colocar aqui, se não nunca irão conseguir fazer login
         // this.app.use(ensureAuthentication)

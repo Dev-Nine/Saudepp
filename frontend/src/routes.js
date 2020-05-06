@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 import Home from './screens/Home';
 import Login from './screens/Login';
@@ -12,7 +12,6 @@ import RegisterMedic from './screens/RegisterMedic';
 
 export default function Routes() {
    return (
-      <BrowserRouter>
          <Switch>
             <Route path="/" exact component={Home} />
             <Route path="/login" exact component={Login}/>
@@ -21,6 +20,5 @@ export default function Routes() {
             <Route path="/register/professional" exact component={RegisterProfessional}/>
             <Route pasth="/register/medic" exact component={RegisterMedic}/>
          </Switch>
-      </BrowserRouter>
    )
 }

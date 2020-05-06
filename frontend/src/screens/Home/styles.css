@@ -29,7 +29,7 @@
 
 #sobre {
    position: relative;
-   display: flex;
+   display: flexbox;
    width: 1210px;
    height: 220px;
    border: black;
@@ -39,7 +39,7 @@
 }
 
 #sobre p {
-   margin-top: 24px;
+   padding-top: 24px;
    width: 1132px;
    color: black;
    font-style: italic;
@@ -48,4 +48,13 @@
    line-height: 35px;
    text-align: justify;
    padding-left: 39px;
+}
+
+#sobre a {
+   position: relative;
+   padding-left: 85%;
+   font-style: normal;
+   font-weight: bold;
+   font-size: 25px;
+   text-align: justify;
 }

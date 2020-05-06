@@ -4,14 +4,20 @@ import { FiMail, FiLock } from 'react-icons/fi'
 import * as Yup from 'yup';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
+import {useHistory} from 'react-router-dom';
 
+import {useAuth} from '../../hooks/auth'
 import Return from '../../components/return'
 import Input from '../../components/Input'
 import getValidationErros from '../../utils/getValidationErros';
 import {Container} from './styles.js'
 
 export default function Login(){
+    const history = useHistory();
+
     const formRef = useRef(null);
+
+    const {signIn} = useAuth();
     
     const handleSubmit = useCallback(async (data) => {
         try {
@@ -27,11 +33,21 @@ export default function Login(){
             await schema.validate(data, {
                 abortEarly: false,
             });
+
+            await signIn({email: data.email, password: data.password});
+
+            history.push('/')
         } catch (err) {
-            const errors = getValidationErros(err);
-            formRef.current.setErrors(errors);
+            if (err instanceof Yup.ValidationError) {
+                const erros = getValidationErros(err);
+
+                formRef.current.setErrors(erros);
+                return
+            }
+
+            console.log(err)
         }
-    }, []);
+    }, [history, signIn]);
     
     return (
         <Container>

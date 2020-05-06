@@ -2,7 +2,7 @@ import { Application } from 'express';
 import { QueryFailedError } from 'typeorm';
 import { scheduleJob } from 'node-schedule';
 import * as express from 'express';
-import cors from 'cors';
+import * as cors from 'cors';
 
 import Routes  from './routes';
 import connection from './database/connection';

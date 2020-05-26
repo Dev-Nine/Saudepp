@@ -6,17 +6,20 @@ import { CovidInfo } from '../model/CovidInfo';
 import { validate } from 'class-validator';
 
 export default async function workerCovidInfo () {
-    const response = await api.get('PortalGeral');
+    const response = await api.get('PortalGeralApi');
     
     console.log(response.data);
 
-    const { total_confirmado, total_obitos, total_letalidade, updatedAt } = response.data.results[0];
+    const { confirmados, obitos, dt_updated } = response.data;
 
     const covid = new CovidInfo();
-    covid.contagion = parseInt(total_confirmado.replace('.',''));
-    covid.deaths = parseInt(total_obitos.replace('.',''));
-    covid.letality = total_letalidade;
-    covid.date = new Date(updatedAt);
+    covid.contagion = parseInt(confirmados.total);
+    covid.contagion_news = parseInt(confirmados.novos)
+    covid.recupered = parseInt(confirmados.recuperados)
+    covid.deaths = parseInt(obitos.total);
+    covid.deaths_news = parseInt(obitos.novos)
+    covid.letality = obitos.letalidade;
+    covid.date = new Date(dt_updated);
 
     console.log('Worker working lol');
 

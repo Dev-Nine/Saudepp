@@ -11,15 +11,27 @@ export class CovidInfo {
     @IsDate()
     date: Date;
 
-    @Column()
+    @Column({default: 0})
     @IsNumber()
     contagion: number;
 
-    @Column()
+    @Column({default: 0})
+    @IsNumber()
+    contagion_news: number;
+
+    @Column({default: 0})
+    @IsNumber()
+    recupered: number;
+
+    @Column({default: 0})
     @IsNumber()
     deaths: number;
 
-    @Column()
+    @Column({default: 0})
+    @IsNumber()
+    deaths_news: number;    
+
+    @Column({default: 0})
     @IsString()
     letality: string;
 

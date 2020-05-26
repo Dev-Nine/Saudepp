@@ -6,13 +6,18 @@ import Card from '../../components/Card'
 import Header from '../../components/Header';
 import api from '../../utils/api';
 
+import image from '../../image/image.svg'
+
 export default function Home() {
    const [covid, setCovid] = useState({})
 
    useEffect( () => {
       async function loadCovidData() {
-         const response = await api.get('/covid')
-         setCovid(response.data); 
+         const { data } = await api.get('/covid')
+         setCovid({
+            contagion: data.contagion.toLocaleString('pt'),
+            deaths: data.deaths.toLocaleString('pt')
+         }); 
       }
 
       loadCovidData()
@@ -22,22 +27,35 @@ export default function Home() {
       <>
          <Header />
          <div id='main'>
-            <div id='corona_info'>
-                  <span>
-                     CORONA <strong>VIRUS</strong>
-                  </span>
-                  <span>
-                     Fique em <strong>CASA</strong>
-                  </span>
-                  <span>
-                     Se <strong>PREVINA</strong>
-                  </span>
-                  <span>
-                     {covid.contagion} Casos confirmados
-                  </span>
-                  <span>
-                     {covid.deaths} Óbitos confirmados
-                  </span>
+            <div id='corona_container' style={{backgroundImage: `url(${image})`}}>
+               <div id='corona_info'>
+                  <div style={{marginLeft: 41, marginTop: 57}}>
+                     <p style={{fontSize: 55, marginBottom: 10}}>
+                        CORONA VIRUS
+                     </p>
+                     <p>
+                        Fique em <strong>CASA</strong>
+                        <br/>
+                        Se <strong>PREVINA</strong>
+                     </p>
+                  </div>
+                  <div style={{marginTop: 85, marginLeft: -45,display: 'grid', height: 66,gridTemplateRows: '50% 50%'}}>
+                     <p style={{display: 'grid', gridTemplateColumns: '1fr 5fr'}}>
+                        <strong>
+                           {covid.contagion}
+                        </strong> 
+                        Casos confirmados
+                     </p>
+                     <p style={{display: 'grid', gridTemplateColumns: '1fr 5fr'}}>
+                        <strong style={{color: 'red'}}>
+                        {covid.deaths} 
+                        </strong>
+                        
+                        Óbitos confirmados
+                     </p>
+                  </div>
+
+               </div>
             </div>
 
             <div id="sobre">

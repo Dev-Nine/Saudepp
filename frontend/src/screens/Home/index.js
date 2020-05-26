@@ -6,7 +6,7 @@ import Card from '../../components/Card'
 import Header from '../../components/Header';
 import api from '../../utils/api';
 
-import image from '../../image/image.svg'
+import image from '../../image/coronavirus-4833754_1920-1230x450.jpg'
 
 export default function Home() {
    const [covid, setCovid] = useState({})
@@ -27,7 +27,7 @@ export default function Home() {
       <>
          <Header />
          <div id='main'>
-            <div id='corona_container' style={{backgroundImage: `url(${image})`}}>
+            <div id='corona_container' style={{borderRadius: 8, backgroundImage: `url(${image})`, width: '100%', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>                  
                <div id='corona_info'>
                   <div style={{marginLeft: 41, marginTop: 57}}>
                      <p style={{fontSize: 55, marginBottom: 10}}>
@@ -39,14 +39,14 @@ export default function Home() {
                         Se <strong>PREVINA</strong>
                      </p>
                   </div>
-                  <div style={{marginTop: 85, marginLeft: -45,display: 'grid', height: 66,gridTemplateRows: '50% 50%'}}>
-                     <p style={{display: 'grid', gridTemplateColumns: '1fr 5fr'}}>
+                  <div style={{marginTop: 85, marginLeft: '30%',display: 'grid', height: 66,gridTemplateRows: '50% 50%'}}>
+                     <p style={{display: 'grid', gridTemplateColumns: '30% 70%'}}>
                         <strong>
                            {covid.contagion}
                         </strong> 
                         Casos confirmados
                      </p>
-                     <p style={{display: 'grid', gridTemplateColumns: '1fr 5fr'}}>
+                     <p style={{display: 'grid', gridTemplateColumns: '30% 70%'}}>
                         <strong style={{color: 'red'}}>
                         {covid.deaths} 
                         </strong>

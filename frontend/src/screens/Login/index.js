@@ -6,7 +6,7 @@ import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import {useHistory} from 'react-router-dom';
 
-import {useAuth} from '../../hooks/auth'
+import {useAuth} from '../../hooks/AuthProvider'
 import Return from '../../components/return'
 import Input from '../../components/Input'
 import getValidationErros from '../../utils/getValidationErros';

@@ -1,0 +1,27 @@
+#corona_container {
+    position: relative;
+    width: 1210px;
+    height: 241px;
+    top: 55px;
+    border-radius: 8px;
+    margin-bottom: 98px;
+ }
+ 
+ #corona_info {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    background: rgba(0, 0, 0, 0.45);
+ }
+ 
+ #corona_info div p {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 27px;
+    line-height: 32px;
+ }
+ 
+ #corona_info div p strong {
+    color: #D3C222;
+ }

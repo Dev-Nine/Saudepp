@@ -12,7 +12,7 @@ export default function Home() {
       <>
          <Header />
 
-         <div id='main'>
+         <div className='main'>
             <CoronaCard />
             <div id="sobre">
                <p>

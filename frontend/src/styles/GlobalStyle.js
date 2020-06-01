@@ -9,7 +9,6 @@ export default createGlobalStyle`
    }
    body {
       background: #FFF;
-      color: #FFF;
       -webkit-font-smoothing: antialiased;
    }
    body, input, button {
@@ -19,5 +18,11 @@ export default createGlobalStyle`
    
    button {
       cursor: pointer;
+   }
+
+   .main {
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
    }
 `;

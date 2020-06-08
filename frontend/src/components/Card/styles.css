@@ -1,14 +1,11 @@
-
-div {
-}
-h1 {
+.card-title {
    font-size: 26px;
    line-height: 30px;
 
    color: #000000;
 }
 
-hr {
+.card-hr {
    width: 210px;
    height: 5px;
 
@@ -18,7 +15,7 @@ hr {
    border-radius: 0px 10px 10px 0px;
 }
 
-ul {
+.card-list {
    margin-top:15px;
    margin-bottom: 30px;
 
@@ -30,7 +27,7 @@ ul {
    list-style: none;
 }
 
-li {
+.card-item {
    background: #FFF;
 
    position: relative;

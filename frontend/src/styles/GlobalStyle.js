@@ -11,13 +11,14 @@ export default createGlobalStyle`
       background: #FFF;
       -webkit-font-smoothing: antialiased;
    }
-   body, input, button {
+   body, input, button, textarea {
       font-family: 'Roboto', serif;
       font-size: 16px;
    }
    
    button {
       cursor: pointer;
+      border: none;
    }
 
    .main {

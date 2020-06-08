@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import ReactMarkdown from 'react-markdown'
+import parse from 'html-react-parser'
 
-import data from './test.md'
+import data from './testHtml.txt'
 
 import Header from '../../components/Header'
 import CoronaCard from '../../components/CoronaCard'
 import Comment from '../../components/Comment'
 
-import { ContainerNoticia, ContainerComentario, EscreverComentario, MarkdownContainer } from './styles'
+import { ContainerNoticia, ContainerComentario, EscreverComentario, TextContainer } from './styles'
 
 export default function NoticeDisplay() {
 
@@ -16,8 +16,8 @@ export default function NoticeDisplay() {
     useEffect(() => {
         fetch(data)
         .then(res => res.text())
-        .then(md => {
-            setContent(md);
+        .then(html => {
+            setContent(html);
         })
     }, []);
 
@@ -31,13 +31,9 @@ export default function NoticeDisplay() {
                         <h1>Como lavar as mãos</h1>
                         <p>Nessa epóca de pandemia, é extramente necessário lavar as mãos!</p>
                         <p>Escrito por Leandro R. - 1 de abril de 2020,</p>
-                        <MarkdownContainer>
-                            <ReactMarkdown 
-                                source={ content } 
-                                escapeHtml={ false }
-                            
-                            />
-                        </MarkdownContainer>
+                        <TextContainer>
+                            {parse(content)}
+                        </TextContainer>
                     </div>
                 </ ContainerNoticia>
                 

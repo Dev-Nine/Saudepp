@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export const ContainerNoticia = styled.div`
     background-color: #F9F7F7;
-    padding: 5px 40px;
+    padding: 15px 40px;
     border-radius: 10px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
@@ -63,6 +63,10 @@ export const MarkdownContainer = styled.div`
         list-style-position: inside;
     }
 
+    * li ul {
+        display: contents;
+    }
+
     li {
         background-color: inherit;
         display: list-item;
@@ -70,6 +74,7 @@ export const MarkdownContainer = styled.div`
 
     a {
         text-decoration: inherit;
+        color: #0094DE;
     }
 
     img {
@@ -77,6 +82,7 @@ export const MarkdownContainer = styled.div`
         margin-left: auto;
         margin-right: auto;
         text-align: center;
-        width: 50%;
+        max-width: 70%;
+        max-height: 30%
     }
 `

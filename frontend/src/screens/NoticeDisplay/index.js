@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Markdown from 'markdown-to-jsx'
+import ReactMarkdown from 'react-markdown'
 
 import data from './test.md'
 
@@ -32,9 +32,11 @@ export default function NoticeDisplay() {
                         <p>Nessa epóca de pandemia, é extramente necessário lavar as mãos!</p>
                         <p>Escrito por Leandro R. - 1 de abril de 2020,</p>
                         <MarkdownContainer>
-                            <Markdown>
-                                {content}
-                            </Markdown>
+                            <ReactMarkdown 
+                                source={ content } 
+                                escapeHtml={ false }
+                            
+                            />
                         </MarkdownContainer>
                     </div>
                 </ ContainerNoticia>

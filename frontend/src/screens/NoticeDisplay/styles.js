@@ -5,6 +5,7 @@ export const ContainerNoticia = styled.div`
     padding: 15px 40px;
     border-radius: 10px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    margin-bottom: 20px;
 
     h1, p {
         margin-bottom: 15px;
@@ -58,18 +59,10 @@ export const EscreverComentario = styled.div`
     }
 `
 
-export const MarkdownContainer = styled.div`
+export const TextContainer = styled.div`
+
     ol, ul {
         list-style-position: inside;
-    }
-
-    * li ul {
-        display: contents;
-    }
-
-    li {
-        background-color: inherit;
-        display: list-item;
     }
 
     a {

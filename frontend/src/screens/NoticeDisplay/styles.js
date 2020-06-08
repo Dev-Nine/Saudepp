@@ -67,4 +67,16 @@ export const MarkdownContainer = styled.div`
         background-color: inherit;
         display: list-item;
     }
+
+    a {
+        text-decoration: inherit;
+    }
+
+    img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        width: 50%;
+    }
 `

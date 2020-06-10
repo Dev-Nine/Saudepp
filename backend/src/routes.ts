@@ -4,13 +4,11 @@ import { QueryFailedError, getRepository, getConnection } from "typeorm";
 import UserController from "./controller/UserController";
 import NoticeController from "./controller/NoticeController";
 import CommentController from "./controller/CommentController";
+import TagController from "./controller/TagController";
 import SessionController from "./controller/SessionController";
-
 
 import ensureAuthentication from './middlewares/ensureAuthentication'
 import verifyAuthentication from './middlewares/verifyAuthentication'
-import TagController from "./controller/TagController";
-import SubTagController from "./controller/SubTagController";
 
 import { CovidInfo } from "./model/CovidInfo";
 
@@ -20,7 +18,6 @@ export default class Routes {
     private noticeController: NoticeController;
     private commentController: CommentController;
     private tagController: TagController;
-    private subTagController: SubTagController;
     private sessionController: SessionController;
 
     constructor() {
@@ -29,7 +26,6 @@ export default class Routes {
         this.noticeController = new NoticeController();
         this.commentController = new CommentController();
         this.tagController = new TagController();
-        this.subTagController = new SubTagController();
         this.sessionController = new SessionController();
     }
 
@@ -47,13 +43,6 @@ export default class Routes {
         this.routes.post("/tags", ensureAuthentication, this.tagController.create.bind(this.tagController));
         this.routes.put("/tags/:id", ensureAuthentication, this.tagController.edit.bind(this.tagController));
         this.routes.delete("/tags/:id", ensureAuthentication, this.tagController.delete.bind(this.tagController));
-
-        // SUBTAGS
-        this.routes.get("/subtags", this.subTagController.getAll.bind(this.subTagController));
-        this.routes.get("/subtags/:id", this.subTagController.getByPk.bind(this.subTagController));
-        this.routes.post("/subtags", ensureAuthentication, this.subTagController.create.bind(this.subTagController));
-        this.routes.put("/subtags/:id", ensureAuthentication, this.subTagController.edit.bind(this.subTagController));
-        this.routes.delete("/subtags/:id", ensureAuthentication, this.subTagController.delete.bind(this.subTagController));
 
         // NOTICIAS
         this.routes.get("/notices", this.noticeController.getAll.bind(this.noticeController));

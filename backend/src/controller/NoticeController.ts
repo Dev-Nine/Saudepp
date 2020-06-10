@@ -3,7 +3,6 @@ import { Notice } from '../model/Notice';
 import { Request, Response } from 'express';
 import { User, UserRole } from '../model/User';
 import { Tag } from '../model/Tag';
-import { SubTag } from '../model/SubTag';
 
 export default class NoticeController {
     private repository : Repository<Notice>;
@@ -31,7 +30,7 @@ export default class NoticeController {
 
     public async validateDelete(req : Request): Promise<number>{
         // adm e mod pode excluir qualquer noticia
-        if(req.user.type == UserRole.ADMIN || req.user.type == UserRole.MODERADOR)
+        if(req.user.type == UserRole.ADMIN /*|| req.user.type == UserRole.MODERADOR*/)
             return 200;
         
         // somente o proprio usuario pode excluir a sua noticia
@@ -64,21 +63,12 @@ export default class NoticeController {
         const body = req["body"];
 
         notice.tags = [];
-        notice.subtags = [];
 
         if(body.tags !== undefined && body.tags.length > 0){
             for (const tagAttr of body.tags){
                 let tag = new Tag();
                 tag.id = tagAttr.id;
                 notice.tags.push(tag);
-            }
-        }
-
-        if(body.subtags !== undefined && body.subtags.length > 0){
-            for (const subTagAttr of body.subtags){
-                let subtag = new SubTag();
-                subtag.id = subTagAttr.id;
-                notice.subtags.push(subtag);
             }
         }
 
@@ -105,15 +95,6 @@ export default class NoticeController {
             }
         }
 
-        if(body.subtags !== undefined && body.subtags.length > 0){
-            notice.subtags = [];
-            for (const subTagAttr of body.subtags){
-                let subtag = new SubTag();
-                subtag.id = subTagAttr.id;
-                notice.subtags.push(subtag);
-            }
-        }
-
         notice.title = body.title;
         notice.text = body.text;
         notice.user.id = parseInt(req.user.id);
@@ -131,7 +112,7 @@ export default class NoticeController {
 
             const notice: Notice = await this.processCreateData(req);
 
-            if(notice.tags.length > 0 || notice.subtags.length > 0){
+            if(notice.tags.length > 0){
                 const result: Notice[] = await this.repository.save([notice]);
                 return res.json(result);
             }
@@ -156,7 +137,7 @@ export default class NoticeController {
             const foundNotice = await this.repository.findOne(req.params["id"]);
             this.repository.merge(foundNotice, notice);
 
-            if(foundNotice.tags.length > 0 || foundNotice.subtags.length > 0){
+            if(foundNotice.tags.length > 0){
                 const result = await this.repository.save(foundNotice);
                 return res.json(result);
             }

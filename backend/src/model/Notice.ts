@@ -3,7 +3,6 @@ import { IsDate, IsString, MinLength } from 'class-validator';
 import {User} from "./User";
 import {Comment} from "./Comment";
 import { Tag } from "./Tag";
-import { SubTag } from "./SubTag";
 
 @Entity()
 export class Notice {
@@ -43,13 +42,4 @@ export class Notice {
         name: 'tag_notice'
     })
     tags: Tag[]
-
-    @ManyToMany(type => SubTag, {
-        eager: true
-    })
-    @JoinTable({
-        name: 'subtag_notice'
-    })
-    subtags: SubTag[]
-
 }

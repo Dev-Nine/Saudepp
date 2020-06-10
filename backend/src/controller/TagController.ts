@@ -20,7 +20,7 @@ export default class TagController {
 
     public async validateEdit(req : Request): Promise<number>{
         // somente usuario adm ou moderador pode alterar
-        if(req.user.type == UserRole.ADMIN || req.user.type == UserRole.MODERADOR)
+        if(req.user.type == UserRole.ADMIN /* || req.user.type == UserRole.MODERADOR*/)
             return 200;
         return 403;
     }
@@ -35,7 +35,6 @@ export default class TagController {
 
         tag.id = body.id;
         tag.description = body.description;
-        tag.group = body.group;
 
         return tag;
     }
@@ -46,7 +45,6 @@ export default class TagController {
 
         tag.id = body.id;
         tag.description = body.description;
-        tag.group = body.group;
 
         return tag;
     }

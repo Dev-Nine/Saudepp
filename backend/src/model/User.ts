@@ -5,9 +5,9 @@ import { Comment } from './Comment';
 
 export enum UserRole {
     ADMIN = 0,
-    MODERADOR = 1,
+    //MODERADOR = 1,
     PROFISSIONAL = 2,
-    COMUM = 3,
+    //COMUM = 3,
 }
 
 @Entity()
@@ -37,7 +37,7 @@ export class User {
     @Column({
         type: "enum",
         enum: UserRole,
-        default: UserRole.COMUM
+        default: UserRole.PROFISSIONAL
     })
     @IsInt()
     @Min(0)

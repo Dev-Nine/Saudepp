@@ -26,7 +26,7 @@ export default class CommentController {
 
     public async validateDelete(req : Request): Promise<number>{
         // adm e mod pode excluir qualquer comentario
-        if(req.user.type == UserRole.ADMIN || req.user.type == UserRole.MODERADOR)
+        if(req.user.type == UserRole.ADMIN /*|| req.user.type == UserRole.MODERADOR*/)
             return 200;
 
         const editedComment : Comment = await this.repository.findOne(req.params["id"]);

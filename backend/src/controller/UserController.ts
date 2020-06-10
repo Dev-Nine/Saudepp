@@ -18,16 +18,22 @@ export default class UserController {
         // por enquanto isso é valido somente nessa fase de testes
         if(req.body.type == UserRole.ADMIN)
             return 200;
+
+        if(req.user.type == UserRole.ADMIN)
+            return 200;
+        return 403;
+
+        /* codigo abaixo quando tiver usuario comum
         
         // usuario adm nao pode ser criado por qualquer usuario
         // usuario "mod" nao é criado diretamente, é transformado de um usuario existente
-        if(req.body.type == UserRole.ADMIN || req.body.type == UserRole.MODERADOR)
-            return 403;
+        // if(req.body.type == UserRole.ADMIN || req.body.type == UserRole.MODERADOR)
+        //     return 403;
 
         // permissoes de usuario nao autenticado
         if(!req.user){
-            if(req.body.type == UserRole.COMUM)
-                return 200;
+            // if(req.body.type == UserRole.COMUM)
+            //     return 200;
             return 403;
         }
 
@@ -36,6 +42,7 @@ export default class UserController {
             return 403;
 
         return 200;
+        */
     }
 
     public async validateEdit(req : Request): Promise<number>{
@@ -58,8 +65,8 @@ export default class UserController {
             // profissional nao é editado, mas sim criado
             if(req.body.type == UserRole.PROFISSIONAL || editedUser.type == UserRole.PROFISSIONAL)
                 return 403;
-            else if(editedUser.type == UserRole.MODERADOR || editedUser.type == UserRole.COMUM)
-                return 200;
+            // else if(editedUser.type == UserRole.MODERADOR || editedUser.type == UserRole.COMUM)
+            //     return 200;
         }
             
         return 403;

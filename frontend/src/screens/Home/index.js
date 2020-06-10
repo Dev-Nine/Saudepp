@@ -5,6 +5,7 @@ import './styles.css'
 import Card from '../../components/Card'
 import Header from '../../components/Header';
 import CoronaCard from '../../components/CoronaCard'
+import Footer from '../../components/Footer'
 
 export default function Home() {
 
@@ -29,6 +30,8 @@ export default function Home() {
                <Card title='Saúde e bem estar' data='' type='health' />
             </div>
          </div>
+
+         <Footer />
       </>
    )
 }

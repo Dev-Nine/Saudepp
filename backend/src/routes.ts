@@ -68,7 +68,7 @@ export default class Routes {
             //Get the last request saved
             const result = await query.findOne({
                 order: {
-                    id: 'DESC',
+                    date: 'DESC',
                 }
             });
 

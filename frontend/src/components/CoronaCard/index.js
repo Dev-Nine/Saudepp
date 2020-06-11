@@ -12,7 +12,7 @@ export default function CoronaCard() {
         async function loadCovidData() {
             const { data } = await api.get('/covid')
             setCovid({
-                contagion: data.contagion.toLocaleString('pt'),
+                confirmed: data.confirmed.toLocaleString('pt'),
                 deaths: data.deaths.toLocaleString('pt')
             }); 
         }
@@ -36,7 +36,7 @@ export default function CoronaCard() {
                 <div style={{marginTop: 85, marginLeft: '30%',display: 'grid', height: 66,gridTemplateRows: '50% 50%'}}>
                     <p style={{display: 'grid', gridTemplateColumns: '30% 70%'}}>
                     <strong>
-                        {covid.contagion}
+                        {covid.confirmed}
                     </strong> 
                     Casos confirmados
                     </p>

@@ -36,6 +36,7 @@
       "start": "nodemon src/server.ts",
       "build": "tsc",
       "migration:run": "yarn ts-node ./node_modules/typeorm/cli.js migration:run",
-      "migration:generate": "yarn ts-node ./node_modules/typeorm/cli.js migration:generate"
+      "migration:generate": "yarn ts-node ./node_modules/typeorm/cli.js migration:generate",
+      "migration:revert": "yarn ts-node ./node_modules/typeorm/cli.js migration:revert"
    }
 }

@@ -1,8 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, Unique } from "typeorm";
 import { IsDate, IsNumber, IsString } from 'class-validator';
 
 
 @Entity()
+@Unique(["date"])
 export class CovidInfo {
     @PrimaryGeneratedColumn()
     id: number;
@@ -13,26 +14,18 @@ export class CovidInfo {
 
     @Column({default: 0})
     @IsNumber()
-    contagion: number;
+    confirmed: number;
 
     @Column({default: 0})
     @IsNumber()
-    contagion_news: number;
+    recovered: number;
 
     @Column({default: 0})
     @IsNumber()
-    recupered: number;
-
-    @Column({default: 0})
-    @IsNumber()
-    deaths: number;
-
-    @Column({default: 0})
-    @IsNumber()
-    deaths_news: number;    
+    deaths: number; 
 
     @Column({default: 0})
     @IsString()
-    letality: string;
+    lethality: string;
 
 }

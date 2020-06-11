@@ -16,7 +16,7 @@ export default class Routes {
     public routes: Router;
     private userController: UserController;
     private noticeController: NoticeController;
-    private commentController: CommentController;
+    // private commentController: CommentController;
     private tagController: TagController;
     private sessionController: SessionController;
 
@@ -24,7 +24,7 @@ export default class Routes {
         this.routes = Router();
         this.userController = new UserController();
         this.noticeController = new NoticeController();
-        this.commentController = new CommentController();
+        // this.commentController = new CommentController();
         this.tagController = new TagController();
         this.sessionController = new SessionController();
     }
@@ -52,11 +52,11 @@ export default class Routes {
         this.routes.delete("/notices/:id", ensureAuthentication, this.noticeController.delete.bind(this.noticeController));
 
         // COMENTARIOS
-        this.routes.get("/comments", this.commentController.getAll.bind(this.commentController));
-        this.routes.get("/comments/:id", this.commentController.getByPk.bind(this.commentController));
-        this.routes.post("/comments", ensureAuthentication, this.commentController.create.bind(this.commentController));
-        this.routes.put("/comments/:id", ensureAuthentication, this.commentController.edit.bind(this.commentController));
-        this.routes.delete("/comments/:id", ensureAuthentication, this.commentController.delete.bind(this.commentController));
+        // this.routes.get("/comments", this.commentController.getAll.bind(this.commentController));
+        // this.routes.get("/comments/:id", this.commentController.getByPk.bind(this.commentController));
+        // this.routes.post("/comments", ensureAuthentication, this.commentController.create.bind(this.commentController));
+        // this.routes.put("/comments/:id", ensureAuthentication, this.commentController.edit.bind(this.commentController));
+        // this.routes.delete("/comments/:id", ensureAuthentication, this.commentController.delete.bind(this.commentController));
 
         // SESSÕES (LOGIN)
         this.routes.post("/sessions", this.sessionController.auth.bind(this.sessionController));

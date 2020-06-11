@@ -94,6 +94,9 @@ export default class UserController {
         user.name = body.name;
         user.email = body.email;
         user.password = body.password;
+        user.username = body.username;
+        user.identifier = body.identifier;
+        user.identifierType = body.identifierType;
 
         if(body.type >= 0 && body.type <= 3)
             user.type = body.type;
@@ -108,6 +111,9 @@ export default class UserController {
         user.name = body.name;
         user.email = body.email;
         user.password = body.password;
+        user.username = body.username;
+        user.identifier = body.identifier;
+        user.identifierType = body.identifierType;
 
         if(body.type >= 0 && body.type <= 3)
             user.type = body.type;

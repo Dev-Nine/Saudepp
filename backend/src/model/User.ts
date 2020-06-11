@@ -16,23 +16,29 @@ export class User {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ length: 50 })
+    @Column({ unique: true, length: 20 })
     @IsString()
-    @MinLength(5)
-    @MaxLength(50)
-    name: string;
+    @MinLength(2)
+    @MaxLength(20)
+    username: string;
 
     @Column({ length: 8000, select: false })
     @IsString()
     @MaxLength(8000)
     password: string;
 
-    @Column({ unique: true, length: 50, select: false })
+    @Column({ unique: true, length: 50 })
     @IsString()
     @IsEmail()
     @MinLength(5) // so pra ter certeza kk
     @MaxLength(50)
     email: string;
+
+    @Column({ length: 50 })
+    @IsString()
+    @MinLength(5)
+    @MaxLength(50)
+    name: string;
 
     @Column({
         type: "enum",
@@ -43,7 +49,20 @@ export class User {
     @Min(0)
     @Max(3)
     type: UserRole;
-    
+
+    // tipo de identificador
+    // caso seja profissional, pode ser crm, crf, etc...
+    @Column({ default: "cpf" })
+    @IsString()
+    @MaxLength(10)
+    identifierType : string
+
+    // valor do identificador
+    // cada cpf, crm e crf tem o seu próprio
+    @Column()
+    @IsString()
+    @MaxLength(50)
+    identifier: string
 
     @OneToMany(type => Notice, notice => notice.user)
     notices: Notice[];

@@ -7,6 +7,7 @@ import { User } from '../model/User';
 
 interface Request {
    email: string;
+   username: string;
    password: string;
 }
 
@@ -16,7 +17,7 @@ interface Response {
 }
 
 export default class AuthenticateUserService {
-   public async execute({email, password}: Request): Promise<Response> {
+   public async execute({email, username, password}: Request): Promise<Response> {
       // const queryBuilder = getRepository(User).createQueryBuilder();
 
       // const teste = await queryBuilder.select("user.email", email)
@@ -26,11 +27,18 @@ export default class AuthenticateUserService {
       // console.log(teste);
 
       const userRepository = typeorm.getRepository(User);
-      const user = await userRepository.findOne({select: ["id", "name", "email", "password"], 
-         where: {email}});
+      var user;
+      if(email){
+         user = await userRepository.findOne({select: ["id", "name", "email", "username", "password"], 
+            where: {email}});
+      }else{
+         user = await userRepository.findOne({select: ["id", "name", "email", "username", "password"], 
+            where: {username}});
+      }
+      
 
       if (!user) {
-         throw new Error('Incorrect email/password combination.')
+         throw new Error('Incorrect combination.')
       }
 
       //console.log("Given: " + password, user.password);
@@ -38,7 +46,7 @@ export default class AuthenticateUserService {
       const passwordMatched = await bcrypt.compare(password, user.password);
       
       if (!passwordMatched) {
-         throw new Error('Incorrect email/password combination.')
+         throw new Error('Incorrect combination.')
       }
 
       const {secret, expiresIn} = authConfig.jwt;

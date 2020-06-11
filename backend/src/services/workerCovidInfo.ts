@@ -5,28 +5,44 @@ import api from '../utils/api';
 import { CovidInfo } from '../model/CovidInfo';
 import { validate } from 'class-validator';
 
-export default async function workerCovidInfo () {
-    const response = await api.get('PortalGeralApi');
-    
-    console.log(response.data);
+interface covidApiData {
+    data : {
+        confirmed : number,
+        deaths : number,
+        recovered : number,
+        updated_at : string
+    }
+}
 
-    const { confirmados, obitos, dt_updated } = response.data;
+export default async function workerCovidInfo () {
+    const response = await api.get('api/report/v1/brazil');
+    const data : covidApiData = response.data;
+
+    const { confirmed, deaths, recovered, updated_at } = data.data; // why
 
     const covid = new CovidInfo();
-    covid.contagion = parseInt(confirmados.total);
-    covid.contagion_news = parseInt(confirmados.novos)
-    covid.recupered = parseInt(confirmados.recuperados)
-    covid.deaths = parseInt(obitos.total);
-    covid.deaths_news = parseInt(obitos.novos)
-    covid.letality = obitos.letalidade;
-    covid.date = new Date(dt_updated);
+    covid.confirmed = confirmed;
+    covid.recovered = recovered;
+    covid.deaths = deaths;
+    covid.lethality = String(100 * (deaths / confirmed));
+    covid.date = new Date(updated_at);
 
-    console.log('Worker working lol');
+    // console.log(covid);
 
     const errors = await validate(covid);
+
     if (errors.length > 0) {
         console.error(errors);
     }  else {
-        await getConnection().getRepository(CovidInfo).save(covid);
+        await getConnection().transaction(async manager => {
+            const datas = await manager.getRepository(CovidInfo).find({
+                order:{
+                    id : "DESC"
+                }
+            });
+            if(datas.length == 0 || datas[0].date.getTime() !== covid.date.getTime()){
+                await manager.getRepository(CovidInfo).save(covid);
+            }
+        });
     }
 }

@@ -1,5 +1,5 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, ManyToMany, JoinTable, BeforeInsert} from "typeorm";
-import { IsDate, IsString, MinLength } from 'class-validator';
+import { IsDate, IsString, MinLength, IsNumber } from 'class-validator';
 import {User} from "./User";
 import {Comment} from "./Comment";
 import { Tag } from "./Tag";
@@ -25,6 +25,10 @@ export class Notice {
     @Column()
     @IsString()
     text: string;
+
+    @Column({ default: 0 })
+    @IsNumber()
+    views: number;
 
     @OneToMany(type => Comment, comment => comment.notice)
     comments: Comment[];

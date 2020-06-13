@@ -78,6 +78,8 @@ export default class NoticeController {
         notice.abstract = body.abstract;
         notice.date = new Date;
 
+        notice.views = 0;
+
         return notice;
     }
 
@@ -127,28 +129,40 @@ export default class NoticeController {
     }
 
     public async edit(req : Request, res : Response): Promise<Response> {
-        try{
-            const statusCode = await this.validateEdit(req);
-            if(statusCode != 200)
-                return res.status(statusCode).send();
+        const { view } = req.query;
 
-            const notice: Notice = await this.processEditData(req);
-
-            const foundNotice = await this.repository.findOne(req.params["id"]);
-            this.repository.merge(foundNotice, notice);
-
-            if(foundNotice.tags.length > 0){
-                const result = await this.repository.save(foundNotice);
+        if(view == 'true'){
+            getConnection().transaction(async manager => {
+                const repository = manager.getRepository(Notice);
+                const foundNotice = await repository.findOne(req.params["id"]);
+                foundNotice.views++;
+                const result = await repository.save(foundNotice);
                 return res.json(result);
+            })
+        }else{
+            try{
+                const statusCode = await this.validateEdit(req);
+                if(statusCode != 200)
+                    return res.status(statusCode).send();
+    
+                const notice: Notice = await this.processEditData(req);
+    
+                const foundNotice = await this.repository.findOne(req.params["id"]);
+                this.repository.merge(foundNotice, notice);
+    
+                if(foundNotice.tags.length > 0){
+                    const result = await this.repository.save(foundNotice);
+                    return res.json(result);
+                }
+                throw new Error("Needs at least 1 tag or subtag");
+                
+            }catch(err){
+                if(err instanceof Error){
+                    console.log(err.stack);
+                    console.log(err.message);
+                }
+                return res.status(400).send();
             }
-            throw new Error("Needs at least 1 tag or subtag");
-            
-        }catch(err){
-            if(err instanceof Error){
-                console.log(err.stack);
-                console.log(err.message);
-            }
-            return res.status(400).send();
         }
     }
 

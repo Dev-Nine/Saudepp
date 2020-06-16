@@ -1,20 +1,19 @@
 import React from 'react'
 
-import './styles.css'
+import { Container } from './styles'
 
-import Notice from '../Notice'
-
-export default function Card({title, type, data}) {
+export default function Card() {
    return (
-      <div>
-         <h1 className="card-title">{title}</h1>
-         <hr className="card-hr" />
-         <ul className="card-list">
-            <li className="card-item"><Notice /></li>
-            <li className="card-item"><Notice /></li>
-            <li className="card-item"><Notice /></li>
-            <li className="card-item"><Notice /></li>
-         </ul>
-      </div>
+      <Container>
+         <img alt='descrição' src='https://www.rbsdirect.com.br/imagesrc/17383078.jpg?w=700' />
+         <div>
+            <strong>Como lavar as mãos</strong>
+            <p>
+               Nessa época de pandemia, é extremamente necessáio lavar as mãos
+            </p>
+            <span>Postado a 5 minutos</span>
+            <span>Leandro R.</span>
+         </div>
+      </ Container>
    )
 }

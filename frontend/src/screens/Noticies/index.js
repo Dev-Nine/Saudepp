@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './styles.css';
+import { Container } from './styles';
 import Header from '../../components/Header';
 
 export default function Comments(){
@@ -8,7 +8,7 @@ export default function Comments(){
     return (
         <>
             <Header/>
-            <section className="container-noticies">
+            <Container>
                 <div className="content">
                         
                     <div className="form">
@@ -36,7 +36,7 @@ export default function Comments(){
                         </form>
                     </div>
                 </div>
-            </section>
+            </ Container>
         </>
     )
 }

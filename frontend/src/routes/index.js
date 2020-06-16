@@ -5,7 +5,7 @@ import { Switch, Route } from 'react-router-dom';
 import Home from '../screens/Home';
 import Login from '../screens/Login';
 import Noticies from '../screens/Noticies';
-import Register from '../screens/register';
+import Register from '../screens/Register';
 import RegisterProfessional from '../screens/RegisterProfessional';
 import RegisterMedic from '../screens/RegisterMedic';
 import NoticeDisplay from '../screens/NoticeDisplay'; 

@@ -1,18 +1,14 @@
 import React from 'react';
 import Return from '../../components/return'
 
-
-/**
- * Importando o css
- */
-import './styles.css'
+import { Container } from '../Register/styles'
 
 export default function RegisterProfessional() {
   return (
     <>
         <Return/>
-        <div className="register-container">
-            <div className="register-form">
+        <Container>
+            <div>
                 <form>
                     <h1>Cadastrar Profissional</h1>
                     <input className="input-form" type="text" placeholder="Nome"/>
@@ -40,7 +36,7 @@ export default function RegisterProfessional() {
                     <button className="button-form"type="submit">Criar Conta</button>
                 </form>
             </div>
-        </div>
+        </ Container>
     </>
   );
 }

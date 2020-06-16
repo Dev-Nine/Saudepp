@@ -1,14 +1,14 @@
 import React from 'react';
 import Return from '../../components/return';
 
-import './styles.css';
+import { Container } from '../Register/styles';
 
 export default function RegisterMedic() {
   return (
     <>
         <Return/>
-        <div className="register-container">
-            <div className="register-form">
+        <Container>
+            <div>
                 <form>
                     <h1>Cadastrar Profissional</h1>
                     <input className="input-form" type="text" placeholder="Nome"/>
@@ -35,7 +35,7 @@ export default function RegisterMedic() {
                     <button className="button-form"type="submit">Criar Conta</button>
                 </form>
             </div>
-        </div>
+        </ Container>
     </>    
   );
 }

@@ -1,14 +1,12 @@
 import React, {Component} from 'react';
 
-
-import './styles.css'
-
+import { Container } from './styles'
 
  class Header extends Component{
     render(){
         return(
         <React.Fragment>
-            <header className="bg">
+            <Container>
                 <div className="menu">
                     <div className="menu-logo">
                         <a href="#">Saúde++</a>
@@ -22,7 +20,7 @@ import './styles.css'
                             <a href="#">Adicionar notícia</a>
                     </nav>
                 </div>
-            </header>
+            </ Container>
         </React.Fragment>
         )
     }

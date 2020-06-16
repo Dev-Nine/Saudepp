@@ -10,7 +10,7 @@ import {useAuth} from '../../hooks/AuthProvider'
 import Return from '../../components/return'
 import Input from '../../components/Input'
 import getValidationErros from '../../utils/getValidationErros';
-import {Container} from './styles.js'
+import {Container} from './styles'
 
 export default function Login(){
     const history = useHistory();

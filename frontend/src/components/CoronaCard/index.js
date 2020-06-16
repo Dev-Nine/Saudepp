@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
-import image from '../../image/coronavirus-4833754_1920-1230x450.jpg'
 import api from '../../utils/api'
-import './styles.css'
+import { Container } from './styles'
 
 export default function CoronaCard() {
 
@@ -21,8 +20,8 @@ export default function CoronaCard() {
     }, [])
 
     return (
-        <div id='corona_container' style={{borderRadius: 8, backgroundImage: `url(${image})`, width: '100%', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>                  
-            <div id='corona_info'>
+        <Container>                  
+            <div className='corona_info'>
                 <div style={{marginLeft: 41, marginTop: 57}}>
                     <p style={{fontSize: 55, marginBottom: 10}}>
                     CORONA VIRUS
@@ -50,6 +49,6 @@ export default function CoronaCard() {
                 </div>
 
             </div>
-        </div>
+        </ Container>
     )
 }

@@ -1,6 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 
 export default createGlobalStyle`
+
    * {
       margin: 0;
       padding: 0;
@@ -23,7 +24,7 @@ export default createGlobalStyle`
 
    .main {
       max-width: 1200px;
-      margin-left: auto;
-      margin-right: auto;
+      margin-left: 3em;
+      margin-right: 3em;
    }
 `;

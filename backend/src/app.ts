@@ -14,9 +14,10 @@ export default class App {
 
     constructor() {
         this.app = express();
+        this.initializeMiddlewares();
     }
 
-    private middlewares(): void {
+    private initializeMiddlewares(): void {
         this.app.use(express.json());
         this.app.use(cors());
         
@@ -36,14 +37,13 @@ export default class App {
     }
     
     public async start(port? : number, args? : any): Promise<void> {
-        try {
-            const con = await connection;
-            
-            this.middlewares();
+        try {           
+	        const con = await connection;
+
             this.linkAllRoutes();
             this.workers();
-
-            // Para inserir a informação sobre o corona quando iniciar o sistema
+            
+	    // Para inserir a informação sobre o corona quando iniciar o sistema
             await workerCovidInfo();
     
             if (port) {
@@ -57,12 +57,13 @@ export default class App {
             }
             console.log('App is online!');
         } catch (err) {
-            console.log(err.message);
+            console.error(err.message);
             console.error('Unable to initiate the app!');
             if (err instanceof QueryFailedError) {
                 console.error('There is a error on the typeorm query!');
-            }
-        }
+            } 
+            process.exit(1);
+	}
 
     }
 }

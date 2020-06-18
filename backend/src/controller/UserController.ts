@@ -1,7 +1,10 @@
-import { Repository, getConnection, DeleteResult } from "typeorm";
+import { Repository, getConnection, DeleteResult, QueryFailedError } from "typeorm";
 import { Request, Response } from 'express';
 import * as bcrypt from 'bcryptjs';
 import { User, UserRole } from '../model/User';
+
+import BaseError from '../errors/BaseError';
+import NotFound from '../errors/NotFound';
 
 // unused
 //import { validate } from 'class-validator';
@@ -121,25 +124,25 @@ export default class UserController {
         return user;
     }
 
-    public async getAll(req : Request, res : Response) : Promise<Response> {
+    public async getAll(req : Request, res : Response, next) : Promise<Response> {
         const users = await this.repository.find();
         if(users && users.length > 0)
             return res.json(users);
-        else
-            return res.status(404).send( { error: 'Not found'} );
+        
+        return next(new NotFound);
     }
 
-    public async getByPk(req : Request, res : Response) : Promise<Response> {
+    public async getByPk(req : Request, res : Response, next) : Promise<Response> {
         const user = await this.repository.findOne(req.params["id"]);
         if(user)
             return res.json(user);
-        else
-            return res.status(404).send( { error: 'Not found'} );
+        
+	return next(new NotFound);
     }
 
-    public async create(req : Request, res : Response) : Promise<Response>{
-        try{
-            const statusCode = await this.validateCreate(req);
+    public async create(req : Request, res : Response, next: Function) : Promise<Response>{
+        try{           
+	    const statusCode = await this.validateCreate(req);
 
             if(statusCode != 200){
                 console.log("a");
@@ -159,16 +162,13 @@ export default class UserController {
             delete result[0].password;
             return res.json(result);
 
-        }catch(err){
-            if(err instanceof Error){
-                console.log(err.stack);
-                console.log(err.message);
-            }
-            return res.status(400).send();
-        }
+        }catch(err){	
+	    return next(err);
+            //return res.status(400).send();
+	}
     }
 
-    public async edit(req : Request, res : Response): Promise<Response> {
+    public async edit(req : Request, res : Response, next): Promise<Response> {
         try{
             const statusCode = await this.validateEdit(req);
             if(statusCode != 200)
@@ -192,15 +192,11 @@ export default class UserController {
 
             return res.json(result);
         }catch(err){
-            if(err instanceof Error){
-                console.log(err.stack);
-                console.log(err.message);
-            }
-            return res.status(400).send();
-        }
+            return next(err);
+	}
     }
 
-    public async delete(req : Request, res : Response): Promise<Response> {
+    public async delete(req : Request, res : Response, next): Promise<Response> {
         try{
             const statusCode = await this.validateDelete(req);
             if(statusCode != 200)
@@ -212,11 +208,7 @@ export default class UserController {
             else
                 return res.status(404).send();
         }catch(err){
-            if(err instanceof Error){
-                console.log(err.stack);
-                console.log(err.message);
-            }
-            return res.status(400).send();
-        }
+            return next(err);
+	}
     }
 }

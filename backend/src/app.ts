@@ -8,6 +8,8 @@ import Routes  from './routes';
 import connection from './database/connection';
 import workerCovidInfo from './services/workerCovidInfo';
 
+//import BaseError from './errors/BaseError';
+
 export default class App {
     public app: Application;
     public routes: Routes;
@@ -35,6 +37,30 @@ export default class App {
         this.routes.defineRoutes();
         this.app.use(this.routes.routes);
     }
+
+    private initializeErrorsHandler() {
+        this.app.use(function (err, req, res, next) {    
+	    console.error(err.stack);
+            console.error(err.message);  
+
+            if (err instanceof QueryFailedError) {
+		console.error(err['detail']);
+		if (Number(err['code']) === 23505) {
+		    let detail = err['detail'].split('=')[0];
+		    detail = detail.split(' ')[1];
+		    detail = detail.replace('(', '');
+		    detail = detail.replace(')', '');
+			//[1].replace(['(', ']'], ' ');	    
+		    err.message = `This ${detail} is already registered`;
+		}
+	    	
+	    }
+	    res.status(err.statusCode || 400);
+            return res.send({
+            errror: err.message,
+            });
+        });
+    }
     
     public async start(args? : any): Promise<void> {
         try {           
@@ -43,6 +69,7 @@ export default class App {
             const con = await connection;
 
             this.linkAllRoutes();
+            this.initializeErrorsHandler();
             this.workers();
             
 	    // Para inserir a informação sobre o corona quando iniciar o sistema

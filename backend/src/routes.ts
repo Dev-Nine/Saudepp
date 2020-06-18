@@ -79,7 +79,6 @@ export default class Routes {
             else 
                 return res.status(400).send( { error: "A error ocurred!" });
                 
-        });       
-
+        });
     }
 }

@@ -36,9 +36,11 @@ export default class App {
         this.app.use(this.routes.routes);
     }
     
-    public async start(port? : number, args? : any): Promise<void> {
+    public async start(args? : any): Promise<void> {
         try {           
-	        const con = await connection;
+	    const port = Number(process.env.PORT) || 3333;
+
+            const con = await connection;
 
             this.linkAllRoutes();
             this.workers();
@@ -46,14 +48,10 @@ export default class App {
 	    // Para inserir a informação sobre o corona quando iniciar o sistema
             await workerCovidInfo();
     
-            if (port) {
-                if (args) {
-                    this.app.listen(port, args, () => console.log(`App running on port ${port}`));
-                } else {
-                    this.app.listen(port, () => console.log(`App running on port ${port}`));
-                }
+            if (args) {
+	        this.app.listen(port, args, () => console.log(`App running on port ${port}`));
             } else {
-                this.app.listen(() => console.log(`Port was not specified, running app`));
+                this.app.listen(port, () => console.log(`App running on port ${port}`));
             }
             console.log('App is online!');
         } catch (err) {

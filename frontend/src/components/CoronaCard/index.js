@@ -21,33 +21,19 @@ export default function CoronaCard() {
 
     return (
         <Container>                  
-            <div className='corona_info'>
-                <div style={{marginLeft: 41, marginTop: 57}}>
-                    <p style={{fontSize: 55, marginBottom: 10}}>
-                    CORONA VIRUS
-                    </p>
-                    <p>
+            <div className="corona-text">
+                <h1>CORONA VIRUS</h1>
+                <p>
                     Fique em <strong>CASA</strong>
                     <br/>
                     Se <strong>PREVINA</strong>
-                    </p>
-                </div>
-                <div style={{marginTop: 85, marginLeft: '30%',display: 'grid', height: 66,gridTemplateRows: '50% 50%'}}>
-                    <p style={{display: 'grid', gridTemplateColumns: '30% 70%'}}>
-                    <strong>
-                        {covid.confirmed}
-                    </strong> 
-                    Casos confirmados
-                    </p>
-                    <p style={{display: 'grid', gridTemplateColumns: '30% 70%'}}>
-                    <strong style={{color: 'red'}}>
-                    {covid.deaths} 
-                    </strong>
-                    
-                    Óbitos confirmados
-                    </p>
-                </div>
-
+                </p>
+            </div>
+            <div className="corona-data">
+                <p><strong>{covid.confirmed}</strong></p>
+                <p>Casos confirmados</p>
+                <p><strong style={{color: 'red'}}>{covid.deaths} </strong></p>
+                <p>Óbitos confirmados</p>
             </div>
         </ Container>
     )

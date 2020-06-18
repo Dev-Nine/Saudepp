@@ -9,6 +9,7 @@ import connection from './database/connection';
 import workerCovidInfo from './services/workerCovidInfo';
 
 //import BaseError from './errors/BaseError';
+import NotFound from './errors/NotFound';
 
 export default class App {
     public app: Application;
@@ -40,11 +41,18 @@ export default class App {
 
     private initializeErrorsHandler() {
         this.app.use(function (err, req, res, next) {    
-	    console.error(err.stack);
-            console.error(err.message);  
+	    // Se estiver em ambiente de desenvolvimento e o erro não for uma instancia de NotFound
+	    if (process.env.DEV && !(err.constructor = NotFound)) {
+		console.error(err.stack);
+            	console.error(err.message);  
+	    }
 
             if (err instanceof QueryFailedError) {
-		console.error(err['detail']);
+		if (process.env.DEV) {
+		    console.error(err['detail']);
+		    console.error(err['code']);
+		}
+
 		if (Number(err['code']) === 23505) {
 		    let detail = err['detail'].split('=')[0];
 		    detail = detail.split(' ')[1];

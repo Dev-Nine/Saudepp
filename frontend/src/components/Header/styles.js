@@ -45,6 +45,7 @@ export const Container = styled.div`
             flex-grow: 1;
             align-items: center;
             justify-content: space-around;
+            
         }
 
         nav a {
@@ -56,6 +57,7 @@ export const Container = styled.div`
             text-decoration: none;
             margin: 0 10px;
             transition: filter 0.2s;
+            
         }
         
         nav a:hover{
@@ -65,7 +67,7 @@ export const Container = styled.div`
         img {
             border-radius: 100%;
             height: 50px;
-            padding: 0 20px;
+            margin-right: 10px;
         }
 
         .icon {

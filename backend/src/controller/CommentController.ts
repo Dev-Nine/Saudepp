@@ -5,6 +5,8 @@ import { User, UserRole } from '../model/User';
 import { Notice } from '../model/Notice';
 import { validate } from 'class-validator';
 
+import NotFound from '../errors/NotFound';
+
 export default class CommentController {
     private repository : Repository<Comment>;
 
@@ -36,20 +38,22 @@ export default class CommentController {
         return 403;
     }
 
-    public async getAll(req : Request, res : Response) : Promise<Response> {
+    public async getAll(req : Request, res : Response, next) : Promise<Response> {
         const comments = await this.repository.find();
         if(comments && comments.length > 0)
             return res.json(comments);
-        else
-            return res.status(404).send( { error: 'Not found'} );
+        
+	const err = new notfound;
+        return next(err);
     }
 
-    public async getByPk(req : Request, res : Response) : Promise<Response> {
+    public async getByPk(req : Request, res : Response, next) : Promise<Response> {
         const comment = await this.repository.findOne(req.params["id"]);
         if(comment)
             return res.json(comment);
-        else
-            return res.status(404).send( { error: 'Not found'} );
+	
+	const err = new notfound;
+        return next(err);
     }
 
     public async processCreateData(req : Request): Promise<Comment> {
@@ -78,7 +82,7 @@ export default class CommentController {
         return comment;
     }
 
-    public async create(req : Request, res : Response) : Promise<Response>{
+    public async create(req : Request, res : Response, next) : Promise<Response>{
         try{
             const statusCode = await this.validateCreate(req);
 
@@ -90,15 +94,11 @@ export default class CommentController {
             const result: Comment[] = await this.repository.save([comment]);
             return res.json(result);
         }catch(err){
-            if(err instanceof Error){
-                console.log(err.stack);
-                console.log(err.message);
-            }
-            return res.status(400).send();
+            return next(err);
         }
     }
 
-    public async edit(req : Request, res : Response): Promise<Response> {
+    public async edit(req : Request, res : Response, next): Promise<Response> {
         try{
             const statusCode = await this.validateEdit(req);
             if(statusCode != 200)
@@ -113,15 +113,11 @@ export default class CommentController {
 
             return res.json(result);
         }catch(err){
-            if(err instanceof Error){
-                console.log(err.stack);
-                console.log(err.message);
-            }
-            return res.status(400).send();
+            return next();
         }
     }
 
-    public async delete(req : Request, res : Response): Promise<Response> {
+    public async delete(req : Request, res : Response, next): Promise<Response> {
         try{
             const statusCode = await this.validateDelete(req);
             if(statusCode != 200)
@@ -133,11 +129,7 @@ export default class CommentController {
             else
                 return res.status(404).send();
         }catch(err){
-            if(err instanceof Error){
-                console.log(err.stack);
-                console.log(err.message);
-            }
-            return res.status(400).send();
+            return next(err);
         }
     }
 }

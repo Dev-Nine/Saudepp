@@ -57,7 +57,11 @@ export const Container = styled.div`
       }
 
       h1 {
-         font-size: 40px;
+         font-size: 32px;
+      }
+
+      .corona-data p, .corona-text p {
+         font-size: 24px;
       }
 
       .corona-data p:nth-child(2) {

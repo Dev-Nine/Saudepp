@@ -1,10 +1,10 @@
 {
-   "name": "Type",
+   "name": "Saudepp",
    "version": "0.0.1",
    "description": "Awesome project developed with TypeORM.",
    "scripts": {
       "start": "ts-node src/server.ts",
-      "dev": "nodemon src/server.ts",
+      "dev": "DEV=true nodemon src/server.ts",
       "build": "tsc",
       "migration:run": "yarn ts-node ./node_modules/typeorm/cli.js migration:run",
       "migration:generate": "yarn ts-node ./node_modules/typeorm/cli.js migration:generate",

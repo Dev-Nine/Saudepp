@@ -4,6 +4,8 @@ import { Request, Response } from 'express';
 import { User, UserRole } from '../model/User';
 import { Tag } from '../model/Tag';
 
+import NotFound from '../errors/NotFound';
+
 export default class NoticeController {
     private repository : Repository<Notice>;
 
@@ -41,20 +43,23 @@ export default class NoticeController {
         return 403;
     }
 
-    public async getAll(req : Request, res : Response) : Promise<Response> {
+    public async getAll(req : Request, res : Response, next) : Promise<Response> {
         const notices = await this.repository.find();
         if(notices && notices.length > 0)
             return res.json(notices);
-        else
-            return res.status(404).send( { error: 'Not found'} );
+	
+	const err = new NotFound;
+        return next(err);
     }
 
-    public async getByPk(req : Request, res : Response) : Promise<Response> {
+    public async getByPk(req : Request, res : Response, next) : Promise<Response> {
         const notice = await this.repository.findOne(req.params["id"]);
         if(notice)
             return res.json(notice);
-        else
-            return res.status(404).send( { error: 'Not found'} );
+	
+	const err = new NotFound;
+        return next(err);
+      
     }
 
     public async processCreateData(req : Request): Promise<Notice> {
@@ -105,7 +110,7 @@ export default class NoticeController {
         return notice;
     }
 
-    public async create(req : Request, res : Response) : Promise<Response>{
+    public async create(req : Request, res : Response, next) : Promise<Response>{
         try{
             const statusCode = await this.validateCreate(req);
 
@@ -120,15 +125,11 @@ export default class NoticeController {
             }
             throw new Error("Needs at least 1 tag or subtag");
         }catch(err){
-            if(err instanceof Error){
-                console.log(err.stack);
-                console.log(err.message);
-            }
-            return res.status(400).send();
+            return next(err);
         }
     }
 
-    public async edit(req : Request, res : Response): Promise<Response> {
+    public async edit(req : Request, res : Response, next): Promise<Response> {
         const { view } = req.query;
 
         if(view == 'true'){
@@ -138,7 +139,7 @@ export default class NoticeController {
                 foundNotice.views++;
                 const result = await repository.save(foundNotice);
                 return res.json(result);
-            })
+            });
         }else{
             try{
                 const statusCode = await this.validateEdit(req);
@@ -157,16 +158,12 @@ export default class NoticeController {
                 throw new Error("Needs at least 1 tag or subtag");
                 
             }catch(err){
-                if(err instanceof Error){
-                    console.log(err.stack);
-                    console.log(err.message);
-                }
-                return res.status(400).send();
+                return next(err);
             }
         }
     }
 
-    public async delete(req : Request, res : Response): Promise<Response> {
+    public async delete(req : Request, res : Response, next): Promise<Response> {
         try{
             const statusCode = await this.validateDelete(req);
             if(statusCode != 200)
@@ -178,11 +175,7 @@ export default class NoticeController {
             else
                 return res.status(404).send();
         }catch(err){
-            if(err instanceof Error){
-                console.log(err.stack);
-                console.log(err.message);
-            }
-            return res.status(400).send();
+            return next(err);
         }
     }
 }

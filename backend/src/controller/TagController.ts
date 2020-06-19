@@ -3,6 +3,8 @@ import { Request, Response } from 'express';
 import { Tag } from '../model/Tag';
 import { UserRole } from '../model/User';
 
+import NotFound from '../errors/NotFound';
+
 export default class TagController {
     private repository : Repository<Tag>;
 
@@ -49,23 +51,25 @@ export default class TagController {
         return tag;
     }
 
-    public async getAll(req : Request, res : Response) : Promise<Response> {
+    public async getAll(req : Request, res : Response, next) : Promise<Response> {
         const tags = await this.repository.find();
         if(tags && tags.length > 0)
             return res.json(tags);
-        else
-            return res.status(404).send( { error: 'Not found'} );
+        
+        const err = new NotFound;
+	return next(err);
     }
 
-    public async getByPk(req : Request, res : Response) : Promise<Response> {
+    public async getByPk(req : Request, res : Response, next) : Promise<Response> {
         const tag = await this.repository.findOne(req.params["id"]);
         if(tag)
             return res.json(tag);
-        else
-            return res.status(404).send( { error: 'Not found'} );
+        
+	const err = new NotFound;
+	return next(err);
     }
 
-    public async create(req : Request, res : Response) : Promise<Response>{
+    public async create(req : Request, res : Response, next) : Promise<Response>{
         try{
             const statusCode = await this.validateCreate(req);
 
@@ -73,19 +77,15 @@ export default class TagController {
                 return res.status(statusCode).send();
 
             const tag: Tag = await this.processCreateData(req);
-
+	    console.log('Criando:', tag);
             const result: Tag[] = await this.repository.save([tag]);
             return res.json(result);
         }catch(err){
-            if(err instanceof Error){
-                console.log(err.stack);
-                console.log(err.message);
-            }
-            return res.status(400).send();
-        }
+            return next(err);
+	}
     }
 
-    public async edit(req : Request, res : Response): Promise<Response> {
+    public async edit(req : Request, res : Response, next): Promise<Response> {
         try{
             const statusCode = await this.validateEdit(req);
             if(statusCode != 200)
@@ -100,15 +100,11 @@ export default class TagController {
 
             return res.json(result);
         }catch(err){
-            if(err instanceof Error){
-                console.log(err.stack);
-                console.log(err.message);
-            }
-            return res.status(400).send();
+            return next(err);
         }
     }
 
-    public async delete(req : Request, res : Response): Promise<Response> {
+    public async delete(req : Request, res : Response, next): Promise<Response> {
         try{
             const statusCode = await this.validateDelete(req);
             if(statusCode != 200)
@@ -120,11 +116,7 @@ export default class TagController {
             else
                 return res.status(404).send();
         }catch(err){
-            if(err instanceof Error){
-                console.log(err.stack);
-                console.log(err.message);
-            }
-            return res.status(400).send();
+	    return next(err);
         }
     }
 }

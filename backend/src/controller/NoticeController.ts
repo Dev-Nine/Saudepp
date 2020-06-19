@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import { User, UserRole } from '../model/User';
 import { Tag } from '../model/Tag';
 
-import NotFound from '../errors/NotFound';
+import { Errors } from '../Errors';
 
 export default class NoticeController {
     private repository : Repository<Notice>;
@@ -48,7 +48,7 @@ export default class NoticeController {
         if(notices && notices.length > 0)
             return res.json(notices);
 	
-	const err = new NotFound;
+	const err = new Errors.NotFound;
         return next(err);
     }
 
@@ -57,7 +57,7 @@ export default class NoticeController {
         if(notice)
             return res.json(notice);
 	
-	const err = new NotFound;
+	const err = new Errors.NotFound;
         return next(err);
       
     }

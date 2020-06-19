@@ -1,4 +1,4 @@
-import { Application } from 'express';
+import { Application, Request, Response } from 'express';
 import { QueryFailedError } from 'typeorm';
 import { scheduleJob } from 'node-schedule';
 import * as express from 'express';
@@ -8,8 +8,7 @@ import Routes  from './routes';
 import connection from './database/connection';
 import workerCovidInfo from './services/workerCovidInfo';
 
-//import BaseError from './errors/BaseError';
-import NotFound from './errors/NotFound';
+import { Errors } from './Errors';
 
 export default class App {
     public app: Application;
@@ -40,13 +39,13 @@ export default class App {
     }
 
     private initializeErrorsHandler() {
-        this.app.use(function (err, req, res, next) {    
+        this.app.use(function (err: Error | Errors.BaseError, req: Request, res: Response, next: Function) {    
 	    // Se estiver em ambiente de desenvolvimento e o erro não for uma instancia de NotFound
-	    if (process.env.DEV && !(err.constructor = NotFound)) {
+	    if (process.env.DEV && !(err.constructor == Errors.NotFound.constructor)) {
 		console.error(err.stack);
             	console.error(err.message);  
 	    }
-
+	    
             if (err instanceof QueryFailedError) {
 		if (process.env.DEV) {
 		    console.error(err['detail']);
@@ -63,9 +62,9 @@ export default class App {
 		}
 	    	
 	    }
-	    res.status(err.statusCode || 400);
+	    res.status((err instanceof Errors.BaseError)? err.statusCode : 400);
             return res.send({
-            errror: err.message,
+		errror: err.message,
             });
         });
     }

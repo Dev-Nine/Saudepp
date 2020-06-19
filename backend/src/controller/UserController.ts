@@ -3,8 +3,7 @@ import { Request, Response } from 'express';
 import * as bcrypt from 'bcryptjs';
 import { User, UserRole } from '../model/User';
 
-import BaseError from '../errors/BaseError';
-import NotFound from '../errors/NotFound';
+import { Errors } from '../Errors';
 
 // unused
 //import { validate } from 'class-validator';
@@ -129,7 +128,7 @@ export default class UserController {
         if(users && users.length > 0)
             return res.json(users);
         
-        return next(new NotFound);
+        return next(new Errors.NotFound);
     }
 
     public async getByPk(req : Request, res : Response, next) : Promise<Response> {
@@ -137,7 +136,7 @@ export default class UserController {
         if(user)
             return res.json(user);
         
-	return next(new NotFound);
+	return next(new Errors.NotFound);
     }
 
     public async create(req : Request, res : Response, next: Function) : Promise<Response>{

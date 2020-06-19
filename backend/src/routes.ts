@@ -1,9 +1,8 @@
-import { Router, Response } from "express";
-import { QueryFailedError, getRepository, getConnection } from "typeorm";
+import { Router } from "express";
+import { getConnection } from "typeorm";
 
 import UserController from "./controller/UserController";
 import NoticeController from "./controller/NoticeController";
-import CommentController from "./controller/CommentController";
 import TagController from "./controller/TagController";
 import SessionController from "./controller/SessionController";
 

@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { Tag } from '../model/Tag';
 import { UserRole } from '../model/User';
 
-import NotFound from '../errors/NotFound';
+import { Errors } from '../Errors';
 
 export default class TagController {
     private repository : Repository<Tag>;
@@ -56,7 +56,7 @@ export default class TagController {
         if(tags && tags.length > 0)
             return res.json(tags);
         
-        const err = new NotFound;
+        const err = new Errors.NotFound;
 	return next(err);
     }
 
@@ -65,7 +65,7 @@ export default class TagController {
         if(tag)
             return res.json(tag);
         
-	const err = new NotFound;
+	const err = new Errors.NotFound;
 	return next(err);
     }
 

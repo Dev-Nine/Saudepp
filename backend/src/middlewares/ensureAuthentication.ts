@@ -5,6 +5,8 @@ import { verify } from 'jsonwebtoken';
 import authConfig from '../config/auth';
 import { User } from '../model/User';
 
+import { Errors } from '../Errors';
+
 interface tokenPayload {
    iat: number;
    exp: number;
@@ -36,14 +38,13 @@ export default function ensureAuthentication(req: Request, res: Response, next: 
             //console.log(decoded);
             return next();
          }else{
-            res.status(403).send({error: "Invalid authorization"});
-         }
+	    throw new Errors.Forbidden;
+	 }
       });
       
    } catch(err) {
       // http 401 = unauthorized
       // http 403 = forbidden
-      console.log(err.message);
-      res.sendStatus(401);
+      throw Errors.Unauthorized;
    }
 }

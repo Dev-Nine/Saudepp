@@ -5,6 +5,8 @@ import { verify } from 'jsonwebtoken';
 import authConfig from '../config/auth';
 import { User } from '../model/User';
 
+import { Errors } from '../Errors';
+
 interface tokenPayload {
    iat: number;
    exp: number;
@@ -37,7 +39,6 @@ export default function ensureAuthentication(req: Request, res: Response, next: 
       
    } catch(err) {
       // http 403 = forbidden
-      console.log(err.message);
-      res.sendStatus(403);
+      throw Errors.Forbidden;
    }
 }

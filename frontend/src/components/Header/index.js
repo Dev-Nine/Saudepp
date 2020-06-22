@@ -51,7 +51,7 @@ class Header extends Component {
                             <a href="#">Sobre nós</a>
                         </nav>
                         <img 
-                            src="https://avatars1.githubusercontent.com/u/44099109?s=460&v=4" 
+                            src="https://i.redd.it/kgqvza99pno21.jpg" 
                             alt="Avatar"
                         />
                     </div>

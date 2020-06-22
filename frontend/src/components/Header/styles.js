@@ -66,6 +66,7 @@ export const Container = styled.div`
 
         img {
             border-radius: 100%;
+            width: 50px;
             height: 50px;
             margin-right: 10px;
         }

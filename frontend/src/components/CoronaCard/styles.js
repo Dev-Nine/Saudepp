@@ -11,6 +11,8 @@ export const Container = styled.div`
    border-radius: 8px;
    color: #FFF;
    background-image: url(${image});
+   background-size: cover;
+   background-position: center;
    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
    background-color: rgba(0, 0, 0, 0.45);
    background-blend-mode: darken;

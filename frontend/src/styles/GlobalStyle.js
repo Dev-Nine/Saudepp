@@ -24,7 +24,6 @@ export default createGlobalStyle`
    }
 
    .main {
-      max-width: 1200px;
       margin-left: 3em;
       margin-right: 3em;
    }

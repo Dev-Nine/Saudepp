@@ -27,4 +27,11 @@ export default createGlobalStyle`
       margin-left: 3em;
       margin-right: 3em;
    }
+
+   @media only screen and (max-width: 1099px){
+      .main {
+         margin-left: 1em;
+         margin-right: 1em;
+      }
+   }
 `;

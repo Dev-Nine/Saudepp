@@ -1,8 +1,7 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
-   width: 270px;
-   height: 372px;
+   height: auto;
    display: flex;
    flex-direction: column; 
    
@@ -14,7 +13,9 @@ export const Container = styled.div`
    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
    img {
-      height: 190px;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: cover;
       border-radius: 10px 10px 0 0;
    }
 
@@ -25,18 +26,15 @@ export const Container = styled.div`
    }
 
    div strong {
-      margin-top: 15px;
+      margin-top: 10px;
       font-weight: bold;
       font-size: 24px;
-      line-height: 28px;
 
    }
 
    div p {
       margin-top: 7px;
       font-size: 16px;
-      line-height: 19px;
-      text-align: justify;
 
       margin-bottom: 15px;
 
@@ -46,17 +44,24 @@ export const Container = styled.div`
    div span {
       font-weight: 500;
       font-size: 16px;
-      line-height: 19px;
-
-      text-align: justify;
 
       color: #787878;
    }
 
-   /* @media (max-width: 1250px) {
-      #notice {
-         width: 300px;
-         background-color: #000;
+   @media (max-width: 1099px) {
+      flex-direction: row;
+      
+      img {
+         max-width: 40%;
+         max-height: 40%;
       }
-   } */
+
+      div strong {
+         font-size: 18px;
+      }
+
+      div p, div span {
+         font-size: 14px;
+      }
+   }
 `

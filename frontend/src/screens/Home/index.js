@@ -21,7 +21,7 @@ export default function Home() {
                   da cidade de Presidente Epitácio, trazendo dados e fatos verídicos 
                   em relação a pandemia do Coronavírus e entre outras doenças que continuam presentes na nossa sociedade, como a Dengue.
                </p>
-               <a href="#">Sobre nós</a>
+               <a href="#">Saiba mais</a>
             </ Sobre>
 
             <div>

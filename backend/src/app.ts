@@ -70,7 +70,10 @@ export default class App {
     }
     
     public async start(args? : any): Promise<void> {
-        try {           
+        /*
+	 *  Initialize the express micro-service
+	 */ 
+    	try {           
 	    const port = Number(process.env.PORT) || 3333;
 
             const con = await connection;
@@ -96,6 +99,5 @@ export default class App {
             } 
             process.exit(1);
 	}
-
     }
 }

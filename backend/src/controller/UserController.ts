@@ -23,7 +23,7 @@ export default class UserController {
 
         if(req.user.type == UserRole.ADMIN)
             return 200;
-        return 403;
+        throw Errors.Forbidden;
 
         /* codigo abaixo quando tiver usuario comum
         
@@ -36,12 +36,12 @@ export default class UserController {
         if(!req.user){
             // if(req.body.type == UserRole.COMUM)
             //     return 200;
-            return 403;
+            throw Errors.Forbidden;
         }
 
         // somente usuario adm pode criar profissionais
         if(req.user.type != UserRole.ADMIN && req.body.type == UserRole.PROFISSIONAL)
-            return 403;
+            throw Errors.Forbidden;
 
         return 200;
         */
@@ -54,24 +54,26 @@ export default class UserController {
         // nao pode alterar o seu tipo
         if(req.user.id == req.params.id){
             if(req.body.type && req.body.type != req.user.type)
-                return 403;
+                throw Errors.Forbidden;
             return 200;
         }
 
         // jamais editar um usuario para se tornar adm
         if(req.body.type == UserRole.ADMIN)
-            return 403;
+            throw Errors.Forbidden;
 
         // se for um usuario adm logado
-        if(req.user.type == UserRole.ADMIN){
-            // profissional nao é editado, mas sim criado
-            if(req.body.type == UserRole.PROFISSIONAL || editedUser.type == UserRole.PROFISSIONAL)
-                return 403;
-            // else if(editedUser.type == UserRole.MODERADOR || editedUser.type == UserRole.COMUM)
-            //     return 200;
-        }
+	if(req.body.type) {
+	    if(req.user.type == UserRole.ADMIN){
+		// profissional nao é editado, mas sim criado
+		if(req.body.type == UserRole.PROFISSIONAL || editedUser.type == UserRole.PROFISSIONAL)
+		    throw Errors.Forbidden;
+		// else if(editedUser.type == UserRole.MODERADOR || editedUser.type == UserRole.COMUM)
+		//     return 200;
+	    }
+	}
             
-        return 403;
+        throw Errors.Forbidden;
     }
 
     public async validateDelete(req : Request): Promise<number>{
@@ -86,7 +88,7 @@ export default class UserController {
         if(req.user.type == UserRole.ADMIN && deletedUser.type != UserRole.ADMIN)
             return 200;
 
-        return 403;
+        throw Errors.Forbidden;
     }
 
     public async processCreateData(req : Request): Promise<User> {
@@ -205,7 +207,7 @@ export default class UserController {
             if(result.affected >= 1)
                 return res.status(200).send();
             else
-                return res.status(404).send();
+                throw Errors.NotFound;
         }catch(err){
             return next(err);
 	}

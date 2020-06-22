@@ -11,6 +11,8 @@ import verifyAuthentication from './middlewares/verifyAuthentication'
 
 import { CovidInfo } from "./model/CovidInfo";
 
+import { Errors } from './Errors';
+
 export default class Routes {
     public routes: Router;
     private userController: UserController;
@@ -76,8 +78,7 @@ export default class Routes {
             if (result)
                 return res.json(result);
             else 
-                return res.status(400).send( { error: "A error ocurred!" });
-                
+               throw new Errors.BaseError('A error ocurred'); 
         });
     }
 }

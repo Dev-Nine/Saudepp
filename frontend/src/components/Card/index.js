@@ -9,7 +9,7 @@ export default function Card() {
          <div>
             <strong>Como lavar as mãos</strong>
             <p>
-               Nessa época de pandemia, é extremamente necessáio lavar as mãos
+               Nessa época de pandemia, é extremamente necessário lavar as mãos!
             </p>
             <span>Postado a 5 minutos</span>
             <span>Leandro R.</span>

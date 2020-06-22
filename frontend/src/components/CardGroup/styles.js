@@ -1,10 +1,10 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
+   margin-bottom: 30px;
+
    h1 {
       font-size: 26px;
-      line-height: 30px;
-
       color: #000000;
    }
 
@@ -19,34 +19,25 @@ export const Container = styled.div`
    }
 
    ul {
-      margin-top:15px;
-      margin-bottom: 30px;
+      margin-top: 15px;
 
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(4, minmax(200px, 330px));
+      gap: 2rem;
 
-      justify-content: space-between;
+      justify-content: space-around;
       
       list-style: none;
    }
 
    li {
-      background: #FFF;
-
-      position: relative;
-   
+      background: #FFF;   
       border-radius: 8px;
    }
 
-   /* @media (max-width: 1250px) {
-      div {
-         margin-left: 15px
-      }
-
+   @media (max-width: 1099px) {
       ul {
-         grid-template-columns: repeat(2, 1fr);
-         justify-content: space-between;
-
+         grid-template-columns: repeat(1, 1fr);
       }
-   } */
+   }
 `

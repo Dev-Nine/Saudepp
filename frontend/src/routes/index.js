@@ -17,10 +17,10 @@ export default function Routes() {
 	    <Route path="/" exact component={ Home } />
             <Route path="/login" exact component={ Login }/>
 	    <Route path="/notices/:noticeId" exact component={ NoticeDisplay }/>
-	    <Route path="/painel/notices" exact component={ CreateNoticies }/>
-            <Route path="/painel/register" exact component={ Register }/> 
+	    <Route path="/painel/notices" isPrivate exact component={ CreateNoticies }/>
+            <Route path="/painel/register" isPrivate exact component={ Register }/> 
             <Route path="/painel/register/professional" isPrivate exact component={ RegisterProfessional }/>
-	    <Route pasth="/painel/register/medic" exact component={ RegisterMedic }/>
+	    <Route pasth="/painel/register/medic" isPrivate exact component={ RegisterMedic }/>
 	    <Route path="" component={ NotFound }/>      
 	</Switch>
    )

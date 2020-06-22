@@ -16,13 +16,13 @@ export default class UserController {
         this.repository = getConnection().getRepository(User);
     }
 
-    public async validateCreate(req : Request): Promise<number>{
+    public async validateCreate(req : Request): Promise<void>{
         // por enquanto isso é valido somente nessa fase de testes
         if(req.body.type == UserRole.ADMIN)
-            return 200;
+            return;
 
         if(req.user.type == UserRole.ADMIN)
-            return 200;
+            return;
         throw Errors.Forbidden;
 
         /* codigo abaixo quando tiver usuario comum
@@ -47,7 +47,7 @@ export default class UserController {
         */
     }
 
-    public async validateEdit(req : Request): Promise<number>{
+    public async validateEdit(req : Request): Promise<void>{
         const editedUser : User = await this.repository.findOne(req.params.id);
 
         // o proprio usuario pode alterar sua conta, entrentanto:
@@ -55,7 +55,7 @@ export default class UserController {
         if(req.user.id == req.params.id){
             if(req.body.type && req.body.type != req.user.type)
                 throw Errors.Forbidden;
-            return 200;
+            return;
         }
 
         // jamais editar um usuario para se tornar adm
@@ -76,17 +76,17 @@ export default class UserController {
         throw Errors.Forbidden;
     }
 
-    public async validateDelete(req : Request): Promise<number>{
+    public async validateDelete(req : Request): Promise<void>{
         const deletedUser : User = await this.repository.findOne(req.params.id);
 
         // o proprio usuario pode excluir sua conta
         if(req.user.id == req.params.id)
-            return 200;
+            return;
 
         // adm pode excluir a conta de qualquer um
         // exceto outros adms lol
         if(req.user.type == UserRole.ADMIN && deletedUser.type != UserRole.ADMIN)
-            return 200;
+            return;
 
         throw Errors.Forbidden;
     }
@@ -143,12 +143,7 @@ export default class UserController {
 
     public async create(req : Request, res : Response, next: Function) : Promise<Response>{
         try{           
-	    const statusCode = await this.validateCreate(req);
-
-            if(statusCode != 200){
-                console.log("a");
-                return res.status(statusCode).send();
-            }
+	    await this.validateCreate(req);
 
             req["body"].password = await bcrypt.hash(req["body"].password, 8);
 
@@ -171,11 +166,9 @@ export default class UserController {
 
     public async edit(req : Request, res : Response, next): Promise<Response> {
         try{
-            const statusCode = await this.validateEdit(req);
-            if(statusCode != 200)
-                return res.status(statusCode).send();
-
-            if(req["body"].password !== undefined)
+            await this.validateEdit(req);
+            
+	    if(req["body"].password !== undefined)
                 req["body"].password = await bcrypt.hash(req["body"].password, 8);
 
             const user: User = await this.processEditData(req);
@@ -199,11 +192,9 @@ export default class UserController {
 
     public async delete(req : Request, res : Response, next): Promise<Response> {
         try{
-            const statusCode = await this.validateDelete(req);
-            if(statusCode != 200)
-                return res.status(statusCode).send();
-
-            const result: DeleteResult = await this.repository.delete(req.params["id"]);
+            await this.validateDelete(req);
+            
+	    const result: DeleteResult = await this.repository.delete(req.params["id"]);
             if(result.affected >= 1)
                 return res.status(200).send();
             else

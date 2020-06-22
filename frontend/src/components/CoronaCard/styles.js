@@ -53,6 +53,7 @@ export const Container = styled.div`
       flex-direction: column;
       align-items: flex-start;
       padding: 20px 20px;
+      margin: 20px 0;
 
       .corona-data {
          margin-top: 30px;

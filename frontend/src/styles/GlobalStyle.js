@@ -24,6 +24,9 @@ export default createGlobalStyle`
    }
 
    .main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       margin-left: 3em;
       margin-right: 3em;
    }

@@ -4,6 +4,11 @@ export const Container = styled.div`
     /* mobile e desktop */
     background: #ffffff;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    
+    div {
+        max-width: 1300px;
+        margin: 0 auto;
+    }
 
     .menu{
         display: flex;
@@ -32,12 +37,12 @@ export const Container = styled.div`
 
     /* desktop */
     @media only screen and (min-width: 1100px){
+
         .menu{
             padding: 10px 10px;
             max-width: 100%;
-            margin: 0 auto;
-            align-items: center;
             flex-wrap: wrap;
+            
         }
 
         nav {
@@ -77,6 +82,11 @@ export const Container = styled.div`
     }
     /* mobile */
     @media only screen and (max-width: 1099px){
+
+        div {
+            margin: 0 0;
+        }
+
         .menu{
             padding: 10px 40px;
         }

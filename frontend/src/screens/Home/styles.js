@@ -8,6 +8,7 @@ export const Sobre = styled.div`
    border-radius: 8px;
    margin-bottom: 38px;
    padding: 24px 39px;
+   max-width: 1300px;
 
    p {
       color: black;

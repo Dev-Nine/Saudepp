@@ -5,7 +5,8 @@ import data from './testHtml.txt'
 
 import Header from '../../components/Header'
 import CoronaCard from '../../components/CoronaCard'
-import Comment from '../../components/Comment'
+//import Comment from '../../components/Comment'
+import Footer from '../../components/Footer';
 
 import { ContainerNoticia, ContainerComentario, EscreverComentario, TextContainer } from './styles'
 
@@ -24,7 +25,7 @@ export default function NoticeDisplay() {
     return(
         <>
             <Header />
-            <div className='main'>
+	    <div style={{ marginBottom: 50 }} className='main'>
                 <CoronaCard />
                 <ContainerNoticia>
                     <div>
@@ -37,7 +38,8 @@ export default function NoticeDisplay() {
                     </div>
                 </ ContainerNoticia>
                 
-                <ContainerComentario>
+		{/*                
+		<ContainerComentario>
                     <h1>Comentários</h1>
                     <Comment 
                         name="Gustavo Patara" 
@@ -51,7 +53,9 @@ export default function NoticeDisplay() {
                         </EscreverComentario>
                     </form>
                 </ ContainerComentario>
-            </div>
+		*/}
+	    </div>
+	    <Footer />
             
         </>
     )

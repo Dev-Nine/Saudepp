@@ -17,6 +17,7 @@ export const Container = styled.div`
 
     .menu-logo{
         padding: 0 10px;
+	text-decoration: none;
     }
 
     .menu-logo a{

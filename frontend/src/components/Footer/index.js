@@ -51,8 +51,14 @@ const Footer = () => {
                 </div>
             </Content>
             <div>
-                <img src={logo} alt="Presidente Epitácio" />
-            </div>
+                <a 
+		    target="_blank" 
+		    href="http://www.presidenteepitacio.sp.gov.br/"
+		    rel="noopener noreferrer"
+		>
+		    <img src={logo} alt="Presidente Epitácio" />
+		</a>
+	    </div>
         </Container>
     )
 }

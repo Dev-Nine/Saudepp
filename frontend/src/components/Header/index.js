@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+import { Link } from 'react-router-dom';
+
 import { FiMenu } from 'react-icons/fi'
 
 import { Container } from './styles'
@@ -38,10 +40,10 @@ class Header extends Component {
                 <Container>
                     <div>
                         <div className="menu">
-                            <div className="menu-logo">
+                            <Link to="/" className="menu-logo">
                                 <a href="#">Saúde++</a>
                                 <p>Presidente Epitácio - SP</p>
-                            </div>
+                            </Link>
                             <div className="icon" onClick={this.handleIconClick}>
                                 <FiMenu color='#0094DE' size={40} />
                             </div>

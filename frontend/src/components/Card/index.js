@@ -8,7 +8,7 @@ export default function Card({ data }) {
 	data = {
 		id: 19,
 		title: "Como lavar as mãos",
-		text: "Nessa época de pandemia, é extremamente necessário lavar as mãos!",
+		abstract: "Nessa época de pandemia, é extremamente necessário lavar as mãos!",
 		user: {
 		    name: 'Leandro R.'
 		},
@@ -17,13 +17,13 @@ export default function Card({ data }) {
     }    
 
    return (
-      <Container>
+      <Container key={data.id}>
 	<Link to={`/notices/${data.id}`}>
          <img alt='descrição' src='https://www.rbsdirect.com.br/imagesrc/17383078.jpg?w=700' />
          <div>
             <strong>{ data.title }</strong>
             <p>
-		{ data.text }
+		{ data.abstract }
 	    </p>
             <span> { data.date } </span>
             <span> { data.user.name } </span>

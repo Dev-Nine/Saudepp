@@ -177,7 +177,16 @@ export default class UserController {
             //if (errors)
             //    return res.status(400).json({ error: errors})
 
-            const foundUser = await this.repository.findOne(req.params["id"]);
+            const foundUser = await this.repository.findOne(
+		req.params["id"], {
+		select: [
+		    "id", 
+		    "name", 
+		    "email", 
+		    "username", 
+		    "password", 
+		]});
+
             this.repository.merge(foundUser, user);
 
             const result = await this.repository.save(foundUser);

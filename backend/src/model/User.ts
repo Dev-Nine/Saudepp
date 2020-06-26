@@ -43,7 +43,8 @@ export class User {
     @Column({
         type: "enum",
         enum: UserRole,
-        default: UserRole.PROFISSIONAL
+        default: UserRole.PROFISSIONAL,
+	select: false
     })
     @IsInt()
     @Min(0)

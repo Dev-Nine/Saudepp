@@ -42,7 +42,7 @@ export const ContainerNoticia = styled.div`
      font-size: 30px;
      font-family: Roboto;
      font-style: normal;
-     font-weight: bold
+     font-weight: bold;
      color: #000000;
    }
     
@@ -59,6 +59,7 @@ export const ContainerNoticia = styled.div`
    li {
       background: #FFF;   
       border-radius: 8px;
+      height: fit-content;
    }
 
    @media (max-width: 1099px) {

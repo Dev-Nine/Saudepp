@@ -10,40 +10,14 @@ import api from '../../utils/api';
 
 export default function ListNotices() {
     const [tags, setTags]= useState([]);
+    const [selected, setSelected] = useState('');
     const [notices, setNotices] = useState([]);
 
-    function searchNotices(e) {
-	const value = e.target.value;
-	console.log(value);
-	api.get(`/notices?tag=${value}`).then(({ data }) => {
-	    console.log(data);
-	    setNotices(data);
-	});
-    }
-
-    function loadNotices() {
-	if (notices.length > 0) {
-	    return(
-		<ul>
-		    {notices.map(not => <li><Card data={not}/></li>)}
-		</ul>
-	    );
-	} else {
-	    return(
-		<ul>
-		    <li><Card /></li>
-		    <li><Card /></li>
-		    <li><Card /></li>
-		    <li><Card /></li>
-		    <li><Card /></li>
-		    <li><Card /></li>
-		    <li><Card /></li>
-		    <li><Card /></li>
-		    <li><Card /></li>
-		    <li><Card /></li>	
-		</ul>);
-	}
-    }
+    useEffect(() => {
+	api.get(`/notices?tag=${selected}`).then(({ data }) => {
+	    setNotices(data.map(d => <li key={d.id}><Card data={d} /></li>));
+	}); 
+    }, [selected]);
 
     useEffect(() => {
 	api.get('/tags').then(({ data }) => {
@@ -57,24 +31,22 @@ export default function ListNotices() {
 	    <Header/>
 	    <div className="main">
 		<ContainerPesquisa>
-		    <form onSubmit={searchNotices}>
 		    <h1>Pesquisar</h1>
 		    
 		    <Search>
-			<select onChange={searchNotices} name="tags" id="tags" className="select-form">
+			<select onChange={(e) => setSelected(e.target.value)} key='' name="tags" id="tags" className="select-form">
 			    <option value="" default> Selecione as categorias</option>
 			    {
 				tags.map((item) => <option key={item} value={item}>{item}</option>)
 			    }
 			</select>
 		    </Search>
-		    </form>
 		</ContainerPesquisa>
 		
 		<ContainerNoticia> 
-		    {
-			loadNotices()
-		    }
+		    <ul>
+			{ notices }
+		    </ul>
 		</ContainerNoticia>
 	    </div>
 	    <Footer/>

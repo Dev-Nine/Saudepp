@@ -18,6 +18,7 @@ export const ContainerNoticia = styled.div`
     }
 `
 
+
 export const ContainerComentario = styled.div`
     background-color: #F9F7F7;
     padding: 20px 40px;

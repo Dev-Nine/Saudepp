@@ -66,7 +66,7 @@ export const Container = styled.div`
             
         }
         
-        nav a:hover{
+	nav a:hover{
             filter: brightness(80%);
         }
 

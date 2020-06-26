@@ -48,10 +48,10 @@ class Header extends Component {
                                 <FiMenu color='#0094DE' size={40} />
                             </div>
                             <nav className={this.state.dropdown}>
-                                <a href="#">Notícias</a>
-                                <a href="#">Dúvidas frequentes</a>
-                                <a href="#">Painel de controle</a>
-                                <a href="#">Sobre nós</a>
+                                <Link to="/notices">Notícias</Link>
+                                <Link to="#">Dúvidas frequentes</Link>
+                                <Link to="#">Painel de controle</Link>
+                                <Link to="#">Sobre nós</Link>
                             </nav>
                             <img 
                                 src="https://i.redd.it/kgqvza99pno21.jpg" 

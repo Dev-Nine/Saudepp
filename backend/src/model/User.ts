@@ -27,7 +27,7 @@ export class User {
     @MaxLength(8000)
     password: string;
 
-    @Column({ unique: true, length: 50 })
+    @Column({ unique: true, length: 50, select: false })
     @IsString()
     @IsEmail()
     @MinLength(5) // so pra ter certeza kk
@@ -52,14 +52,14 @@ export class User {
 
     // tipo de identificador
     // caso seja profissional, pode ser crm, crf, etc...
-    @Column({ default: "cpf" })
+    @Column({ default: "cpf", select: false })
     @IsString()
     @MaxLength(10)
     identifierType : string
 
     // valor do identificador
     // cada cpf, crm e crf tem o seu próprio
-    @Column()
+    @Column({ select: false })
     @IsString()
     @MaxLength(50)
     identifier: string

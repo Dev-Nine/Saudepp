@@ -14,8 +14,8 @@ export default function RegisterProfessional() {
                     <input className="input-form" type="text" placeholder="Nome"/>
                     <input className="input-form" type="email" placeholder="E-mail"/>
                     <select name="" id="" className="select-form">
-                        <option className="option-form"value="">Farmacêutico/Bioquímico</option>
                         <option className="option-form"value="">Médico</option>
+                        <option className="option-form"value="">Farmacêutico/Bioquímico</option>
                     </select>
                     <div className="group-crf">
                       <section>

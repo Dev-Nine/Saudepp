@@ -23,6 +23,7 @@ export default function ListNotices() {
 	    <Header/>
 	    <div className="main">
 		<ContainerPesquisa>
+		    <form>
 		    <h1>Pesquisar</h1>
 		    
 		    <Search>
@@ -32,6 +33,7 @@ export default function ListNotices() {
 			    }
 			</select>
 		    </Search>
+		    </form>
 		</ContainerPesquisa>
 		
 		<ContainerNoticia> 

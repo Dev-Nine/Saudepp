@@ -1,4 +1,4 @@
-import { Repository, getConnection, DeleteResult } from "typeorm";
+import { Repository, getConnection, DeleteResult, getRepository } from "typeorm";
 import { Notice } from '../model/Notice';
 import { Request, Response } from 'express';
 import { User, UserRole } from '../model/User';
@@ -110,6 +110,12 @@ export default class NoticeController {
         return notice;
     }
 
+    public async verifyTags(tags: Tag[]) {
+	const data = await getRepository(Tag).findByIds(tags.map(tag => (tag.id)));
+
+	return tags.length === data.length;
+    }
+
     public async create(req : Request, res : Response, next) : Promise<Response>{
         try{
             const statusCode = await this.validateCreate(req);
@@ -118,6 +124,11 @@ export default class NoticeController {
                 return res.status(statusCode).send();
 
             const notice: Notice = await this.processCreateData(req);
+
+	    const tags = await this.verifyTags(notice.tags);
+   
+	    if (!tags)
+		throw Error("Tag doesn't exist");
 
             if(notice.tags.length > 0){
                 const result: Notice[] = await this.repository.save([notice]);

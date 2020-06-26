@@ -4,6 +4,7 @@ export const Container = styled.div`
    height: auto;
    display: flex;
    flex-direction: column; 
+    
 
    background: #FFFFFF;
    
@@ -11,6 +12,11 @@ export const Container = styled.div`
    box-sizing: border-box;
    border-radius: 10px;
    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+   a {
+      text-decoration: none;
+      color: black;
+   }
 
    img {
       max-width: 100%;

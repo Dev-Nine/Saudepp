@@ -1,19 +1,34 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 
 import { Container } from './styles'
 
-export default function Card() {
+export default function Card({ data }) {
+    if (!data) {
+	data = {
+		id: 19,
+		title: "Como lavar as mãos",
+		text: "Nessa época de pandemia, é extremamente necessário lavar as mãos!",
+		user: {
+		    name: 'Leandro R.'
+		},
+		date: "2020-06-26T13:00:27.664Z"
+	    }
+    }    
+
    return (
       <Container>
+	<Link to={`/notices/${data.id}`}>
          <img alt='descrição' src='https://www.rbsdirect.com.br/imagesrc/17383078.jpg?w=700' />
          <div>
-            <strong>Como lavar as mãos</strong>
+            <strong>{ data.title }</strong>
             <p>
-               Nessa época de pandemia, é extremamente necessário lavar as mãos!
-            </p>
-            <span>Postado a 5 minutos</span>
-            <span>Leandro R.</span>
+		{ data.text }
+	    </p>
+            <span> { data.date } </span>
+            <span> { data.user.name } </span>
          </div>
+      </Link>
       </ Container>
    )
 }

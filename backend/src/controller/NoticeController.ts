@@ -44,44 +44,43 @@ export default class NoticeController {
     }
 
     public async getAll(req : Request, res : Response, next) : Promise<Response> {
-	try{
-	    if (req.query.tag) {
-	    const queryTag = String(req.query.tag);
-	    console.log(queryTag);
-	    const tag = await getRepository(Tag).findOne(queryTag);
-	    if (!tag)
-		next(Error("Tag doesn't found"));
-		
-		const notices = await this.repository
-		    .createQueryBuilder("notice")
-		    .leftJoinAndSelect("notice.user", "user")
-		    .leftJoinAndSelect("notice.tags", "tags")
-		    .where("notice_tags.tagId = :id", {id: tag.id})
-		    .getMany();
-		
-		res.send(notices);
-	} else {
-	    console.log('oi');
-	    const notices = await this.repository.find();
-	    if(notices && notices.length > 0)
-		return res.json(notices);
-	
-	    const err = new Errors.NotFound;
-	    return next(err);
-	
-	}
-	} catch (err) { 
-	   return next(err);
-	}
+        try{
+            if (req.query.tag) {
+                const queryTag = String(req.query.tag);
+                console.log(queryTag);
+                const tag = await getRepository(Tag).findOne(queryTag);
+                if (!tag)
+                next(Error("Tag not found"));
+            
+                const notices = await this.repository
+                    .createQueryBuilder("notice")
+                    .leftJoinAndSelect("notice.user", "user")
+                    .leftJoinAndSelect("notice.tags", "tags")
+                    .where("notice_tags.tagId = :id", {id: tag.id})
+                    .getMany();
+            
+                res.send(notices);
+            } else {
+                console.log('oi');
+                const notices = await this.repository.find();
+                if(notices && notices.length > 0)
+                return res.json(notices);
+            
+                const err = new Errors.NotFound;
+                return next(err);
+            
+            }
+        } catch (err) { 
+            return next(err);
+        }
     }
 
     public async getByPk(req : Request, res : Response, next) : Promise<Response> {
         const notice = await this.repository.findOne(req.params["id"]);
         if(notice)
             return res.json(notice);
-	
-	const err = new Errors.NotFound;
-        return next(err);
+        const err = new Errors.NotFound;
+            return next(err);
       
     }
 
@@ -148,10 +147,10 @@ export default class NoticeController {
 
             const notice: Notice = await this.processCreateData(req);
 
-	    const tags = await this.verifyTags(notice.tags);
-   
-	    if (!tags)
-		throw Error("Tag doesn't exist");
+            const tags = await this.verifyTags(notice.tags);
+    
+            if (!tags)
+                throw Error("Tag doesn't exist");
 
             if(notice.tags.length > 0){
                 const result: Notice[] = await this.repository.save([notice]);

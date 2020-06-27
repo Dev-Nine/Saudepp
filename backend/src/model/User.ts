@@ -27,7 +27,7 @@ export class User {
     @MaxLength(8000)
     password: string;
 
-    @Column({ unique: true, length: 50, select: false })
+    @Column({ unique: true, length: 50 })
     @IsString()
     @IsEmail()
     @MinLength(5) // so pra ter certeza kk
@@ -44,7 +44,6 @@ export class User {
         type: "enum",
         enum: UserRole,
         default: UserRole.PROFISSIONAL,
-	select: false
     })
     @IsInt()
     @Min(0)

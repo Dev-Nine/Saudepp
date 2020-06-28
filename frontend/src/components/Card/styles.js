@@ -1,10 +1,9 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
-   height: auto;
    display: flex;
    flex-direction: column; 
-    
+   height: 100%;
 
    background: #FFFFFF;
    
@@ -13,13 +12,10 @@ export const Container = styled.div`
    border-radius: 10px;
    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
-   a {
-      text-decoration: none;
-      color: black;
-   }
 
    img {
       max-width: 100%;
+      height: 180px;
       max-height: 100%;
       object-fit: cover;
       border-radius: 10px 10px 0 0;
@@ -27,6 +23,7 @@ export const Container = styled.div`
 
    div {
       display: flex;
+      flex: 1;
       flex-direction: column;
       margin: 5px 15px 5px 15px;
    }
@@ -34,7 +31,7 @@ export const Container = styled.div`
    div strong {
       margin-top: 10px;
       font-weight: bold;
-      font-size: 24px;
+      font-size: 20px;
 
    }
 
@@ -59,6 +56,7 @@ export const Container = styled.div`
       
       img {
          max-width: 40%;
+         height: auto;
          max-height: 40%;
       }
 

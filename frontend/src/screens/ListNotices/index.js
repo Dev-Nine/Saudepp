@@ -14,16 +14,15 @@ export default function ListNotices() {
     const [notices, setNotices] = useState([]);
 
     useEffect(() => {
-	api.get(`/notices?tag=${selected}`).then(({ data }) => {
-	    setNotices(data.map(d => <li key={d.id}><Card data={d} /></li>));
-	}); 
+		api.get(`/notices?tag=${selected}`).then(({ data }) => {
+			setNotices(data.map(d => <li key={d.id}><Card data={d} /></li>));
+		}); 
     }, [selected]);
 
     useEffect(() => {
-	api.get('/tags').then(({ data }) => {
-	    const process = data.map(tag => ( tag.id ));
-	    setTags(process);
-	});
+		api.get('/tags').then(({ data }) => {
+			setTags(data);
+		});
     }, []);
 
     return (
@@ -35,9 +34,13 @@ export default function ListNotices() {
 		    
 		    <Search>
 			<select onChange={(e) => setSelected(e.target.value)} key='' name="tags" id="tags" className="select-form">
-			    <option value="" default> Selecione as categorias</option>
+			    <option value="">Selecione as categorias</option>
 			    {
-				tags.map((item) => <option key={item} value={item}>{item}</option>)
+					tags.map(item => 
+						<option key={item.id} value={item.id}>
+							{item.description}
+						</option>
+					)
 			    }
 			</select>
 		    </Search>

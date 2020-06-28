@@ -17,18 +17,19 @@ export default function Card({ data }) {
     }    
 
    return (
-      <Container key={data.id}>
-	<Link to={`/notices/${data.id}`}>
-         <img alt='descrição' src='https://www.rbsdirect.com.br/imagesrc/17383078.jpg?w=700' />
-         <div>
-            <strong>{ data.title }</strong>
-            <p>
-		{ data.abstract }
-	    </p>
-            <span> { data.date } </span>
-            <span> { data.user.name } </span>
-         </div>
+      
+	<Link to={`/notices/${data.id}`} style={{ textDecoration: 'none', color: 'black' }}>
+        <Container key={data.id}>
+            <img alt='descrição' src='https://www.rbsdirect.com.br/imagesrc/17383078.jpg?w=700' />
+            <div>
+                <strong>{ data.title }</strong>
+                <p>
+                { data.abstract }
+                </p>
+                <span> { data.date } </span>
+                <span> { data.user.name } </span>
+            </div>
+        </ Container>
       </Link>
-      </ Container>
    )
 }

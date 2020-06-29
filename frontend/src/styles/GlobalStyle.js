@@ -7,10 +7,14 @@ export default createGlobalStyle`
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      outline: 0
+      outline: 0;
+   }
+   html{
+      height: 100%;
    }
    body {
       background: #FFF;
+      height: 100%;
       -webkit-font-smoothing: antialiased;
    }
    body, input, button, textarea {
@@ -21,6 +25,13 @@ export default createGlobalStyle`
    button {
       cursor: pointer;
       border: none;
+   }
+   
+   #root{
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
    }
 
    .main {

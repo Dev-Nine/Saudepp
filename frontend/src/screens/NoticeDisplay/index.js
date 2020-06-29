@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import parse from 'html-react-parser'
 
 import data from './testHtml.txt'
@@ -26,6 +26,7 @@ export default function NoticeDisplay(props) {
     });
 
     const [isLoading, setIsLoading] = useState(true)
+    var timer = useRef();
     
     function getMonthAsName(month) {
         switch(month + 1){
@@ -59,6 +60,7 @@ export default function NoticeDisplay(props) {
     }
 
     useEffect(() => {
+        var timer;
         const { noticeId } = props.match.params;
         console.log(noticeId);
         if(noticeId !== undefined){
@@ -71,6 +73,10 @@ export default function NoticeDisplay(props) {
                     user: data.user,
                     date : new Date(data.date),
                 });
+                timer = setTimeout(() => {
+                    api.get(`/notices/${noticeId}?viewed=true`);
+                }, 15000)
+
             })
             .catch(err => {
                 alert(err);
@@ -78,6 +84,7 @@ export default function NoticeDisplay(props) {
             .finally(() => {
                 setIsLoading(false);
             });
+            return () => clearTimeout(timer);
         }
     }, [props.match.params]);
 

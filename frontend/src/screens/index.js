@@ -7,6 +7,7 @@ import NoticeDisplay from './NoticeDisplay';
 import Register from './Register';
 import RegisterMedic from './RegisterMedic';
 import RegisterProfessional from './RegisterProfessional';
+import Faq from './Faq';
 
 export { 
    CreateNoticies, 
@@ -17,7 +18,8 @@ export {
    NoticeDisplay, 
    Register, 
    RegisterMedic, 
-   RegisterProfessional
+   RegisterProfessional,
+   Faq
 }
 
 

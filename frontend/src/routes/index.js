@@ -10,7 +10,8 @@ import {
 	NotFound,
 	NoticeDisplay,
 	Register,
-	RegisterMedic
+	RegisterMedic,
+	Faq
 } from '../screens' 
 
 export default function Routes() {
@@ -19,6 +20,7 @@ export default function Routes() {
 	    <Route path="/" exact component={ Home } />
             <Route path="/login" exact component={ Login }/>
 	    <Route path="/notices" exact component={ ListNotices }/>
+	    <Route path="/faq" exact component={ Faq }/>
 	    <Route path="/notices/:noticeId" exact component={ NoticeDisplay }/>
 	    <Route path="/painel/notices" isPrivate exact component={ CreateNoticies }/>
             <Route path="/painel/register" isPrivate exact component={ Register }/> 

@@ -41,7 +41,7 @@ class Header extends Component {
                     <div>
                         <div className="menu">
                             <Link to="/" className="menu-logo">
-                                <a href="#">Saúde++</a>
+                                <p>Saúde++</p>
                                 <p>Presidente Epitácio - SP</p>
                             </Link>
                             <div className="icon" onClick={this.handleIconClick}>

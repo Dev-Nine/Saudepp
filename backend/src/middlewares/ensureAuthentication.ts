@@ -27,7 +27,11 @@ export default function ensureAuthentication(req: Request, res: Response, next: 
 
       const {sub} = decoded as tokenPayload;
 
-      getConnection().getRepository(User).findOne(sub)
+      getConnection().getRepository(User).findOne(sub, {
+         select: [
+             "id", 
+             "type"
+         ]})
          .then(function(user : User){
          if(user !== undefined){
             req.user = {

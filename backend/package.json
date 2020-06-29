@@ -6,9 +6,11 @@
       "start": "ts-node src/server.ts",
       "dev": "nodemon src/server.ts",
       "build": "tsc",
-      "migration:run": "yarn ts-node ./node_modules/typeorm/cli.js migration:run",
-      "migration:generate": "yarn ts-node ./node_modules/typeorm/cli.js migration:generate",
-      "migration:revert": "yarn ts-node ./node_modules/typeorm/cli.js migration:revert"
+      "migration:run": "ts-node ./node_modules/typeorm/cli.js migration:run",
+      "migration:generate": "ts-node ./node_modules/typeorm/cli.js migration:generate",
+      "migration:revert": "ts-node ./node_modules/typeorm/cli.js migration:revert",
+      "typeorm": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+      "dev:server": "ts-node-dev -r tsconfig-paths/register --inspect --transpileOnly --ignore-watch node_modules src/shared/infra/http/server.ts"
    },
    "devDependencies": {
       "@types/bcryptjs": "^2.4.2",
@@ -22,11 +24,13 @@
       "eslint": "^6.8.0",
       "nodemon": "^2.0.2",
       "ts-node": "3.3.0",
-      "typescript": "3.3.3333"
+      "typescript": "3.3.3333",
+      "@types/cheerio": "^0.22.18",
+      "@types/jsonwebtoken": "^8.3.9"
+      
+      
    },
    "dependencies": {
-      "@types/cheerio": "^0.22.18",
-      "@types/jsonwebtoken": "^8.3.9",
       "axios": "^0.19.2",
       "bcryptjs": "^2.4.3",
       "body-parser": "^1.19.0",

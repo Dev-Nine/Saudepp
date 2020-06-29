@@ -23,6 +23,7 @@ export const Container = styled.div`
 
    div {
       display: flex;
+      overflow-wrap: break-word;
       flex: 1;
       flex-direction: column;
       margin: 5px 15px 5px 15px;
@@ -62,6 +63,7 @@ export const Container = styled.div`
 
       div strong {
          font-size: 18px;
+         
       }
 
       div p, div span {

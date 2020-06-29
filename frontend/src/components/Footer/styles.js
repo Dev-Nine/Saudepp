@@ -4,6 +4,7 @@ export const Container = styled.div`
     background-color: #333333;
     color: #EAEAEA;
     padding: 6%;
+    margin-top: auto;
 
     img {
         width: 30%;

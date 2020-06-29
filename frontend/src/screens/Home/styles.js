@@ -7,7 +7,7 @@ export const Sobre = styled.div`
    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
    border-radius: 8px;
    margin-bottom: 38px;
-   padding: 24px 39px;
+   padding: 24px 40px;
    max-width: 1300px;
 
    p {

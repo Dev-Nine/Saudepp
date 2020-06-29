@@ -20,7 +20,7 @@ export const Container = styled.div`
 	text-decoration: none;
     }
 
-    .menu-logo a{
+    .menu-logo p:first-child{
         font-size: 28px;
         font-weight: bold;
         text-decoration: none;

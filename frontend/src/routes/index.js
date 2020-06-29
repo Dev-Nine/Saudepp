@@ -1,16 +1,17 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-//import Route from './Route'
-import Home from '../screens/Home';
-import Login from '../screens/Login';
-import CreateNoticies from '../screens/CreateNoticies';
-import ListNotices from '../screens/ListNotices';
-import Register from '../screens/Register';
-import RegisterProfessional from '../screens/RegisterProfessional';
-import RegisterMedic from '../screens/RegisterMedic';
-import NoticeDisplay from '../screens/NoticeDisplay'; 
-import NotFound from '../screens/NotFound';
+import {
+	CreateNoticies,
+	Home,
+	ListNotices,
+	Login,
+	RegisterProfessional,
+	NotFound,
+	NoticeDisplay,
+	Register,
+	RegisterMedic
+} from '../screens' 
 
 export default function Routes() {
    return (

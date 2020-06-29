@@ -38,6 +38,7 @@ const AuthProvider = ({children}) => {
    const signOut = useCallback(() => {
       localStorage.removeItem('@Saude:token');
       localStorage.removeItem('@Saude:user');
+      api.defaults.headers.authorization = "";
 
       setData({})
    }, [])

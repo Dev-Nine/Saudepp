@@ -17,7 +17,7 @@ export default function Home() {
             <CoronaCard />
             <Sobre>
                <p>
-                  A plataforma digital denominada Saúde++, visa atualizar e orientar os cidadãos 
+                  &emsp;A plataforma digital denominada Saúde++, visa atualizar e orientar os cidadãos 
                   da cidade de Presidente Epitácio, trazendo dados e fatos verídicos 
                   em relação a pandemia do Coronavírus e entre outras doenças que continuam presentes na nossa sociedade, como a Dengue.
                </p>
@@ -26,7 +26,6 @@ export default function Home() {
 
             <div>
                <CardGroup title='Novas noticias' data='' type='new' />
-               <CardGroup title='Recomendações' data='' type='rec' />
                <CardGroup title='Saúde e bem estar' data='' type='health' />
             </div>
          </div>

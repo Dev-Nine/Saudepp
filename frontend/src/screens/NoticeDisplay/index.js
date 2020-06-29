@@ -9,7 +9,7 @@ import CoronaCard from '../../components/CoronaCard'
 //import Comment from '../../components/Comment'
 import Footer from '../../components/Footer';
 
-import api from '../../utils/api';
+import api from '../../services/api';
 
 import { ContainerNoticia, ContainerComentario, EscreverComentario, TextContainer } from './styles'
 

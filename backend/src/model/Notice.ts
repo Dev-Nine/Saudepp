@@ -10,11 +10,11 @@ export class Notice {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({ length: 70 })
     @IsString()
     title: string;
 
-    @Column()
+    @Column({ length: 120 })
     @IsString()
     abstract: string;
 

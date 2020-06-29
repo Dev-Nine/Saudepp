@@ -40,31 +40,31 @@ export default class App {
 
     private initializeErrorsHandler() {
         this.app.use(function (err: Error | Errors.BaseError, req: Request, res: Response, next: Function) {    
-	    // Se estiver em ambiente de desenvolvimento e o erro não for uma instancia de NotFound
-	    if (process.env.DEV && !(err.constructor == Errors.NotFound.constructor)) {
-		console.error(err.stack);
-            	console.error(err.message);  
-	    }
-	    
-            if (err instanceof QueryFailedError) {
-		if (process.env.DEV) {
-		    console.error(err['detail']);
-		    console.error(err['code']);
-		}
+        // Se estiver em ambiente de desenvolvimento e o erro não for uma instancia de NotFound
+        if (process.env.DEV && !(err.constructor == Errors.NotFound.constructor)) {
+            console.error(err.stack);
+            console.error(err.message);  
+        }
 
-		if (Number(err['code']) === 23505) {
-		    let detail = err['detail'].split('=')[0];
-		    detail = detail.split(' ')[1];
-		    detail = detail.replace('(', '');
-		    detail = detail.replace(')', '');
-			//[1].replace(['(', ']'], ' ');	    
-		    err.message = `This ${detail} is already registered`;
-		}
-	    	
-	    }
-	    res.status((err instanceof Errors.BaseError)? err.statusCode : 400);
+        if (err instanceof QueryFailedError) {
+            if (process.env.DEV) {
+                console.error(err['detail']);
+                console.error(err['code']);
+            }
+
+            if (Number(err['code']) === 23505) {
+                let detail = err['detail'].split('=')[0];
+                detail = detail.split(' ')[1];
+                detail = detail.replace('(', '');
+                detail = detail.replace(')', '');
+                //[1].replace(['(', ']'], ' ');	    
+                err.message = `This ${detail} is already registered`;
+            }
+        }
+
+        res.status((err instanceof Errors.BaseError)? err.statusCode : 400);
             return res.send({
-		errror: err.message,
+                error: err.message,
             });
         });
     }
@@ -73,8 +73,8 @@ export default class App {
         /*
 	 *  Initialize the express micro-service
 	 */ 
-    	try {           
-	    const port = Number(process.env.PORT) || 3333;
+        try {           
+            const port = Number(process.env.PORT) || 3333;
 
             const con = await connection;
 
@@ -82,11 +82,11 @@ export default class App {
             this.initializeErrorsHandler();
             this.workers();
             
-	    // Para inserir a informação sobre o corona quando iniciar o sistema
+        // Para inserir a informação sobre o corona quando iniciar o sistema
             await workerCovidInfo();
-    
+
             if (args) {
-	        this.app.listen(port, args, () => console.log(`App running on port ${port}`));
+            this.app.listen(port, args, () => console.log(`App running on port ${port}`));
             } else {
                 this.app.listen(port, () => console.log(`App running on port ${port}`));
             }
@@ -98,6 +98,6 @@ export default class App {
                 console.error('There is a error on the typeorm query!');
             } 
             process.exit(1);
-	}
+        }
     }
 }

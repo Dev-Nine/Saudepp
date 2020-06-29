@@ -3,6 +3,7 @@ import React from 'react'
 import { Container } from './styles'
 
 import Card from '../Card'
+import { Link } from 'react-router-dom';
 
 export default function CardGroup({title, type, data}) {
     function parseData () {
@@ -31,6 +32,7 @@ export default function CardGroup({title, type, data}) {
             <h1>{title}</h1>
             <hr />
 	    { parseData() } 
+			<Link to="/notices/">Outras notícias &gt;</Link>
          </div>
       </ Container>
    )

@@ -1,31 +1,39 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Users\NL\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js ts-node ./node_modules/typeorm/cli.js migration:generate -n FixCovidConfirmed
+  /home/leeandro/.nvm/versions/node/v12.18.0/bin/node /usr/share/yarn/bin/yarn.js migration:run
 
 PATH: 
-  C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\TDM-GCC-64\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\swipl\bin;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\PuTTY\;C:\ProgramData\chocolatey\bin;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\Java\jdk1.8.0_231\bin;C:\Users\NL\AppData\Local\Programs\Python\Python37\Scripts\;C:\Users\NL\AppData\Local\Programs\Python\Python37\;C:\Users\NL\AppData\Local\Microsoft\WindowsApps;C:\Users\NL\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\NL\AppData\Local\Microsoft\WindowsApps;C:\Users\NL\AppData\Roaming\npm;C:\Program Files\heroku\bin
+  /home/leeandro/.fastlane/bin:/home/leeandro/.zinit/polaris/sbin:/home/leeandro/.zinit/polaris/bin:/home/leeandro/.zinit/polaris/usr/sbin:/home/leeandro/.zinit/polaris/usr/bin:/home/leeandro/.nvm/versions/node/v12.18.0/bin:/home/leeandro/.fastlane/bin:/home/leeandro/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/local/bin:/home/leeandro/Android/Sdk/emulator:/home/leeandro/Android/Sdk/tools:/home/leeandro/Android/Sdk/tools/bin:/home/leeandro/Android/Sdk/platform-tools:/usr/local/bin:/home/leeandro/Android/Sdk/emulator:/home/leeandro/Android/Sdk/tools:/home/leeandro/Android/Sdk/tools/bin:/home/leeandro/Android/Sdk/platform-tools
 
 Yarn version: 
   1.22.4
 
 Node version: 
-  12.16.1
+  12.18.0
 
 Platform: 
-  win32 x64
+  linux x64
 
 Trace: 
-  SyntaxError: C:\Users\NL\Documents\hacking\pulls\Hack-COVID-19\backend\package.json: Unexpected end of JSON input
+  SyntaxError: /home/leeandro/www/Hack-COVID-19/backend/package.json: Unexpected token } in JSON at position 487
       at JSON.parse (<anonymous>)
-      at C:\Users\NL\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:1625:59
+      at /usr/share/yarn/lib/cli.js:1625:59
       at Generator.next (<anonymous>)
-      at step (C:\Users\NL\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:310:30)
-      at C:\Users\NL\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:321:13
+      at step (/usr/share/yarn/lib/cli.js:310:30)
+      at /usr/share/yarn/lib/cli.js:321:13
 
 npm manifest: 
   {
-     "name": "Type",
+     "name": "saudepp",
      "version": "0.0.1",
      "description": "Awesome project developed with TypeORM.",
+     "scripts": {
+        "start": "ts-node src/server.ts",
+        "dev": "nodemon src/server.ts",
+        "build": "tsc",
+        "migration:run": "ts-node ./node_modules/typeorm/cli.js migration:run",
+        "migration:generate": "yarn ts-node ./node_modules/typeorm/cli.js migration:generate",
+        "migration:revert": "yarn ts-node ./node_modules/typeorm/cli.js migration:revert",
+     },
      "devDependencies": {
         "@types/bcryptjs": "^2.4.2",
         "@types/body-parser": "^1.19.0",
@@ -38,11 +46,13 @@ npm manifest:
         "eslint": "^6.8.0",
         "nodemon": "^2.0.2",
         "ts-node": "3.3.0",
-        "typescript": "3.3.3333"
+        "typescript": "3.3.3333",
+        "@types/cheerio": "^0.22.18",
+        "@types/jsonwebtoken": "^8.3.9"
+  
+  
      },
      "dependencies": {
-        "@types/cheerio": "^0.22.18",
-        "@types/jsonwebtoken": "^8.3.9",
         "axios": "^0.19.2",
         "bcryptjs": "^2.4.3",
         "body-parser": "^1.19.0",
@@ -55,12 +65,7 @@ npm manifest:
         "postgres": "^1.0.2",
         "reflect-metadata": "^0.1.10",
         "typeorm": "0.2.24"
-     },
-     "scripts": {
-        "start": "nodemon src/server.ts",
-        "build": "tsc",
-        "migration_run": "yarn ts-node ./node_modules/typeorm/cli.js migration:run",
-        "migration_generate": "yarn ts-node ./node_modules/typeorm/cli.js migration:generate"
+     }
   }
 
 yarn manifest: 

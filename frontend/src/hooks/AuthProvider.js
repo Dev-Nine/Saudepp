@@ -18,9 +18,6 @@ const AuthProvider = ({children}) => {
       return {}
    })
 
-   useEffect(() => {
-      api.get('sessions')
-   }, [data.token])
 
    const signIn = useCallback(async ({email, password}) => {
       const response = await api.post('/sessions', {
@@ -44,6 +41,18 @@ const AuthProvider = ({children}) => {
 
       setData({})
    }, [])
+
+   useEffect(() => {
+      if (!data.token) {
+         return;
+      }
+
+      api.get('sessions').catch(() => {
+         signOut();
+
+         alert('Sessão expirada, entre novamente.')
+      })
+   }, [data.token, signOut])
 
    return (
       <AuthContext.Provider value={{user: data.user, signIn, signOut}}>

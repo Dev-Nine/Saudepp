@@ -18,12 +18,17 @@ export default class UserController {
 
     public async validateCreate(req : Request): Promise<void>{
         // por enquanto isso é valido somente nessa fase de testes
-        if(req.body.type == UserRole.ADMIN)
+	if (!req.body.password || req.body.password.length === 0)
+	    throw Error('Password length must be higher thant 0')
+        
+	if(req.body.type == UserRole.ADMIN)
             return;
 
         if(req.user.type == UserRole.ADMIN)
             return;
-        throw Errors.Forbidden;
+
+
+	throw Errors.Forbidden;
 
         /* codigo abaixo quando tiver usuario comum
         

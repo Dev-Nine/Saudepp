@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import parse from 'html-react-parser'
 
 import data from './testHtml.txt'
+import loadingNotice from '../../assets/loadingNotice.png'
 
 import Header from '../../components/Header'
 import CoronaCard from '../../components/CoronaCard'
@@ -15,16 +16,19 @@ import { ContainerNoticia, ContainerComentario, EscreverComentario, TextContaine
 export default function NoticeDisplay(props) {
 
     const [content, setContent] = useState({
-        title: "Como lavar as mãos",
-        abstract: "Nessa epóca de pandemia, é extramente necessário lavar as mãos!",
-        text: "",
+        title: "",
+        abstract: "",
         user: {
-            name: "Leandro Ribeiro"
-        }
+            name: ""
+        },
+        date : "",
+        text: ""
     });
+
+    const [isLoading, setIsLoading] = useState(true)
     
     function getMonthAsName(month) {
-        switch(month){
+        switch(month + 1){
             default:
                 return "";
             case 1:
@@ -55,23 +59,27 @@ export default function NoticeDisplay(props) {
     }
 
     useEffect(() => {
-        const { noticeId } = props.match.params.noticeId;
+        const { noticeId } = props.match.params;
         console.log(noticeId);
-        if(noticeId === undefined){
-            fetch(data)
-            .then(res => res.text())
-            .then(html => {
+        if(noticeId !== undefined){
+            api.get(`/notices/${noticeId}`).then(({ data }) => {
+                console.log(data);
                 setContent({
-                    ...content,
-                    text: html
+                    title: data.title,
+                    text: data.text,
+                    abstract: data.abstract,
+                    user: data.user,
+                    date : new Date(data.date),
                 });
             })
-        }else{
-            api.get(`/notices/${noticeId}`).then(({ data }) => {
-                
-            }); 
+            .catch(err => {
+                alert(err);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
         }
-    }, [content, props.match.params, props.match.params.id]);
+    }, [props.match.params]);
 
     return(
         <>
@@ -79,14 +87,20 @@ export default function NoticeDisplay(props) {
 	    <div style={{ marginBottom: 50 }} className='main'>
                 <CoronaCard />
                 <ContainerNoticia>
+                    { isLoading ? <img src={loadingNotice}/> :
                     <div>
                         <h1>{content.title}</h1>
                         <p>{content.abstract}</p>
-                        <p>Escrito por {content.user.name} - 1 de abril de 2020</p>
+                        { content.date === "" ? undefined :
+                        <p>
+                            Escrito por {content.user.name} - {content.date.getDate()} de {getMonthAsName(content.date.getMonth())} de {content.date.getFullYear()}
+                        </p>
+                        }
                         <TextContainer>
                             {parse(content.text)}
                         </TextContainer>
                     </div>
+                    }
                 </ ContainerNoticia>
                 
 		{/*                

@@ -1,4 +1,6 @@
 import styled from 'styled-components'
+import { shade } from 'polished'
+
 
 export const Container = styled.div`
    display: flex;
@@ -11,6 +13,15 @@ export const Container = styled.div`
    box-sizing: border-box;
    border-radius: 10px;
    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+   transition: border-color 0.4s;
+   transition: background-color 0.4s;
+
+   &:hover {
+      border-color: ${shade(0.3, '#a2a2a2')};
+      background: ${shade(0.08, '#fff')};
+
+   };
 
 
    img {

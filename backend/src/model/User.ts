@@ -16,7 +16,7 @@ export class User {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ unique: true, length: 20 })
+    @Column({ unique: true, length: 20, select: false })
     @IsString()
     @MinLength(2)
     @MaxLength(20)
@@ -27,7 +27,7 @@ export class User {
     @MaxLength(8000)
     password: string;
 
-    @Column({ unique: true, length: 50 })
+    @Column({ unique: true, length: 50, select: false })
     @IsString()
     @IsEmail()
     @MinLength(5) // so pra ter certeza kk
@@ -44,6 +44,7 @@ export class User {
         type: "enum",
         enum: UserRole,
         default: UserRole.PROFISSIONAL,
+        select: false
     })
     @IsInt()
     @Min(0)

@@ -24,17 +24,7 @@ export default class SessionController {
       }
    }
 
-   public async validateToken (req: Request, res: Response, next) : Promise<any> {
-      const {token} = req.body;
-      if(token){
-         try{
-            const decoded = jwt.verify(token, authConfig.jwt.secret);
-            if(decoded)
-               return res.status(203).send();
-         }catch(err){
-            return res.status(401).send({ error: err.message });
-         }
-      }
-      return res.status(401).send();
+   public async index (req: Request, res: Response, next) : Promise<any> {
+      return res.status(204).send();
    }
 }

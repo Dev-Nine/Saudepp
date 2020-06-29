@@ -61,7 +61,7 @@ export default class Routes {
 
         // SESSÕES (LOGIN)
         this.routes.post("/sessions", this.sessionController.auth.bind(this.sessionController));
-        this.routes.get("/sessions", this.sessionController.validateToken.bind(this.sessionController));
+        this.routes.get("/sessions", this.sessionController.index.bind(this.sessionController));
     
         // COVID (INFO)
         this.routes.get('/covid', async function getInfo (req, res) {

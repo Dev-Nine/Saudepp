@@ -2,10 +2,13 @@ import styled from 'styled-components'
 
 export const Container = styled.div`
    margin-bottom: 30px;
-   display: flex;
-   flex-direction: column;
-   align-items: center;
-   style: none;
+
+   div a {
+      color : blue;
+      font-size: 20px;
+      font-weight: 500;
+      float: right;
+   }
 
    h1 {
       font-size: 26px;
@@ -24,6 +27,7 @@ export const Container = styled.div`
 
    ul {
       margin-top: 15px;
+      margin-bottom: 15px;
 
       display: grid;
       grid-template-columns: repeat(4, minmax(200px, 300px));

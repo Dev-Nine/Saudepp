@@ -76,12 +76,23 @@ export default class NoticeController {
     }
 
     public async getByPk(req : Request, res : Response, next) : Promise<Response> {
-        const notice = await this.repository.findOne(req.params["id"]);
-        if(notice)
-            return res.json(notice);
-        const err = new Errors.NotFound;
-            return next(err);
-      
+        const { viewed } = req.query;
+
+        if(viewed == 'true'){
+            getConnection().transaction(async manager => {
+                const repository = manager.getRepository(Notice);
+                const foundNotice = await repository.findOne(req.params["id"]);
+                foundNotice.views++;
+                const result = await repository.save(foundNotice);
+                return res.json(result);
+            });
+        }else{
+            const notice = await this.repository.findOne(req.params["id"]);
+            if(notice)
+                return res.json(notice);
+            const err = new Errors.NotFound;
+                return next(err);
+        }
     }
 
     public async processCreateData(req : Request): Promise<Notice> {
@@ -163,36 +174,25 @@ export default class NoticeController {
     }
 
     public async edit(req : Request, res : Response, next): Promise<Response> {
-        const { view } = req.query;
+        
+        try{
+            const statusCode = await this.validateEdit(req);
+            if(statusCode != 200)
+                return res.status(statusCode).send();
 
-        if(view == 'true'){
-            getConnection().transaction(async manager => {
-                const repository = manager.getRepository(Notice);
-                const foundNotice = await repository.findOne(req.params["id"]);
-                foundNotice.views++;
-                const result = await repository.save(foundNotice);
+            const notice: Notice = await this.processEditData(req);
+
+            const foundNotice = await this.repository.findOne(req.params["id"]);
+            this.repository.merge(foundNotice, notice);
+
+            if(foundNotice.tags.length > 0){
+                const result = await this.repository.save(foundNotice);
                 return res.json(result);
-            });
-        }else{
-            try{
-                const statusCode = await this.validateEdit(req);
-                if(statusCode != 200)
-                    return res.status(statusCode).send();
-    
-                const notice: Notice = await this.processEditData(req);
-    
-                const foundNotice = await this.repository.findOne(req.params["id"]);
-                this.repository.merge(foundNotice, notice);
-    
-                if(foundNotice.tags.length > 0){
-                    const result = await this.repository.save(foundNotice);
-                    return res.json(result);
-                }
-                throw new Error("Needs at least 1 tag or subtag");
-                
-            }catch(err){
-                return next(err);
             }
+            throw new Error("Needs at least 1 tag or subtag");
+            
+        }catch(err){
+            return next(err);
         }
     }
 

@@ -1,4 +1,4 @@
-import React, {createContext, useCallback, useState, useContext} from 'react'
+import React, {createContext, useCallback, useState, useContext, useEffect} from 'react'
 
 import api from '../utils/api'
 
@@ -10,11 +10,17 @@ const AuthProvider = ({children}) => {
       const user = localStorage.getItem('@Saude:user')
 
       if (token && user) {
+         api.defaults.headers.authorization = `Bearer ${token}`;
+
          return {token, user: JSON.parse(user)};
       }
 
       return {}
    })
+
+   useEffect(() => {
+      api.get('sessions')
+   }, [data.token])
 
    const signIn = useCallback(async ({email, password}) => {
       const response = await api.post('/sessions', {
@@ -24,6 +30,7 @@ const AuthProvider = ({children}) => {
 
       const {token, user} = response.data;
 
+      api.defaults.headers.authorization = `Bearer ${token}`;
       localStorage.setItem('@Saude:token', token);
       localStorage.setItem('@Saude:user', JSON.stringify(user));
 

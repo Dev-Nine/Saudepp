@@ -38,10 +38,5 @@
             "jsx": "never"
          }
       ]
-   },
-   "settings": {
-      "import/resolver": {
-         "javascript": {}
-      }
    }
 }

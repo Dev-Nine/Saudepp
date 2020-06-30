@@ -17,20 +17,14 @@ export default class UserController {
     }
 
     public async validateCreate(req : Request): Promise<void>{
+        // if (!req.body.password || !(req.body.password.length >= 6))
+        //     throw Error('Password length must be 6 or more characters');
+
         // por enquanto isso é valido somente nessa fase de testes
-	console.log(req.body.password.length > 6);
-	if (!req.body.password || !(req.body.password.length >= 6)) {
-	    throw Error('Password length must have 6 or more characters');
-	} 
-
-	if(req.body.type == UserRole.ADMIN)
+        if(req.body.type == UserRole.ADMIN)
             return;
 
-        if(req.user.type == UserRole.ADMIN)
-            return;
-
-
-	throw Errors.Forbidden;
+        throw Errors.Forbidden;
 
         /* codigo abaixo quando tiver usuario comum
         
@@ -70,15 +64,15 @@ export default class UserController {
             throw Errors.Forbidden;
 
         // se for um usuario adm logado
-	if(req.body.type) {
-	    if(req.user.type == UserRole.ADMIN){
-		// profissional nao é editado, mas sim criado
-		if(req.body.type == UserRole.PROFISSIONAL || editedUser.type == UserRole.PROFISSIONAL)
-		    throw Errors.Forbidden;
-		// else if(editedUser.type == UserRole.MODERADOR || editedUser.type == UserRole.COMUM)
-		//     return 200;
-	    }
-	}
+        if(req.body.type) {
+            if(req.user.type == UserRole.ADMIN){
+                // profissional nao é editado, mas sim criado
+                if(req.body.type == UserRole.PROFISSIONAL || editedUser.type == UserRole.PROFISSIONAL)
+                    throw Errors.Forbidden;
+                // else if(editedUser.type == UserRole.MODERADOR || editedUser.type == UserRole.COMUM)
+                //     return 200;
+            }
+        }
             
         throw Errors.Forbidden;
     }
@@ -108,9 +102,7 @@ export default class UserController {
         user.username = body.username;
         user.identifier = body.identifier;
         user.identifierType = body.identifierType;
-
-        if(body.type >= 0 && body.type <= 3)
-            user.type = body.type;
+        user.type = body.type;
 
         return user;
     }
@@ -125,9 +117,7 @@ export default class UserController {
         user.username = body.username;
         user.identifier = body.identifier;
         user.identifierType = body.identifierType;
-
-        if(body.type >= 0 && body.type <= 3)
-            user.type = body.type;
+        user.type = body.type;
 
         return user;
     }
@@ -150,15 +140,11 @@ export default class UserController {
 
     public async create(req : Request, res : Response, next: Function) : Promise<Response>{
         try{           
-	    await this.validateCreate(req);
+        await this.validateCreate(req);
 
             req["body"].password = await bcrypt.hash(req["body"].password, 8);
 
             const user: User = await this.processCreateData(req);
-
-            //const errors = await this.validateData(user);
-            //if (errors)
-            //    return res.status(400).send({ error: errors });
 
             const result: User[] = await this.repository.save([user]);
             delete result[0].id;
@@ -166,16 +152,16 @@ export default class UserController {
             return res.json(result);
 
         }catch(err){	
-	    return next(err);
+            return next(err);
             //return res.status(400).send();
-	}
+        }
     }
 
     public async edit(req : Request, res : Response, next): Promise<Response> {
         try{
             await this.validateEdit(req);
             
-	    if(req["body"].password !== undefined)
+            if(req["body"].password !== undefined)
                 req["body"].password = await bcrypt.hash(req["body"].password, 8);
 
             const user: User = await this.processEditData(req);
@@ -185,14 +171,14 @@ export default class UserController {
             //    return res.status(400).json({ error: errors})
 
             const foundUser = await this.repository.findOne(
-		req.params["id"], {
-		select: [
-		    "id", 
-		    "name", 
-		    "email", 
-		    "username", 
-		    "password", 
-		]});
+            req.params["id"], {
+            select: [
+                "id", 
+                "name", 
+                "email", 
+                "username", 
+                "password", 
+            ]});
 
             this.repository.merge(foundUser, user);
 
@@ -210,7 +196,7 @@ export default class UserController {
         try{
             await this.validateDelete(req);
             
-	    const result: DeleteResult = await this.repository.delete(req.params["id"]);
+        const result: DeleteResult = await this.repository.delete(req.params["id"]);
             if(result.affected >= 1)
                 return res.status(200).send();
             else

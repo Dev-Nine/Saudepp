@@ -47,21 +47,25 @@ export default class NoticeController {
         try{
             if (req.query.tag) {
                 const queryTag = String(req.query.tag).split(',').map(tag => tag.trim());
-                console.log(queryTag);
-		const tags = await getRepository(Tag).find({where: [ queryTag.map(tag => { id: tag})]}); 
+                const tagObjects = queryTag.map(tag => ({id: tag}));
+                const tags = await getRepository(Tag)
+                    .find({
+                        where: tagObjects
+                    });
                 if (!tags || tags.length === 0)
-		    next(Error("Tag not found"));
+                    next(Error("Tag not found"));
 		
-		const queryBuilder = this.repository
+                const queryBuilder = this.repository
                     .createQueryBuilder("notice")
                     .leftJoinAndSelect("notice.user", "user")
-                    .leftJoinAndSelect("notice.tags", "tags")
-                    .where("notice_tags.tagId = :id", {id: tags[0].id});
-		tags.shift();
-		console.log(tags);
-		for (const tag of tags) {   
-		    queryBuilder.andWhere("notice_tags.tagId = :id", {id: tag.id});
-		}
+                    .leftJoinAndSelect("notice.tags", "tags");
+
+                console.log(tags);
+                tags.map(tag => {
+                    console.log(tag.id);
+                    queryBuilder.andWhere(`notice_tags.tagId = :${tag.id}`, {[tag.id]: tag.id});
+                }) ;
+       
                 const notices = await queryBuilder.getMany();
                 res.send(notices);
             } else {

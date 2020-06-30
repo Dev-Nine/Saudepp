@@ -13,6 +13,10 @@ import { CovidInfo } from "./model/CovidInfo";
 
 import { Errors } from './Errors';
 
+import { celebrate } from 'celebrate';
+import validator from 'cpf-cnpj-validator'
+const Joi = require('@hapi/joi').extend(validator)
+
 export default class Routes {
     public routes: Router;
     private userController: UserController;
@@ -32,11 +36,35 @@ export default class Routes {
 
     public defineRoutes() {
         // USUARIOS
-        this.routes.get("/users", this.userController.getAll.bind(this.userController));
-        this.routes.get("/users/:id", this.userController.getByPk.bind(this.userController));
-        this.routes.post("/users", verifyAuthentication, this.userController.create.bind(this.userController));
-        this.routes.put("/users/:id", ensureAuthentication, this.userController.edit.bind(this.userController));
-        this.routes.delete("/users/:id", ensureAuthentication, this.userController.delete.bind(this.userController));
+        const userSchema = celebrate({
+            body: Joi.object().keys({ 
+                username: Joi.string().required().regex(/^[a-z0-9_]{4,20}$/),
+                password: Joi.string().required().regex(/^[a-zA-Z0-9!@#$%&*]{6,30}$/),
+                email: Joi.string().required().email(),
+                name: Joi.string().required().regex(/^[a-zA-Z ]{4,50}$/),
+                type: Joi.number().required().min(0).max(3),
+                identifierType: Joi.string().default('cpf'),
+                identifier: Joi.when('identifierType', { is: Joi.string().regex(/^cpf$/), then: Joi.document().cpf()})
+            })
+        }, {
+            abortEarly: false
+        });
+
+        this.routes.get("/users", 
+            this.userController.getAll.bind(this.userController));
+        this.routes.get("/users/:id", 
+            this.userController.getByPk.bind(this.userController));
+        this.routes.post("/users",
+            verifyAuthentication, 
+            userSchema,
+            this.userController.create.bind(this.userController));
+        this.routes.put("/users/:id", 
+            ensureAuthentication, 
+            userSchema,
+            this.userController.edit.bind(this.userController));
+        this.routes.delete("/users/:id", 
+            ensureAuthentication, 
+            this.userController.delete.bind(this.userController));
 
         // TAG
         this.routes.get("/tags", this.tagController.getAll.bind(this.tagController));

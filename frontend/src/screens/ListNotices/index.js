@@ -11,7 +11,11 @@ import api from '../../services/api';
 export default function ListNotices() {
     const [tags, setTags]= useState([]);
     const [selected, setSelected] = useState('');
-    const [notices, setNotices] = useState([]);
+	const [notices, setNotices] = useState([]);
+	
+	useEffect(() => {
+		document.title = "Notícias"
+	 })
 
     useEffect(() => {
 		api.get(`/notices?tag=${selected}`).then(({ data }) => {

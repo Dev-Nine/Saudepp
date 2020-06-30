@@ -4,22 +4,30 @@ export const Container = styled.div`
    width: 100%;
    padding: 0 40px;
 
-   h1 {
-      font-size: 48px;
-      color: #0094DE;
+   h2 {
+      font-size: 32px;
    }
    
-   ul {
-      margin-left: 40px;
-      margin-top: 16px;
-   }
 
    ul li {
       list-style: none;
-      margin-bottom: 8px;
+      font-size: 32px;
+      font-weight: 500;
+      margin-bottom: 28px;
    }
 
    ul li:last-child {
+      margin-bottom: 0;
+   }
+
+   li p {
+      font-size: 20px;
+      font-weight: 300;
+      text-align: justify;
+      margin-bottom: 16px;
+   }
+
+   li p:last-child {
       margin-bottom: 0;
    }
 

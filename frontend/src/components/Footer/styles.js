@@ -2,9 +2,17 @@ import styled from 'styled-components'
 
 export const Container = styled.div`
     background-color: #333333;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
     color: #EAEAEA;
-    padding: 6%;
     margin-top: auto;
+
+    .content {
+        max-width: 1300px;
+        width: 100%;
+        padding: 50px;
+    }
 
     img {
         width: 30%;

@@ -8,6 +8,7 @@ import Register from './Register';
 import RegisterMedic from './RegisterMedic';
 import RegisterProfessional from './RegisterProfessional';
 import Faq from './Faq';
+import FaqCovid19 from './Faq/Subpages/Covid19'
 
 export { 
    CreateNoticies, 
@@ -19,7 +20,8 @@ export {
    Register, 
    RegisterMedic, 
    RegisterProfessional,
-   Faq
+   Faq,
+      FaqCovid19,
 }
 
 

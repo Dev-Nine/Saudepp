@@ -6,9 +6,13 @@ import CardGroup from '../../components/CardGroup'
 import Header from '../../components/Header';
 import CoronaCard from '../../components/CoronaCard'
 import Footer from '../../components/Footer'
+import { useEffect } from 'react';
 
 export default function Home() {
-
+   useEffect(() => {
+      document.title = "Home"
+   })
+   
    return (
       <>
          <Header />

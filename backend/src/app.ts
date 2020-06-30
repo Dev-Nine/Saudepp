@@ -8,7 +8,7 @@ import Routes  from './routes';
 import connection from './database/connection';
 import workerCovidInfo from './services/workerCovidInfo';
 
-import { Errors } from './Errors';
+import ErrorHandler from './utils/errorHandler';
 
 export default class App {
     public app: Application;
@@ -39,34 +39,7 @@ export default class App {
     }
 
     private initializeErrorsHandler() {
-        this.app.use(function (err: Error | Errors.BaseError, req: Request, res: Response, next: Function) {    
-        // Se estiver em ambiente de desenvolvimento e o erro não for uma instancia de NotFound
-        if (process.env.DEV && !(err.constructor == Errors.NotFound.constructor)) {
-            console.error(err.stack);
-            console.error(err.message);  
-        }
-
-        if (err instanceof QueryFailedError) {
-            if (process.env.DEV) {
-                console.error(err['detail']);
-                console.error(err['code']);
-            }
-
-            if (Number(err['code']) === 23505) {
-                let detail = err['detail'].split('=')[0];
-                detail = detail.split(' ')[1];
-                detail = detail.replace('(', '');
-                detail = detail.replace(')', '');
-                //[1].replace(['(', ']'], ' ');	    
-                err.message = `This ${detail} is already registered`;
-            }
-        }
-
-        res.status((err instanceof Errors.BaseError)? err.statusCode : 400);
-            return res.send({
-                error: err.message,
-            });
-        });
+        this.app.use(ErrorHandler);
     }
     
     public async start(args? : any): Promise<void> {

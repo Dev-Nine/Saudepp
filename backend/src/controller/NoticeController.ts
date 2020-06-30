@@ -46,19 +46,23 @@ export default class NoticeController {
     public async getAll(req : Request, res : Response, next) : Promise<Response> {
         try{
             if (req.query.tag) {
-                const queryTag = String(req.query.tag);
+                const queryTag = String(req.query.tag).split(',').map(tag => tag.trim());
                 console.log(queryTag);
-                const tag = await getRepository(Tag).findOne(queryTag);
-                if (!tag)
-                next(Error("Tag not found"));
-            
-                const notices = await this.repository
+		const tags = await getRepository(Tag).find({where: [ queryTag.map(tag => { id: tag})]}); 
+                if (!tags || tags.length === 0)
+		    next(Error("Tag not found"));
+		
+		const queryBuilder = this.repository
                     .createQueryBuilder("notice")
                     .leftJoinAndSelect("notice.user", "user")
                     .leftJoinAndSelect("notice.tags", "tags")
-                    .where("notice_tags.tagId = :id", {id: tag.id})
-                    .getMany();
-            
+                    .where("notice_tags.tagId = :id", {id: tags[0].id});
+		tags.shift();
+		console.log(tags);
+		for (const tag of tags) {   
+		    queryBuilder.andWhere("notice_tags.tagId = :id", {id: tag.id});
+		}
+                const notices = await queryBuilder.getMany();
                 res.send(notices);
             } else {
                 console.log('oi');

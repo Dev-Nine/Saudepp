@@ -38,8 +38,10 @@ export default createGlobalStyle`
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-left: 3em;
-      margin-right: 3em;
+      align-self: center;
+      max-width: 1300px;
+      width: 100%;
+      padding: 50px 30px;
    }
 
    @media only screen and (max-width: 1099px){

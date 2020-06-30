@@ -1,6 +1,6 @@
 import React, {useRef, useCallback} from 'react';
 
-import { FiMail, FiLock } from 'react-icons/fi'
+import {FiLock, FiUser } from 'react-icons/fi'
 import * as Yup from 'yup';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
@@ -22,19 +22,35 @@ export default function Login(){
     const handleSubmit = useCallback(async (data) => {
         try {
             formRef.current.setErrors({});
-            
-            const schema = Yup.object().shape({
-                email: Yup.string()
-                .required('Insira um e-mail')
-                .email('Insira um e-mail válido'),
-                password: Yup.string().required('Senha obrigatória'),
-            });
-            
+
+            let schema;
+            let signInData;
+
+            if ( /(.+)@(.+){2,}\.(.+){2,}/.test(data.user)) {
+                schema = Yup.object().shape({
+                    user: Yup.string()
+                        .required('Insira um e-mail')
+                        .email('Insira um e-mail válido'),
+                    password: Yup.string().required('Senha obrigatória'),
+                });
+
+                signInData = {email: data.user, password: data.password}
+            } else {
+                schema = Yup.object().shape({
+                    user: Yup.string()
+                        .required('Insira um Usuário válido')
+                        .min(4),
+                    password: Yup.string().required('Senha obrigatória'),
+                });
+
+                signInData = {username: data.user, password: data.password}
+            }
+
             await schema.validate(data, {
                 abortEarly: false,
             });
 
-            await signIn({email: data.email, password: data.password});
+            await signIn(signInData)
 
             history.push('/')
         } catch (err) {
@@ -54,9 +70,9 @@ export default function Login(){
             <Form ref={formRef} onSubmit={handleSubmit}>
                 <h1>Entre</h1>
                     <Input
-                    icon={FiMail}
-                    name="email"
-                    placeholder="E-Mail"
+                    icon={FiUser}
+                    name="user"
+                    placeholder="Usuário ou E-mail"
                     />
                     <Input
                     icon={FiLock}

@@ -18,9 +18,11 @@ export default class UserController {
 
     public async validateCreate(req : Request): Promise<void>{
         // por enquanto isso é valido somente nessa fase de testes
-	if (!req.body.password || req.body.password.length === 0)
-	    throw Error('Password length must be higher thant 0')
-        
+	console.log(req.body.password.length > 6);
+	if (!req.body.password || !(req.body.password.length >= 6)) {
+	    throw Error('Password length must have 6 or more characters');
+	} 
+
 	if(req.body.type == UserRole.ADMIN)
             return;
 

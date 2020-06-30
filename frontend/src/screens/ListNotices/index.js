@@ -6,7 +6,7 @@ import Card from '../../components/Card';
 
 import { ContainerNoticia, ContainerPesquisa, Search } from './styles';
 
-import api from '../../utils/api';
+import api from '../../services/api';
 
 export default function ListNotices() {
     const [tags, setTags]= useState([]);

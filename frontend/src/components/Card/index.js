@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 import showTime from '../../utils/showTime';
@@ -6,33 +6,36 @@ import showTime from '../../utils/showTime';
 import { Container } from './styles';
 
 export default function Card({ data }) {
-    
-    if (!data) {
-	data = {
-		id: 19,
-		title: "Como lavar as mãos",
-		abstract: "Nessa época de pandemia, é extremamente necessário lavar as mãos!",
-		user: {
-		    name: 'Leandro R.'
-		},
-		date: "2020-06-26T13:00:27.664Z"
-	    }
-    }    
+   if (!data) {
+      data = {
+         id: 19,
+         title: 'Como lavar as mãos',
+         abstract:
+            'Nessa época de pandemia, é extremamente necessário lavar as mãos!',
+         user: {
+            name: 'Leandro R.',
+         },
+         date: '2020-06-26T13:00:27.664Z',
+      };
+   }
 
    return (
-      
-	<Link to={`/notices/${data.id}`} style={{ textDecoration: 'none', color: 'black' }}>
-        <Container key={data.id}>
-            <img alt='descrição' src='https://www.rbsdirect.com.br/imagesrc/17383078.jpg?w=700' />
+      <Link
+         to={`/notices/${data.id}`}
+         style={{ textDecoration: 'none', color: 'black' }}
+      >
+         <Container key={data.id}>
+            <img
+               alt="descrição"
+               src="https://www.rbsdirect.com.br/imagesrc/17383078.jpg?w=700"
+            />
             <div>
-                <strong>{ data.title }</strong>
-                <p>
-                { data.abstract }
-                </p>
-                <span> { showTime(data.date) } </span>
-                <span> { data.user.name } </span>
+               <strong>{data.title}</strong>
+               <p>{data.abstract}</p>
+               <span> {showTime(data.date)} </span>
+               <span> {data.user.name} </span>
             </div>
-        </ Container>
+         </Container>
       </Link>
-   )
+   );
 }

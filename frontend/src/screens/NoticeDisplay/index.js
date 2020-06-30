@@ -1,116 +1,118 @@
-import React, { useEffect, useState, useRef } from 'react'
-import parse from 'html-react-parser'
+import React, { useEffect, useState, useRef } from 'react';
+import parse from 'html-react-parser';
 
-import data from './testHtml.txt'
-import loadingNotice from '../../assets/loadingNotice.png'
+import data from './testHtml.txt';
+import loadingNotice from '../../assets/loadingNotice.png';
 
-import Header from '../../components/Header'
-import CoronaCard from '../../components/CoronaCard'
-//import Comment from '../../components/Comment'
+import Header from '../../components/Header';
+import CoronaCard from '../../components/CoronaCard';
+// import Comment from '../../components/Comment'
 import Footer from '../../components/Footer';
 
 import api from '../../services/api';
 
-import { ContainerNoticia, ContainerComentario, EscreverComentario, TextContainer } from './styles'
+import { ContainerNoticia, TextContainer } from './styles';
 
 export default function NoticeDisplay(props) {
+   const [content, setContent] = useState({
+      title: '',
+      abstract: '',
+      user: {
+         name: '',
+      },
+      date: '',
+      text: '',
+   });
 
-    const [content, setContent] = useState({
-        title: "",
-        abstract: "",
-        user: {
-            name: ""
-        },
-        date : "",
-        text: ""
-    });
+   const [isLoading, setIsLoading] = useState(true);
+   const timer = useRef();
 
-    const [isLoading, setIsLoading] = useState(true)
-    var timer = useRef();
-    
-    function getMonthAsName(month) {
-        switch(month + 1){
-            default:
-                return "";
-            case 1:
-                return "janeiro";
-            case 2:
-                return "fevereiro";
-            case 3:
-                return "março";
-            case 4:
-                return "abril";
-            case 5:
-                return "maio";
-            case 6:
-                return "junho";
-            case 7:
-                return "julho";
-            case 8:
-                return "agosto";
-            case 9:
-                return "setembro";
-            case 10:
-                return "outubro";
-            case 11:
-                return "novembro";
-            case 12:
-                return "dezembro";
-        }
-    }
+   function getMonthAsName(month) {
+      switch (month + 1) {
+         default:
+            return '';
+         case 1:
+            return 'janeiro';
+         case 2:
+            return 'fevereiro';
+         case 3:
+            return 'março';
+         case 4:
+            return 'abril';
+         case 5:
+            return 'maio';
+         case 6:
+            return 'junho';
+         case 7:
+            return 'julho';
+         case 8:
+            return 'agosto';
+         case 9:
+            return 'setembro';
+         case 10:
+            return 'outubro';
+         case 11:
+            return 'novembro';
+         case 12:
+            return 'dezembro';
+      }
+   }
 
-    useEffect(() => {
-        var timer;
-        const { noticeId } = props.match.params;
-        console.log(noticeId);
-        if(noticeId !== undefined){
-            api.get(`/notices/${noticeId}`).then(({ data }) => {
-                console.log(data);
-                setContent({
-                    title: data.title,
-                    text: data.text,
-                    abstract: data.abstract,
-                    user: data.user,
-                    date : new Date(data.date),
-                });
-                timer = setTimeout(() => {
-                    api.get(`/notices/${noticeId}?viewed=true`);
-                }, 15000)
-
+   useEffect(() => {
+      let timer;
+      const { noticeId } = props.match.params;
+      console.log(noticeId);
+      if (noticeId !== undefined) {
+         api.get(`/notices/${noticeId}`)
+            .then(({ data }) => {
+               console.log(data);
+               setContent({
+                  title: data.title,
+                  text: data.text,
+                  abstract: data.abstract,
+                  user: data.user,
+                  date: new Date(data.date),
+               });
+               timer = setTimeout(() => {
+                  api.get(`/notices/${noticeId}?viewed=true`);
+               }, 15000);
             })
-            .catch(err => {
-                alert(err);
+            .catch((err) => {
+               alert(err);
             })
             .finally(() => {
-                setIsLoading(false);
+               setIsLoading(false);
             });
-            return () => clearTimeout(timer);
-        }
-    }, [props.match.params]);
+         return () => clearTimeout(timer);
+      }
+   }, [props.match.params]);
 
-    return(
-        <>
-            <Header />
-	    <div style={{ marginBottom: 50 }} className='main'>
-                <CoronaCard />
-                <ContainerNoticia>
-                    { isLoading ? <img src={loadingNotice}/> :
-                    <div>
-                        <h1>{content.title}</h1>
-                        <p>{content.abstract}</p>
-                        { content.date === "" ? undefined :
+   return (
+      <>
+         <Header />
+         <div style={{ marginBottom: 50 }} className="main">
+            <CoronaCard />
+            <ContainerNoticia>
+               {isLoading ? (
+                  <img src={loadingNotice} />
+               ) : (
+                  <div>
+                     <h1>{content.title}</h1>
+                     <p>{content.abstract}</p>
+                     {content.date === '' ? undefined : (
                         <p>
-                            Escrito por {content.user.name} - {content.date.getDate()} de {getMonthAsName(content.date.getMonth())} de {content.date.getFullYear()}
+                           Escrito por {content.user.name} -{' '}
+                           {content.date.getDate()} de{' '}
+                           {getMonthAsName(content.date.getMonth())} de{' '}
+                           {content.date.getFullYear()}
                         </p>
-                        }
-                        <TextContainer>
-                            {parse(content.text)}
-                        </TextContainer>
-                    </div>
-                    }
-                </ ContainerNoticia>
-                
-		{/*                
+                     )}
+                     <TextContainer>{parse(content.text)}</TextContainer>
+                  </div>
+               )}
+            </ContainerNoticia>
+
+            {/*                
 		<ContainerComentario>
                     <h1>Comentários</h1>
                     <Comment 
@@ -126,9 +128,8 @@ export default function NoticeDisplay(props) {
                     </form>
                 </ ContainerComentario>
 		*/}
-	    </div>
-	    <Footer />
-            
-        </>
-    )
+         </div>
+         <Footer />
+      </>
+   );
 }

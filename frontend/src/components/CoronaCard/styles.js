@@ -1,6 +1,6 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
-import image from '../../image/coronavirus-4833754_1920-1230x450.jpg'
+import image from '../../image/coronavirus-4833754_1920-1230x450.jpg';
 
 export const Container = styled.div`
    position: relative;
@@ -9,7 +9,7 @@ export const Container = styled.div`
    padding: 40px 0;
    margin-bottom: 50px;
    border-radius: 8px;
-   color: #FFF;
+   color: #fff;
 
    background-image: url(${image});
    background-size: cover;
@@ -17,7 +17,7 @@ export const Container = styled.div`
    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
    background-color: rgba(0, 0, 0, 0.45);
    background-blend-mode: darken;
-   
+
    display: flex;
    align-items: center;
    justify-content: space-between;
@@ -25,18 +25,18 @@ export const Container = styled.div`
    h1 {
       font-size: 60px;
    }
-   
+
    div p {
       font-weight: bold;
       font-size: 27px;
    }
-   
+
    div p strong {
-      color: #D3C222;
+      color: #d3c222;
    }
 
    /* desktop */
-   @media only screen and (min-width: 1100px){
+   @media only screen and (min-width: 1100px) {
       div {
          padding: 0 40px;
       }
@@ -51,7 +51,7 @@ export const Container = styled.div`
       }
    }
 
-   @media only screen and (max-width: 1099px){
+   @media only screen and (max-width: 1099px) {
       flex-direction: column;
       align-items: flex-start;
       padding: 20px 20px;
@@ -65,7 +65,8 @@ export const Container = styled.div`
          font-size: 32px;
       }
 
-      .corona-data p, .corona-text p {
+      .corona-data p,
+      .corona-text p {
          font-size: 24px;
       }
 
@@ -73,5 +74,4 @@ export const Container = styled.div`
          margin-bottom: 20px;
       }
    }
-   
- `
+`;

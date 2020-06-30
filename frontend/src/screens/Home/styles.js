@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 export const Sobre = styled.div`
    display: flex;
@@ -28,10 +28,11 @@ export const Sobre = styled.div`
       text-align: justify;
    }
 
-   @media only screen and (max-width: 1099px){
+   @media only screen and (max-width: 1099px) {
       padding: 24px 20px;
 
-      p, a {
+      p,
+      a {
          font-size: 16px;
       }
 
@@ -43,4 +44,4 @@ export const Sobre = styled.div`
          -webkit-box-orient: vertical;
       }
    }
-`
+`;

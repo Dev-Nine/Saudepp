@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 export const Container = styled.div`
    width: 100%;
@@ -6,9 +6,9 @@ export const Container = styled.div`
 
    h1 {
       font-size: 48px;
-      color: #0094DE;
+      color: #0094de;
    }
-   
+
    ul {
       margin-left: 40px;
       margin-top: 16px;
@@ -28,7 +28,6 @@ export const Container = styled.div`
       color: blue;
    }
 
-   @media only screen and (max-width: 1099px){
-
+   @media only screen and (max-width: 1099px) {
    }
-`
+`;

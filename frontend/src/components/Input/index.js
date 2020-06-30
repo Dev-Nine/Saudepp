@@ -1,15 +1,8 @@
-import React, {
-   useEffect,
-   useRef,
-   useState,
-   useCallback,
-} from 'react';
-// import { FiAlertCircle } from 'react-icons/fi';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useField } from '@unform/core';
-import {FiAlertCircle} from 'react-icons/fi'
+import { FiAlertCircle } from 'react-icons/fi';
 
 import { Container, Error } from './styles';
-
 
 const Input = ({ name, icon: Icon, ...rest }) => {
    const inputRef = useRef(null);
@@ -20,7 +13,7 @@ const Input = ({ name, icon: Icon, ...rest }) => {
    const handleInputBlur = useCallback(() => {
       setIsFocused(false);
 
-      setIsFilled(!!inputRef.current?.value);
+      setIsFilled(!!inputRef.current.value);
    }, []);
 
    const handleInputFocus = useCallback(() => setIsFocused(true), []);

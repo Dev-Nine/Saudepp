@@ -8,23 +8,18 @@ import Register from './Register';
 import RegisterMedic from './RegisterMedic';
 import RegisterProfessional from './RegisterProfessional';
 import Faq from './Faq';
-import FaqCovid19 from './Faq/Subpages/Covid19'
+import FaqCovid19 from './Faq/Subpages/Covid19';
 
-export { 
-   CreateNoticies, 
-   Home, 
-   ListNotices, 
-   Login, 
-   NotFound, 
-   NoticeDisplay, 
-   Register, 
-   RegisterMedic, 
+export {
+   CreateNoticies,
+   Home,
+   ListNotices,
+   Login,
+   NotFound,
+   NoticeDisplay,
+   Register,
+   RegisterMedic,
    RegisterProfessional,
    Faq,
-      FaqCovid19,
-}
-
-
-
-
-
+   FaqCovid19,
+};

@@ -1,82 +1,82 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 export const Container = styled.div`
-    background-color: #333333;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    color: #EAEAEA;
-    margin-top: auto;
+   background-color: #333333;
+   align-items: center;
+   display: flex;
+   flex-direction: column;
+   color: #eaeaea;
+   margin-top: auto;
 
-    .content {
-        max-width: 1300px;
-        width: 100%;
-        padding: 50px;
-    }
+   .content {
+      max-width: 1300px;
+      width: 100%;
+      padding: 50px;
+   }
 
-    img {
-        width: 30%;
-    }
+   img {
+      width: 30%;
+   }
 
-    p {
-        font-weight: 400;
-        margin-bottom: 20px;
-    }
+   p {
+      font-weight: 400;
+      margin-bottom: 20px;
+   }
 
-    hr {
-        width: 40%;
-    }
+   hr {
+      width: 40%;
+   }
 
-    @media only screen and (max-width: 1099px){
-        img {
-            width: 70%;
-        }
-    }
-`
+   @media only screen and (max-width: 1099px) {
+      img {
+         width: 70%;
+      }
+   }
+`;
 
 export const Header = styled.div`
-    margin-bottom: 40px;
-    hr {
-        width: 40%;
-    }
+   margin-bottom: 40px;
+   hr {
+      width: 40%;
+   }
 
-    @media only screen and (max-width: 1099px){
-        margin-bottom: 16px;
+   @media only screen and (max-width: 1099px) {
+      margin-bottom: 16px;
 
-        h1 {
-            font-size: 24px;
-        }
+      h1 {
+         font-size: 24px;
+      }
 
-        hr {
-            display: none;
-        }
-    }
-`
+      hr {
+         display: none;
+      }
+   }
+`;
 
 export const Content = styled.div`
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 40px;
+   display: flex;
+   justify-content: space-between;
+   margin-bottom: 40px;
 
-    hr {
-        width: 200px;
-        margin-bottom: 20px;
-    }
+   hr {
+      width: 200px;
+      margin-bottom: 20px;
+   }
 
-    @media only screen and (max-width: 1099px){
-        flex-direction: column;
+   @media only screen and (max-width: 1099px) {
+      flex-direction: column;
 
-        h2 {
-            margin-top: 10px;
-            font-size: 20px;
-        }
+      h2 {
+         margin-top: 10px;
+         font-size: 20px;
+      }
 
-        hr {
-            width: 100%;
-        }
+      hr {
+         width: 100%;
+      }
 
-        p {
-            margin-bottom: 16px;
-        }
-    }
-`
+      p {
+         margin-bottom: 16px;
+      }
+   }
+`;

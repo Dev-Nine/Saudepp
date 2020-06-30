@@ -1,15 +1,14 @@
-import styled from 'styled-components'
-import { shade } from 'polished'
-
+import styled from 'styled-components';
+import { shade } from 'polished';
 
 export const Container = styled.div`
    display: flex;
-   flex-direction: column; 
+   flex-direction: column;
    height: 100%;
 
-   background: #FFFFFF;
-   
-   border: 1.5px solid #A2A2A2;
+   background: #ffffff;
+
+   border: 1.5px solid #a2a2a2;
    box-sizing: border-box;
    border-radius: 10px;
    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -20,9 +19,7 @@ export const Container = styled.div`
    &:hover {
       border-color: ${shade(0.3, '#a2a2a2')};
       background: ${shade(0.08, '#fff')};
-
-   };
-
+   }
 
    img {
       max-width: 100%;
@@ -44,7 +41,6 @@ export const Container = styled.div`
       margin-top: 10px;
       font-weight: bold;
       font-size: 20px;
-
    }
 
    div p {
@@ -53,7 +49,7 @@ export const Container = styled.div`
 
       margin-bottom: 15px;
 
-      color: #4A4A4A;
+      color: #4a4a4a;
    }
 
    div span {
@@ -65,7 +61,7 @@ export const Container = styled.div`
 
    @media (max-width: 1099px) {
       flex-direction: row;
-      
+
       img {
          max-width: 40%;
          height: auto;
@@ -74,11 +70,11 @@ export const Container = styled.div`
 
       div strong {
          font-size: 18px;
-         
       }
 
-      div p, div span {
+      div p,
+      div span {
          font-size: 14px;
       }
    }
-`
+`;

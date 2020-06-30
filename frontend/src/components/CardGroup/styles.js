@@ -1,10 +1,10 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 export const Container = styled.div`
    margin-bottom: 30px;
 
    div a {
-      color : blue;
+      color: blue;
       font-size: 20px;
       font-weight: 500;
       float: right;
@@ -32,12 +32,12 @@ export const Container = styled.div`
       display: grid;
       grid-template-columns: repeat(4, minmax(200px, 300px));
       gap: 2rem;
-      
+
       list-style: none;
    }
 
    li {
-      background: #FFF;   
+      background: #fff;
       border-radius: 8px;
    }
 
@@ -46,4 +46,4 @@ export const Container = styled.div`
          grid-template-columns: repeat(1, 1fr);
       }
    }
-`
+`;

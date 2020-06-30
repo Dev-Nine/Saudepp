@@ -4,7 +4,7 @@ import { Errors } from '../Errors';
 
 export default function (err: Error | Errors.BaseError, req: Request, res: Response, next: Function) {    
     // Se estiver em ambiente de desenvolvimento e o erro não for uma instancia de NotFound
-    if (process.env.DEV && (!(err.constructor == Errors.NotFound.constructor)) && (!(err.constructor == Errors.MissingJWT.constructor))) {
+    if (process.env.DEV && !(err.name != Errors.BaseError.name)) {
 	console.error(err.stack);
 	console.error(err.message);  
     }

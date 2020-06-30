@@ -10,7 +10,7 @@ import { useAuth } from '../../hooks/AuthProvider'
 
 function Header(){
     const [dropdown, setDropdown] = useState('');
-    const { user } = useAuth();
+    const { user, signOut } = useAuth();
 
     function handleIconClick(event) {
         setDropdown(prevState => {
@@ -45,11 +45,13 @@ function Header(){
                             }
                             <Link to="#">Sobre nós</Link>
                         </nav>
-                        { !!user && 
+                        {user && 
                         <img 
+                            onClick={() => signOut()}
                             src="https://i.redd.it/kgqvza99pno21.jpg" 
                             alt="Avatar"
                         />
+
                         }   
                     </div>
                 </div>

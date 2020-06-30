@@ -63,7 +63,7 @@ export default class NoticeController {
                 console.log(tags);
                 tags.map(tag => {
                     console.log(tag.id);
-                    queryBuilder.andWhere(`notice_tags.tagId = :${tag.id}`, {[tag.id]: tag.id});
+                    queryBuilder.orWhere(`notice_tags.tagId = :${tag.id}`, {[tag.id]: tag.id});
                 }) ;
        
                 const notices = await queryBuilder.getMany();

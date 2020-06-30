@@ -3,7 +3,7 @@ import { createGlobalStyle } from 'styled-components';
 export default createGlobalStyle`
 
    * {
-      overflow-x: hidden; //horizontal
+      /* overflow-x: hidden; //horizontal */
       margin: 0;
       padding: 0;
       box-sizing: border-box;

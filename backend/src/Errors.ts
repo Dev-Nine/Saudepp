@@ -27,4 +27,10 @@ export namespace Errors {
 			this.statusCode = 401;
 		}
     }
+    export class MissingJWT extends BaseError {
+		constructor(){
+			super("JWT Token is missing");
+			this.statusCode = 400;
+		}
+    }
 }

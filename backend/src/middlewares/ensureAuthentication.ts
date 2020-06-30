@@ -6,6 +6,7 @@ import authConfig from '../config/auth';
 import { User } from '../model/User';
 
 import { Errors } from '../Errors';
+import ErrorHandler from '../utils/errorHandler';
 
 interface tokenPayload {
    iat: number;
@@ -18,7 +19,7 @@ export default function ensureAuthentication(req: Request, res: Response, next: 
 
    try {
       if (!authHeader) {
-         throw new Error('JWT Token is missing');
+	throw new Errors.MissingJWT;
       }
    
       const [, token] = authHeader.split(' ');
@@ -49,6 +50,6 @@ export default function ensureAuthentication(req: Request, res: Response, next: 
    } catch(err) {
 	// http 401 = unauthorized
 	// http 403 = forbidden
-	res.status(400).send({ message: err.message });
+	ErrorHandler(err, req, res, next);
     }
 }

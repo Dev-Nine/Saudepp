@@ -10,22 +10,22 @@ export const Search = styled.div`
     font-style: normal;
     
     select {
-	display: block;
-	width: 30%;
-	height: 36px;
-	border-style: hidden;
-    	border-radius: 10px;
-	box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-    
-	font-size: 15px;
-	line-height: 28px;
-	background-color: #FFFFFF;
+        display: block;
+        width: 30%;
+        height: 40px;
+        border-style: hidden;
+        border-radius: 10px;
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
+        font-size: 15px;
+        line-height: 28px;
+        background-color: #FFFFFF;
     }
 
     option {
-	font-size: 15px;
-	line-height: 28px;
-	background-color: #FFFFFF;
+        font-size: 15px;
+        line-height: 28px;
+        background-color: #FFFFFF;
     }
 
 `

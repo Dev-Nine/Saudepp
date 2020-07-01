@@ -67,16 +67,18 @@ export default class NoticeController {
 
                 const data = await (await queryBuilder.getRawMany()).map(obj => obj.id);
 
-                const notices = await this.repository
-                    .createQueryBuilder("notice")
-                    .where("notice.id IN (:...id)", { id : data })
-                    .leftJoinAndSelect("notice.user", "user")
-                    .leftJoinAndSelect("notice.tags", "tags")
-                    .getMany()
-
-                res.send(notices);
+                if(data.length !== 0){
+                    const notices = await this.repository
+                        .createQueryBuilder("notice")
+                        .where("notice.id IN (:...id)", { id : data })
+                        .leftJoinAndSelect("notice.user", "user")
+                        .leftJoinAndSelect("notice.tags", "tags")
+                        .getMany()
+                    res.send(notices);
+                }
+                throw new Errors.NotFound;
+                
             } else {
-                console.log('oi');
                 const notices = await this.repository.find();
                 if(notices && notices.length > 0)
                 return res.json(notices);
@@ -117,7 +119,7 @@ export default class NoticeController {
 
         notice.tags = [];
 
-        if(body.tags !== undefined && body.tags.length > 0){
+        if(body.tags !== undefined){
             for (const tagAttr of body.tags){
                 let tag = new Tag();
                 tag.id = tagAttr.id;
@@ -141,7 +143,7 @@ export default class NoticeController {
         notice.user = new User();
         const body = req["body"];
 
-        if(body.tags !== undefined && body.tags.length > 0){
+        if(body.tags !== undefined){
             notice.tags = [];
             for (const tagAttr of body.tags){
                 let tag = new Tag();
@@ -178,11 +180,8 @@ export default class NoticeController {
             if (!tags)
                 throw Error("Tag doesn't exist");
 
-            if(notice.tags.length > 0){
-                const result: Notice[] = await this.repository.save([notice]);
-                return res.json(result);
-            }
-            throw new Error("Needs at least 1 tag or subtag");
+            const result: Notice[] = await this.repository.save([notice]);
+            return res.json(result);
         }catch(err){
             return next(err);
         }
@@ -200,11 +199,8 @@ export default class NoticeController {
             const foundNotice = await this.repository.findOne(req.params["id"]);
             this.repository.merge(foundNotice, notice);
 
-            if(foundNotice.tags.length > 0){
-                const result = await this.repository.save(foundNotice);
-                return res.json(result);
-            }
-            throw new Error("Needs at least 1 tag or subtag");
+            const result = await this.repository.save(foundNotice);
+            return res.json(result);
             
         }catch(err){
             return next(err);

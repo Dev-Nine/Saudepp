@@ -11,7 +11,7 @@ import verifyAuthentication from './middlewares/verifyAuthentication'
 
 import { CovidInfo } from "./model/CovidInfo";
 
-import { Errors } from './Errors';
+import { BaseError } from './Errors';
 
 import { celebrate } from 'celebrate';
 import validator from 'cpf-cnpj-validator'
@@ -162,7 +162,7 @@ export default class Routes {
             if (result)
                 return res.json(result);
             else 
-               throw new Errors.BaseError('A error ocurred'); 
+               throw new BaseError('A error ocurred'); 
         });
     }
 }

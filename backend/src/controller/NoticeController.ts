@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import { User, UserRole } from '../model/User';
 import { Tag } from '../model/Tag';
 
-import { Errors } from '../Errors';
+import { NotFound } from '../Errors';
 
 export default class NoticeController {
     private repository : Repository<Notice>;
@@ -76,14 +76,14 @@ export default class NoticeController {
                         .getMany()
                     res.send(notices);
                 }
-                throw new Errors.NotFound;
+                throw new NotFound;
                 
             } else {
                 const notices = await this.repository.find();
                 if(notices && notices.length > 0)
                 return res.json(notices);
             
-                const err = new Errors.NotFound;
+                const err = new NotFound;
                 return next(err);
             
             }
@@ -107,7 +107,7 @@ export default class NoticeController {
             const notice = await this.repository.findOne(req.params["id"]);
             if(notice)
                 return res.json(notice);
-            const err = new Errors.NotFound;
+            const err = new NotFound;
                 return next(err);
         }
     }

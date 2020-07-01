@@ -1,11 +1,17 @@
-import {Entity, Column, PrimaryColumn} from "typeorm";
+import {Entity, Column, PrimaryColumn, PrimaryGeneratedColumn} from "typeorm";
 import { IsString, MinLength } from 'class-validator';
 
 @Entity()
 export class Tag {
 
-    @PrimaryColumn()
-    id: string;
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({ 
+        unique: true, 
+    })
+    @MinLength(2)
+    title: string;
 
     @Column()
     @IsString()

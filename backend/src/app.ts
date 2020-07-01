@@ -43,7 +43,7 @@ export default class App {
 	 *  Initialize the express micro-service
 	 */ 
         try {           
-	    const port = Number(process.env.PORT) || 3333;
+			const port = Number(process.env.PORT) || 3333;
 
             this.workers();
             

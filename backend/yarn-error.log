@@ -1,30 +1,21 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Users\NL\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add @types/celebrate --D
+  /home/leeandro/.nvm/versions/node/v12.18.0/bin/node /usr/share/yarn/bin/yarn.js add express-rate-limit
 
 PATH: 
-  C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\TDM-GCC-64\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\swipl\bin;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\PuTTY\;C:\ProgramData\chocolatey\bin;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\Java\jdk1.8.0_231\bin;C:\Users\NL\AppData\Local\Programs\Python\Python37\Scripts\;C:\Users\NL\AppData\Local\Programs\Python\Python37\;C:\Users\NL\AppData\Local\Microsoft\WindowsApps;C:\Users\NL\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\NL\AppData\Local\Microsoft\WindowsApps;C:\Users\NL\AppData\Roaming\npm;C:\Program Files\heroku\bin;C:\Program Files\PostgreSQL\11\bin;
+  /home/leeandro/.fastlane/bin:/home/leeandro/.zinit/polaris/sbin:/home/leeandro/.zinit/polaris/bin:/home/leeandro/.zinit/polaris/usr/sbin:/home/leeandro/.zinit/polaris/usr/bin:/home/leeandro/.nvm/versions/node/v12.18.0/bin:/home/leeandro/.fastlane/bin:/home/leeandro/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/local/bin:/home/leeandro/Android/Sdk/emulator:/home/leeandro/Android/Sdk/tools:/home/leeandro/Android/Sdk/tools/bin:/home/leeandro/Android/Sdk/platform-tools:/usr/local/bin:/home/leeandro/Android/Sdk/emulator:/home/leeandro/Android/Sdk/tools:/home/leeandro/Android/Sdk/tools/bin:/home/leeandro/Android/Sdk/platform-tools
 
 Yarn version: 
   1.22.4
 
 Node version: 
-  12.16.1
+  12.18.0
 
 Platform: 
-  win32 x64
+  linux x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@types%2fcelebrate: Not found
-      at Request.params.callback [as _callback] (C:\Users\NL\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:66987:18)
-      at Request.self.callback (C:\Users\NL\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:140748:22)
-      at Request.emit (events.js:311:20)
-      at Request.<anonymous> (C:\Users\NL\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141720:10)
-      at Request.emit (events.js:311:20)
-      at IncomingMessage.<anonymous> (C:\Users\NL\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141642:12)
-      at Object.onceWrapper (events.js:417:28)
-      at IncomingMessage.emit (events.js:323:22)
-      at endReadableNT (_stream_readable.js:1204:12)
-      at processTicksAndRejections (internal/process/task_queues.js:84:21)
+  Error: getaddrinfo EAI_AGAIN registry.yarnpkg.com
+      at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:66:26)
 
 npm manifest: 
   {
@@ -47,6 +38,7 @@ npm manifest:
         "@types/cheerio": "^0.22.18",
         "@types/cors": "^2.8.6",
         "@types/express": "4.17.4",
+        "@types/hapi__joi": "^17.1.3",
         "@types/jsonwebtoken": "^8.3.9",
         "@types/node": "^8.0.29",
         "@types/node-schedule": "^1.3.0",
@@ -59,19 +51,24 @@ npm manifest:
         "typescript": "3.3.3333"
      },
      "dependencies": {
+        "@hapi/joi": "^17.1.1",
+        "add": "^2.0.6",
         "axios": "^0.19.2",
         "bcryptjs": "^2.4.3",
         "body-parser": "^1.19.0",
         "celebrate": "^12.1.1",
         "class-validator": "^0.12.2",
         "cors": "^2.8.5",
+        "cpf-cnpj-validator": "^1.0.2",
+        "dotenv": "^8.2.0",
         "express": "^4.17.1",
         "jsonwebtoken": "^8.5.1",
         "node-schedule": "^1.3.2",
         "pg": "^8.0.0",
         "postgres": "^1.0.2",
         "reflect-metadata": "^0.1.10",
-        "typeorm": "0.2.24"
+        "typeorm": "0.2.24",
+        "yarn": "^1.22.4"
      }
   }
 
@@ -121,7 +118,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/@hapi/hoek/-/hoek-9.0.4.tgz#e80ad4e8e8d2adc6c77d985f698447e8628b6010"
     integrity sha512-EwaJS7RjoXUZ2cXXKZZxZqieGtc7RbvQhUy8FwDoMQtxWVi14tFjeFCYPZAM1mBCpOpiBpyaZbb9NeHc7eGKgw==
   
-  "@hapi/joi@17.x.x":
+  "@hapi/joi@17.x.x", "@hapi/joi@^17.1.0", "@hapi/joi@^17.1.1":
     version "17.1.1"
     resolved "https://registry.yarnpkg.com/@hapi/joi/-/joi-17.1.1.tgz#9cc8d7e2c2213d1e46708c6260184b447c661350"
     integrity sha512-p4DKeZAoeZW4g3u7ZeRo+vCDuSDgSvtsB/NpfjXEHTUjSeINAi/RrVOWiVQ1isaoLzMvFEhe8n5065mQq1AdQg==
@@ -216,6 +213,11 @@ Lockfile:
       "@types/express-serve-static-core" "*"
       "@types/qs" "*"
       "@types/serve-static" "*"
+  
+  "@types/hapi__joi@^17.1.3":
+    version "17.1.3"
+    resolved "https://registry.yarnpkg.com/@types/hapi__joi/-/hapi__joi-17.1.3.tgz#1b400fcf819e400949a4b4ec7fec73216c4f7088"
+    integrity sha512-3+EUJ+haX1Ix/Lmn//qGE0l3dll7TouN+ukkorTroShhyQniOECd30psoxSUjcVE6vVjaS07mqhRkJ6lUZrrbw==
   
   "@types/json-schema@^7.0.3":
     version "7.0.4"
@@ -349,6 +351,11 @@ Lockfile:
     version "7.1.1"
     resolved "https://registry.yarnpkg.com/acorn/-/acorn-7.1.1.tgz#e35668de0b402f359de515c5482a1ab9f89a69bf"
     integrity sha512-add7dgA5ppRPxCFJoAGfMDi7PIBXq1RtGo7BhbLaxwrXPOmw8gq48Y9ozT01hUKy9byMjlR20EJhu5zlkErEkg==
+  
+  add@^2.0.6:
+    version "2.0.6"
+    resolved "https://registry.yarnpkg.com/add/-/add-2.0.6.tgz#248f0a9f6e5a528ef2295dbeec30532130ae2235"
+    integrity sha1-JI8Kn25aUo7yKV2+7DBTITCuIjU=
   
   ajv@^6.10.0, ajv@^6.10.2:
     version "6.12.0"
@@ -800,6 +807,13 @@ Lockfile:
       object-assign "^4"
       vary "^1"
   
+  cpf-cnpj-validator@^1.0.2:
+    version "1.0.2"
+    resolved "https://registry.yarnpkg.com/cpf-cnpj-validator/-/cpf-cnpj-validator-1.0.2.tgz#cb729d9a1f6694f8b039460da754dbdb0ec08459"
+    integrity sha512-U/KU3kSb8DCfylvMal/rn+BhWO+KRwOq9gYtkMiQpH2spi7W2sNugTAxEIBFOiOyMJ3jQB7LTPYSoTbpXDbXyA==
+    dependencies:
+      "@hapi/joi" "^17.1.0"
+  
   create-error-class@^3.0.0:
     version "3.0.2"
     resolved "https://registry.yarnpkg.com/create-error-class/-/create-error-class-3.0.2.tgz#06be7abef947a3f14a30fd610671d401bca8b7b6"
@@ -943,6 +957,11 @@ Lockfile:
     version "6.2.0"
     resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-6.2.0.tgz#941c0410535d942c8becf28d3f357dbd9d476064"
     integrity sha512-HygQCKUBSFl8wKQZBSemMywRWcEDNidvNbjGVyZu3nbZ8qq9ubiPoGLMdRDpfSrpkkm9BXYFkpKxxFX38o/76w==
+  
+  dotenv@^8.2.0:
+    version "8.2.0"
+    resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
+    integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
   
   duplexer3@^0.1.4:
     version "0.1.4"
@@ -2365,6 +2384,11 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.1.tgz#3cf37023d199e1c24d1a55b84800c2f3e6468031"
     integrity sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==
   
+  rate-limiter-flexible@^2.1.7:
+    version "2.1.7"
+    resolved "https://registry.yarnpkg.com/rate-limiter-flexible/-/rate-limiter-flexible-2.1.7.tgz#5594818c92abac1229ae512cac6a604b39c96b2b"
+    integrity sha512-oq1fBLuMy8RGzs0klc+8jIB2I6D8MIwewdnkebvXIB/WSt7jWKXAf1rlgaZCYCnLO6q9A2rFFKma+QusDANilA==
+  
   raw-body@2.4.0:
     version "2.4.0"
     resolved "https://registry.yarnpkg.com/raw-body/-/raw-body-2.4.0.tgz#a1ce6fb9c9bc356ca52e89256ab59059e13d0332"
@@ -3269,6 +3293,11 @@ Lockfile:
       which-module "^2.0.0"
       y18n "^4.0.0"
       yargs-parser "^18.1.1"
+  
+  yarn@^1.22.4:
+    version "1.22.4"
+    resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.22.4.tgz#01c1197ca5b27f21edc8bc472cd4c8ce0e5a470e"
+    integrity sha512-oYM7hi/lIWm9bCoDMEWgffW8aiNZXCWeZ1/tGy0DWrN6vmzjCXIKu2Y21o8DYVBUtiktwKcNoxyGl/2iKLUNGA==
   
   yn@3.1.1:
     version "3.1.1"

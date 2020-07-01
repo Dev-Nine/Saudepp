@@ -12,9 +12,9 @@ export default async function () {
 	"migrations": ["src/migration/**/*.ts"],
 	"subscribers": ["src/subscriber/**/*.ts"],
 	"cli": {
-	   "entitiesDir": "src/model",
-	   "migrationsDir": "src/migration",
-	   "subscribersDir": "src/subscriber"
+	    "entitiesDir": "src/model",
+	    "migrationsDir": "src/migration",
+	    "subscribersDir": "src/subscriber"
 	}
      });
 } 

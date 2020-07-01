@@ -60,7 +60,6 @@ export default class NoticeController {
                 const queryBuilder = this.repository
                     .createQueryBuilder("notice")
                     .select("notice.id, COUNT(notice.id) AS idCount")
-                    .leftJoin("notice.user", "user")
                     .leftJoin("notice.tags", "tags")
                     .where("notice_tags.tagId IN (:...tagsId)", { tagsId })
                     .groupBy("notice.id")

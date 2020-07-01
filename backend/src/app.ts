@@ -5,7 +5,6 @@ import * as express from 'express';
 import * as cors from 'cors';
 
 import Routes  from './routes';
-import connection from './database/connection';
 import workerCovidInfo from './services/workerCovidInfo';
 
 import ErrorHandler from './utils/errorHandler';
@@ -47,9 +46,7 @@ export default class App {
 	 *  Initialize the express micro-service
 	 */ 
         try {           
-            const port = Number(process.env.PORT) || 3333;
-
-            const con = await connection;
+	    const port = Number(process.env.PORT) || 3333;
 
             this.linkAllRoutes();
             this.initializeErrorsHandler();
@@ -67,9 +64,6 @@ export default class App {
         } catch (err) {
             console.error(err.message);
             console.error('Unable to initiate the app!');
-            if (err instanceof QueryFailedError) {
-                console.error('There is a error on the typeorm query!');
-            } 
             process.exit(1);
         }
     }

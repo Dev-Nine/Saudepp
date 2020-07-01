@@ -54,19 +54,27 @@ export default class NoticeController {
                     });
                 if (!tags || tags.length === 0)
                     next(Error("Tag not found"));
-		
+
+                const tagsId = tags.map(tag => tag.id);
+                        
                 const queryBuilder = this.repository
                     .createQueryBuilder("notice")
-                    .leftJoinAndSelect("notice.user", "user")
-                    .leftJoinAndSelect("notice.tags", "tags");
+                    .select("notice.id, COUNT(notice.id) AS idCount")
+                    .leftJoin("notice.user", "user")
+                    .leftJoin("notice.tags", "tags")
+                    .where("notice_tags.tagId IN (:...tagsId)", { tagsId })
+                    .groupBy("notice.id")
+                    .having('COUNT(notice.id) = :length', {length: tags.length});
 
-                console.log(tags);
-                tags.map(tag => {
-                    console.log(tag.id);
-                    queryBuilder.orWhere(`notice_tags.tagId = :${tag.id}`, {[tag.id]: tag.id});
-                }) ;
-       
-                const notices = await queryBuilder.getMany();
+                const data = await (await queryBuilder.getRawMany()).map(obj => obj.id);
+
+                const notices = await this.repository
+                    .createQueryBuilder("notice")
+                    .where("notice.id IN (:...id)", { id : data })
+                    .leftJoinAndSelect("notice.user", "user")
+                    .leftJoinAndSelect("notice.tags", "tags")
+                    .getMany()
+
                 res.send(notices);
             } else {
                 console.log('oi');

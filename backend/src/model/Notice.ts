@@ -40,10 +40,11 @@ export class Notice {
     user: User;
 
     @ManyToMany(type => Tag, {
-        eager: true
+        eager: true,
+        cascade: true
     })
     @JoinTable({
-        name: 'tag_notice'
+        name: 'tag_notice',
     })
     tags: Tag[]
 }

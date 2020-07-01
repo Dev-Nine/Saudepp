@@ -35,7 +35,7 @@ export default class TagController {
         const tag = new Tag();
         const body = req["body"];
 
-        tag.id = body.id;
+        tag.title = body.title;
         tag.description = body.description;
 
         return tag;
@@ -45,7 +45,7 @@ export default class TagController {
         const tag = new Tag();
         const body = req["body"];
 
-        tag.id = body.id;
+        tag.title = body.title;
         tag.description = body.description;
 
         return tag;
@@ -77,12 +77,12 @@ export default class TagController {
                 return res.status(statusCode).send();
 
             const tag: Tag = await this.processCreateData(req);
-	    console.log('Criando:', tag);
+
             const result: Tag[] = await this.repository.save([tag]);
             return res.json(result);
         }catch(err){
             return next(err);
-	}
+        }
     }
 
     public async edit(req : Request, res : Response, next): Promise<Response> {
@@ -94,11 +94,15 @@ export default class TagController {
             const tag: Tag = await this.processEditData(req);
 
             const foundTag = await this.repository.findOne(req.params["id"]);
-            this.repository.merge(foundTag, tag);
+            if(foundTag){
+                
+                this.repository.merge(foundTag, tag);
 
-            const result = await this.repository.save(foundTag);
+                const result = await this.repository.save(foundTag);
 
-            return res.json(result);
+                return res.json(result);
+            }
+            throw new Errors.NotFound;
         }catch(err){
             return next(err);
         }
@@ -109,6 +113,7 @@ export default class TagController {
             const statusCode = await this.validateDelete(req);
             if(statusCode != 200)
                 return res.status(statusCode).send();
+                
 
             const result: DeleteResult = await this.repository.delete(req.params["id"]);
             if(result.affected >= 1)

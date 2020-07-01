@@ -5,7 +5,7 @@ import { verify } from 'jsonwebtoken';
 import authConfig from '../config/auth';
 import { User } from '../model/User';
 
-import { Errors } from '../Errors';
+import { MissingJWT, Forbidden } from '../Errors';
 import ErrorHandler from '../utils/errorHandler';
 
 interface tokenPayload {
@@ -19,7 +19,7 @@ export default function ensureAuthentication(req: Request, res: Response, next: 
 
    try {
       if (!authHeader) {
-	throw new Errors.MissingJWT;
+	     throw new MissingJWT;
       }
    
       const [, token] = authHeader.split(' ');
@@ -43,7 +43,7 @@ export default function ensureAuthentication(req: Request, res: Response, next: 
             //console.log(decoded);
             return next();
          }else{
-	    throw new Errors.Forbidden;
+	    throw new Forbidden;
 	 }
       });
       

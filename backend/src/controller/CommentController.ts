@@ -5,7 +5,7 @@ import { User, UserRole } from '../model/User';
 import { Notice } from '../model/Notice';
 import { validate } from 'class-validator';
 
-import { Errors } from '../Errors';
+import { NotFound } from '../Errors';
 
 export default class CommentController {
     private repository : Repository<Comment>;
@@ -43,7 +43,7 @@ export default class CommentController {
         if(comments && comments.length > 0)
             return res.json(comments);
         
-	const err = new Errors.NotFound;
+		const err = new NotFound;
         return next(err);
     }
 
@@ -52,7 +52,7 @@ export default class CommentController {
         if(comment)
             return res.json(comment);
 	
-	const err = new Errors.NotFound;
+		const err = new NotFound;
         return next(err);
     }
 

@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 import { QueryFailedError } from 'typeorm';
-import { Errors } from '../Errors';
+import { BaseError } from '../Errors';
 
-export default function (err: Error | Errors.BaseError, req: Request, res: Response, next: Function) {    
+export default function (err: Error | BaseError, req: Request, res: Response, next: Function) {    
     // Se estiver em ambiente de desenvolvimento e o erro não for uma instancia de NotFound
-    if (process.env.DEV && !(err.name != Errors.BaseError.name)) {
+    if (process.env.DEV && !(err.name != BaseError.name)) {
 	console.error(err.stack);
 	console.error(err.message);  
     }
@@ -25,8 +25,8 @@ export default function (err: Error | Errors.BaseError, req: Request, res: Respo
 	}
     }
 
-    res.status((err instanceof Errors.BaseError)? err.statusCode : 400);
+    res.status((err instanceof BaseError)? err.statusCode : 400);
 	return res.send({
 	    error: err.message,
 	});
-    }
+}

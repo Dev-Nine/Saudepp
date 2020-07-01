@@ -1,9 +1,9 @@
-import { Repository, getConnection, DeleteResult, QueryFailedError } from "typeorm";
+import { Repository, getConnection, DeleteResult } from "typeorm";
 import { Request, Response } from 'express';
 import * as bcrypt from 'bcryptjs';
 import { User, UserRole } from '../model/User';
 
-import { Errors } from '../Errors';
+import { Forbidden, NotFound } from '../Errors';
 
 // unused
 //import { validate } from 'class-validator';
@@ -24,7 +24,7 @@ export default class UserController {
         if(req.body.type == UserRole.ADMIN)
             return;
 
-        throw Errors.Forbidden;
+        throw Forbidden;
 
         /* codigo abaixo quando tiver usuario comum
         
@@ -37,12 +37,12 @@ export default class UserController {
         if(!req.user){
             // if(req.body.type == UserRole.COMUM)
             //     return 200;
-            throw Errors.Forbidden;
+            throw Forbidden;
         }
 
         // somente usuario adm pode criar profissionais
         if(req.user.type != UserRole.ADMIN && req.body.type == UserRole.PROFISSIONAL)
-            throw Errors.Forbidden;
+            throw Forbidden;
 
         return 200;
         */
@@ -55,26 +55,26 @@ export default class UserController {
         // nao pode alterar o seu tipo
         if(req.user.id == req.params.id){
             if(req.body.type && req.body.type != req.user.type)
-                throw Errors.Forbidden;
+                throw Forbidden;
             return;
         }
 
         // jamais editar um usuario para se tornar adm
         if(req.body.type == UserRole.ADMIN)
-            throw Errors.Forbidden;
+            throw Forbidden;
 
         // se for um usuario adm logado
         if(req.body.type) {
             if(req.user.type == UserRole.ADMIN){
                 // profissional nao é editado, mas sim criado
                 if(req.body.type == UserRole.PROFISSIONAL || editedUser.type == UserRole.PROFISSIONAL)
-                    throw Errors.Forbidden;
+                    throw Forbidden;
                 // else if(editedUser.type == UserRole.MODERADOR || editedUser.type == UserRole.COMUM)
                 //     return 200;
             }
         }
             
-        throw Errors.Forbidden;
+        throw Forbidden;
     }
 
     public async validateDelete(req : Request): Promise<void>{
@@ -89,7 +89,7 @@ export default class UserController {
         if(req.user.type == UserRole.ADMIN && deletedUser.type != UserRole.ADMIN)
             return;
 
-        throw Errors.Forbidden;
+        throw Forbidden;
     }
 
     public async processCreateData(req : Request): Promise<User> {
@@ -127,7 +127,7 @@ export default class UserController {
         if(users && users.length > 0)
             return res.json(users);
         
-        return next(new Errors.NotFound);
+        return next(new NotFound);
     }
 
     public async getByPk(req : Request, res : Response, next) : Promise<Response> {
@@ -152,7 +152,7 @@ export default class UserController {
         }
             
         
-	    return next(new Errors.NotFound);
+	    return next(new NotFound);
     }
 
     public async create(req : Request, res : Response, next: Function) : Promise<Response>{
@@ -217,7 +217,7 @@ export default class UserController {
             if(result.affected >= 1)
                 return res.status(200).send();
             else
-                throw Errors.NotFound;
+                throw NotFound;
         }catch(err){
             return next(err);
 	}

@@ -41,13 +41,12 @@ export default createGlobalStyle`
       align-self: center;
       max-width: 1300px;
       width: 100%;
-      padding: 50px 30px;
+      padding: 20px;
    }
 
    @media only screen and (max-width: 1099px){
       .main {
-         margin-left: 1em;
-         margin-right: 1em;
+         padding: 16px;
       }
    }
 `;

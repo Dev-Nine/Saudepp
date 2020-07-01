@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
    width: 100%;
-   padding: 0 40px;
+   padding: 16px;
 
    h2 {
       font-size: 32px;

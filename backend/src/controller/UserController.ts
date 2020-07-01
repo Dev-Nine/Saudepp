@@ -131,11 +131,28 @@ export default class UserController {
     }
 
     public async getByPk(req : Request, res : Response, next) : Promise<Response> {
-        const user = await this.repository.findOne(req.params["id"]);
-        if(user)
+        const user = await this.repository.findOne(req.params["id"], {
+            select: [
+                "id", 
+                "name", 
+                "email", 
+                "username", 
+                "type",
+                "identifierType",
+                "identifier"
+            ]});
+        if(user){
+            if(!req.user || (req.user.type != 0 && parseInt(req.user.id) != user.id)){
+                delete user.email;
+                delete user.username;
+                delete user.identifier;
+                delete user.identifierType;
+            }
             return res.json(user);
+        }
+            
         
-	return next(new Errors.NotFound);
+	    return next(new Errors.NotFound);
     }
 
     public async create(req : Request, res : Response, next: Function) : Promise<Response>{

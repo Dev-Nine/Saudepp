@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import axios from 'axios';
 import parse from 'html-react-parser';
 
 import data from './testHtml.txt';
@@ -25,7 +26,6 @@ export default function NoticeDisplay(props) {
    });
 
    const [isLoading, setIsLoading] = useState(true);
-   const timer = useRef();
 
    function getMonthAsName(month) {
       switch (month + 1) {
@@ -60,30 +60,39 @@ export default function NoticeDisplay(props) {
 
    useEffect(() => {
       let timer;
+      const { CancelToken } = axios;
+      const source = CancelToken.source();
       const { noticeId } = props.match.params;
-      console.log(noticeId);
       if (noticeId !== undefined) {
-         api.get(`/notices/${noticeId}`)
-            .then(({ data }) => {
-               console.log(data);
+         api.get(`/notices/${noticeId}`, {
+            cancelToken: source.token,
+         })
+            .then(({ apiData }) => {
                setContent({
-                  title: data.title,
-                  text: data.text,
-                  abstract: data.abstract,
-                  user: data.user,
-                  date: new Date(data.date),
+                  title: apiData.title,
+                  text: apiData.text,
+                  abstract: apiData.abstract,
+                  user: apiData.user,
+                  date: new Date(apiData.date),
                });
+               setIsLoading(false);
                timer = setTimeout(() => {
-                  api.get(`/notices/${noticeId}?viewed=true`);
+                  api.get(`/notices/${noticeId}?viewed=true`, {
+                     cancelToken: source.token,
+                  });
                }, 15000);
             })
             .catch((err) => {
-               alert(err);
-            })
-            .finally(() => {
-               setIsLoading(false);
+               if (axios.isCancel(err)) {
+                  console.log('Notice API request cancelled.', err.message);
+               } else {
+                  setIsLoading(false);
+               }
             });
-         return () => clearTimeout(timer);
+         return () => {
+            source.cancel('Operation canceled by the user.');
+            clearTimeout(timer);
+         };
       }
    }, [props.match.params]);
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 import api from '../../services/api';
 import { Container } from './styles';
@@ -6,17 +7,34 @@ import { Container } from './styles';
 export default function CoronaCard() {
    const [covid, setCovid] = useState({});
 
+   const { CancelToken } = axios;
+   const source = CancelToken.source();
+
    useEffect(() => {
       async function loadCovidData() {
-         const { data } = await api.get('/covid');
-         setCovid({
-            confirmed: data.confirmed.toLocaleString('pt'),
-            deaths: data.deaths.toLocaleString('pt'),
-         });
+         try {
+            const { data } = await api.get('/covid', {
+               cancelToken: source.token,
+            });
+            setCovid({
+               confirmed: data.confirmed.toLocaleString('pt'),
+               deaths: data.deaths.toLocaleString('pt'),
+            });
+         } catch (err) {
+            if (axios.isCancel(err)) {
+               console.log('Covid-19 API request cancelled.', err.message);
+            }
+         }
       }
 
       loadCovidData();
-   }, []);
+   }, [source.token]);
+
+   useEffect(() => {
+      return () => {
+         source.cancel('Operation canceled by the user.');
+      };
+   });
 
    return (
       <Container>

@@ -6,6 +6,7 @@ import * as cors from 'cors';
 
 import Routes  from './routes';
 import workerCovidInfo from './services/workerCovidInfo';
+import limiter from './middlewares/rateLimiter'
 
 import ErrorHandler from './utils/errorHandler';
 
@@ -31,6 +32,7 @@ export default class App {
     private initializeMiddlewares(): void {
         this.app.use(express.json());
         this.app.use(cors());
+        this.app.use(limiter);
     }
 
     private workers(): void {
@@ -43,7 +45,7 @@ export default class App {
 	 *  Initialize the express micro-service
 	 */ 
         try {           
-	    const port = Number(process.env.PORT) || 3333;
+			const port = Number(process.env.PORT) || 3333;
 
             this.workers();
             

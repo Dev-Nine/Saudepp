@@ -29,4 +29,4 @@ export default function (err: Error | Errors.BaseError, req: Request, res: Respo
 	return res.send({
 	    error: err.message,
 	});
-    };
+    }

@@ -8,7 +8,7 @@ export const Container = styled.div`
 
    background: #ffffff;
 
-   border: 1.5px solid #a2a2a2;
+   border: 2px solid #a2a2a2;
    box-sizing: border-box;
    border-radius: 10px;
    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -18,7 +18,11 @@ export const Container = styled.div`
 
    &:hover {
       border-color: ${shade(0.3, '#a2a2a2')};
-      background: ${shade(0.08, '#fff')};
+      background: linear-gradient(
+         45deg,
+         rgba(255, 255, 255, 1) 0%,
+         rgba(225, 225, 225, 1) 100%
+      );
    }
 
    img {

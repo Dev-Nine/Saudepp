@@ -10,35 +10,32 @@ import workerCovidInfo from './services/workerCovidInfo';
 import ErrorHandler from './utils/errorHandler';
 
 export default class App {
-    public app: Application;
-    public routes: Routes;
+    private app: Application;
+    private routes: Routes;
 
     constructor() {
         this.app = express();
-        this.initializeMiddlewares();
+
+	// Initialize middlewares
+	this.initializeMiddlewares();
+
+	// Define routes
+        this.routes = new Routes;
+	this.routes.defineRoutes();
+	this.app.use(this.routes.routes);
+    
+	// Define error handler
+        this.app.use(ErrorHandler);
     }
 
     private initializeMiddlewares(): void {
         this.app.use(express.json());
         this.app.use(cors());
-        
-        // n faz sentido colocar aqui, se não nunca irão conseguir fazer login
-        // this.app.use(ensureAuthentication)
     }
 
     private workers(): void {
         //second minute hour day-of-month month day-of-week
         scheduleJob('0 0 * * * *', workerCovidInfo);
-    }
-
-    private linkAllRoutes(): void {
-        this.routes = new Routes();
-        this.routes.defineRoutes();
-        this.app.use(this.routes.routes);
-    }
-
-    private initializeErrorsHandler() {
-        this.app.use(ErrorHandler);
     }
     
     public async start(args? : any): Promise<void> {
@@ -48,18 +45,16 @@ export default class App {
         try {           
 	    const port = Number(process.env.PORT) || 3333;
 
-            this.linkAllRoutes();
-            this.initializeErrorsHandler();
             this.workers();
             
-        // Para inserir a informação sobre o corona quando iniciar o sistema
+            // Para inserir a informação sobre o corona quando iniciar o sistema
             await workerCovidInfo();
 
-            if (args) {
-            this.app.listen(port, args, () => console.log(`App running on port ${port}`));
-            } else {
+            if (args)
+		this.app.listen(port, args, () => console.log(`App running on port ${port}`));
+            else 
                 this.app.listen(port, () => console.log(`App running on port ${port}`));
-            }
+            
             console.log('App is online!');
         } catch (err) {
             console.error(err.message);

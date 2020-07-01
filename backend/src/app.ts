@@ -3,6 +3,7 @@ import { QueryFailedError } from 'typeorm';
 import { scheduleJob } from 'node-schedule';
 import * as express from 'express';
 import * as cors from 'cors';
+import * as helmet from 'helmet';
 
 import Routes  from './routes';
 import workerCovidInfo from './services/workerCovidInfo';
@@ -33,6 +34,7 @@ export default class App {
         this.app.use(express.json());
         this.app.use(cors());
         this.app.use(limiter);
+        this.app.use(helmet());
     }
 
     private workers(): void {

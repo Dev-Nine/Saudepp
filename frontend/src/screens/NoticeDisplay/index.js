@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import parse from 'html-react-parser';
 
@@ -14,6 +14,9 @@ import api from '../../services/api';
 import { ContainerNoticia, TextContainer } from './styles';
 
 export default function NoticeDisplay(props) {
+   const { match } = props;
+   const { params } = match;
+
    const [content, setContent] = useState({
       title: '',
       abstract: '',
@@ -61,7 +64,7 @@ export default function NoticeDisplay(props) {
       let timer;
       const { CancelToken } = axios;
       const source = CancelToken.source();
-      const { noticeId } = props.match.params;
+      const { noticeId } = params;
       if (noticeId !== undefined) {
          api.get(`/notices/${noticeId}`, {
             cancelToken: source.token,
@@ -88,12 +91,12 @@ export default function NoticeDisplay(props) {
                   setIsLoading(false);
                }
             });
-         return () => {
-            source.cancel('Operation canceled by the user.');
-            clearTimeout(timer);
-         };
       }
-   }, [props.match.params]);
+      return () => {
+         source.cancel('Operation canceled by the user.');
+         clearTimeout(timer);
+      };
+   }, [params]);
 
    return (
       <>
@@ -102,7 +105,7 @@ export default function NoticeDisplay(props) {
             <CoronaCard />
             <ContainerNoticia>
                {isLoading ? (
-                  <img src={loadingNotice} />
+                  <img src={loadingNotice} alt="Notice load" />
                ) : (
                   <div>
                      <h1>{content.title}</h1>

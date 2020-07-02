@@ -41,7 +41,7 @@ export default createGlobalStyle`
       align-self: center;
       max-width: 1300px;
       width: 100%;
-      padding: 20px;
+      padding: 32px 40px;
    }
 
    @media only screen and (max-width: 1099px){

@@ -40,7 +40,7 @@ function Header() {
                      <Link to="/notices">Notícias</Link>
                      <Link to="/faq">Dúvidas frequentes</Link>
                      {!!user && <Link to="#">Painel de controle</Link>}
-                     <Link to="#">Sobre nós</Link>
+                     <Link to="/about">Sobre nós</Link>
                   </nav>
                   {user && (
                      <img

@@ -33,7 +33,7 @@ export const Sobre = styled.div`
 
       p,
       a {
-         font-size: 16px;
+         font-size: 20px;
       }
 
       p {

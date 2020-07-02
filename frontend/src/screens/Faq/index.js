@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 
 import { Link } from 'react-router-dom';
+
+import { FiCornerDownRight } from 'react-icons/fi';
+
 import { Container } from './styles';
 
 import Header from '../../components/Header';
@@ -17,11 +20,14 @@ export default function Faq() {
 
          <div className="main">
             <Container>
-               <h1>Saúde++ - Dúvidas frequentes</h1>
+               <h1>Dúvidas frequentes</h1>
                <ul>
                   <li>
                      <Link to="/faq/covid19">
-                        <h2>Informações sobre o novo corona vírus</h2>
+                        <h2>
+                           <FiCornerDownRight />
+                           Informações sobre o novo corona vírus
+                        </h2>
                      </Link>
                   </li>
                </ul>

@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
    width: 100%;
-   padding: 16px;
 
    h2 {
       font-size: 32px;
@@ -10,29 +9,37 @@ export const Container = styled.div`
 
    ul li {
       list-style: none;
-      font-size: 32px;
-      font-weight: 500;
-      margin-bottom: 28px;
    }
 
    ul li:last-child {
       margin-bottom: 0;
    }
 
-   li p {
+   ul.summary li {
+      font-size: 24px;
+      margin-bottom: 8px;
+   }
+
+   ul.faq li {
+      font-size: 32px;
+      font-weight: 500;
+      margin-bottom: 16px;
+   }
+
+   ul.faq li p {
       font-size: 20px;
       font-weight: 300;
       text-align: justify;
       margin-bottom: 16px;
    }
 
-   li p:last-child {
+   ul.faq li p:last-child {
       margin-bottom: 0;
    }
 
    a {
       text-decoration: none;
-      color: blue;
+      color: #0094de;
    }
 
    @media only screen and (max-width: 1099px) {

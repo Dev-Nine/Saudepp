@@ -2,11 +2,14 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
    width: 100%;
-   padding: 0 40px;
 
    h1 {
       font-size: 48px;
       color: #0094de;
+   }
+
+   h2 {
+      font-size: 28px;
    }
 
    ul {
@@ -24,10 +27,16 @@ export const Container = styled.div`
    }
 
    a {
-      text-decoration: none;
-      color: blue;
+      text-decoration: underline;
+      color: #0094de;
    }
 
    @media only screen and (max-width: 1099px) {
+      h1 {
+         font-size: 40px;
+      }
+      ul {
+         margin-left: 20px;
+      }
    }
 `;

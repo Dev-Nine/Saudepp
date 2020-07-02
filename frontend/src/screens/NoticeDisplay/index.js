@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import parse from 'html-react-parser';
 
+import { FiFrown } from 'react-icons/fi';
+
 import loadingNotice from '../../assets/loadingNotice.png';
 
 import Header from '../../components/Header';
@@ -14,8 +16,8 @@ import api from '../../services/api';
 import { ContainerNoticia, TextContainer } from './styles';
 
 export default function NoticeDisplay(props) {
-   const { match } = props;
-   const { params } = match;
+   const { computedMatch } = props;
+   const { params } = computedMatch;
 
    const [content, setContent] = useState({
       title: '',
@@ -70,6 +72,7 @@ export default function NoticeDisplay(props) {
             cancelToken: source.token,
          })
             .then(({ data }) => {
+               document.title = data.title || 'Notícia';
                setContent({
                   title: data.title,
                   text: data.text,
@@ -88,6 +91,14 @@ export default function NoticeDisplay(props) {
                if (axios.isCancel(err)) {
                   console.log('Notice API request cancelled.', err.message);
                } else {
+                  setContent((prevContent) => ({
+                     ...prevContent,
+                     title: (
+                        <>
+                           Houve um erro ao carregar a notícia <FiFrown />
+                        </>
+                     ),
+                  }));
                   setIsLoading(false);
                }
             });
@@ -108,16 +119,27 @@ export default function NoticeDisplay(props) {
                   <img src={loadingNotice} alt="Notice load" />
                ) : (
                   <div>
-                     <h1>{content.title}</h1>
-                     <p>{content.abstract}</p>
-                     {content.date === '' ? undefined : (
+                     <div className="container">
+                        <div className="gradient" />
+                        <div className="banner" />
+                     </div>
+                     <div className="header">
+                        <h1>{content.title}</h1>
+                        <p>{content.abstract}</p>
                         <p>
-                           Escrito por {content.user.name} -{' '}
-                           {content.date.getDate()} de{' '}
-                           {getMonthAsName(content.date.getMonth())} de{' '}
-                           {content.date.getFullYear()}
+                           {content.user.name !== '' ? (
+                              <>Escrito por {content.user.name} - </>
+                           ) : undefined}{' '}
+                           {content.date ? (
+                              <>
+                                 {content.date.getDate()} de{' '}
+                                 {getMonthAsName(content.date.getMonth())} de{' '}
+                                 {content.date.getFullYear()}
+                              </>
+                           ) : undefined}
                         </p>
-                     )}
+                     </div>
+
                      <TextContainer>{parse(content.text)}</TextContainer>
                   </div>
                )}

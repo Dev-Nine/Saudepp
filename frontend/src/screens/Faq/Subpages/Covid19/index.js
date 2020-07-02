@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 
+import { FiCornerDownRight } from 'react-icons/fi';
 import { Container } from '../styles';
 
 import Header from '../../../../components/Header';
@@ -15,7 +16,73 @@ export default function FaqCovid19() {
          <Header />
          <div className="main">
             <Container>
-               <ul className="summary" />
+               <h1>Sumário</h1>
+               <ul className="summary">
+                  <a href="#section1">
+                     <li>
+                        <FiCornerDownRight />
+                        1. O que é o coronavírus?
+                     </li>
+                  </a>
+                  <a href="#section2">
+                     <li>
+                        <FiCornerDownRight />
+                        2. O que é COVID-19?
+                     </li>
+                  </a>
+                  <a href="#section3">
+                     <li>
+                        <FiCornerDownRight />
+                        3. Quais são os sintomas da COVID-19?
+                     </li>
+                  </a>
+                  <a href="#section4">
+                     <li>
+                        <FiCornerDownRight />
+                        4. Quão grave é a COVID-19?
+                     </li>
+                  </a>
+                  <a href="#section5">
+                     <li>
+                        <FiCornerDownRight />
+                        5. Como a COVID-19 é transmitida?
+                     </li>
+                  </a>
+                  <a href="#section6">
+                     <li>
+                        <FiCornerDownRight />
+                        6. Pessoas sem sintomas podem transmitir o coronavírus?
+                     </li>
+                  </a>
+                  <a href="#section7">
+                     <li>
+                        <FiCornerDownRight />
+                        7. Posso pegar a COVID-19 se tiver contato com fezes de
+                        alguém com a doença?
+                     </li>
+                  </a>
+                  <a href="#section8">
+                     <li>
+                        <FiCornerDownRight />
+                        8. Posso pegar o coronavírus comendo alimentos
+                        preparados por outras pessoas?
+                     </li>
+                  </a>
+                  <a href="#section9">
+                     <li>
+                        <FiCornerDownRight />
+                        9. Produtos vindos da China podem conter o vírus?
+                     </li>
+                  </a>
+                  <a href="#section10">
+                     <li>
+                        <FiCornerDownRight />
+                        10. Humanos podem ser contaminados por coronavírus por
+                        fonte animal?
+                     </li>
+                  </a>
+               </ul>
+
                <ul className="faq">
                   <li id="section1">
                      <h2>1. O que é o coronavírus?</h2>

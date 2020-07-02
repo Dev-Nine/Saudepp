@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import parse from 'html-react-parser';
 
-import data from './testHtml.txt';
 import loadingNotice from '../../assets/loadingNotice.png';
 
 import Header from '../../components/Header';
@@ -67,13 +66,13 @@ export default function NoticeDisplay(props) {
          api.get(`/notices/${noticeId}`, {
             cancelToken: source.token,
          })
-            .then(({ apiData }) => {
+            .then(({ data }) => {
                setContent({
-                  title: apiData.title,
-                  text: apiData.text,
-                  abstract: apiData.abstract,
-                  user: apiData.user,
-                  date: new Date(apiData.date),
+                  title: data.title,
+                  text: data.text,
+                  abstract: data.abstract,
+                  user: data.user,
+                  date: new Date(data.date),
                });
                setIsLoading(false);
                timer = setTimeout(() => {

@@ -1,9 +1,9 @@
 import { Application, Request, Response } from 'express';
 import { QueryFailedError } from 'typeorm';
 import { scheduleJob } from 'node-schedule';
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
+import * as express from 'express';
+import * as cors from 'cors';
+import * as helmet from 'helmet';
 
 import Routes  from './routes';
 import workerCovidInfo from './services/workerCovidInfo';

@@ -20,6 +20,7 @@ export default function ListNotices() {
    const [tags, setTags] = useState([]);
    const [selectedTags, setSelectedTags] = useState([]);
    const [notices, setNotices] = useState([]);
+   const [loading, setLoading] = useState(true);
 
    useEffect(() => {
       document.title = 'Notícias';
@@ -46,15 +47,23 @@ export default function ListNotices() {
    );
 
    useEffect(() => {
-      api.get(`/notices?tag=${selectedTags}`).then(({ data }) => {
-         setNotices(
-            data.map((d) => (
-               <li key={d.id}>
-                  <Card data={d} />
-               </li>
-            )),
-         );
-      });
+      setLoading(true);
+      api.get(`/notices?tag=${selectedTags}`)
+         .then(({ data }) => {
+            setNotices(
+               data.map((d) => (
+                  <li key={d.id}>
+                     <Card data={d} />
+                  </li>
+               )),
+            );
+         })
+         .catch(() => {
+            setNotices(<p>Não encontrado...</p>);
+         })
+         .finally(() => {
+            setLoading(false);
+         });
    }, [selectedTags]);
 
    useEffect(() => {
@@ -68,7 +77,7 @@ export default function ListNotices() {
          <Header />
          <div className="main">
             <ContainerPesquisa>
-               <h1>Pesquisar</h1>
+               <h1>Pesquisar {loading && ' - Carregando as notícias...'}</h1>
 
                <Search>
                   <select
@@ -92,6 +101,7 @@ export default function ListNotices() {
                         onClick={() => {
                            handleDeleteCategory(id);
                         }}
+                        key={id}
                      >
                         <span>{tags[id - 1].description}</span>
                         <FiXCircle size={18} color="#fff" />
@@ -99,7 +109,6 @@ export default function ListNotices() {
                   ))}
                </TagContainer>
             </ContainerPesquisa>
-
             <ContainerNoticia>
                <ul>{notices}</ul>
             </ContainerNoticia>

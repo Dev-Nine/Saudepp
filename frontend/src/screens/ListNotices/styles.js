@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { shade } from 'polished';
 
 export const ContainerPesquisa = styled.div`
    width: 70%;
@@ -26,6 +27,30 @@ export const Search = styled.div`
       font-size: 15px;
       line-height: 28px;
       background-color: #ffffff;
+   }
+`;
+
+export const TagContainer = styled.div`
+   display: flex;
+`;
+
+export const TagButton = styled.button`
+   margin: 8px 8px 0 0;
+   padding: 8px 14px;
+   background: #0094de;
+   border-radius: 8px;
+   display: flex;
+   transition: 1s;
+
+   &:hover {
+      background: ${shade(0.1, '#0094de')};
+   }
+
+   span {
+      color: #fff;
+      padding-right: 4px;
+      font-size: 16px;
+      font-weight: 500;
    }
 `;
 

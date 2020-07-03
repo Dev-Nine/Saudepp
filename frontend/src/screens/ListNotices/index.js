@@ -1,24 +1,52 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+
+import { FiXCircle } from 'react-icons/fi';
 
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import Card from '../../components/Card';
 
-import { ContainerNoticia, ContainerPesquisa, Search } from './styles';
+import {
+   ContainerNoticia,
+   ContainerPesquisa,
+   Search,
+   TagButton,
+   TagContainer,
+} from './styles';
 
 import api from '../../services/api';
 
 export default function ListNotices() {
    const [tags, setTags] = useState([]);
-   const [selected, setSelected] = useState('');
+   const [selectedTags, setSelectedTags] = useState([]);
    const [notices, setNotices] = useState([]);
 
    useEffect(() => {
       document.title = 'Notícias';
    });
 
+   const handleSelectCategory = useCallback(
+      (id) => {
+         if (!id || selectedTags.includes(id)) {
+            return;
+         }
+
+         setSelectedTags([...selectedTags, id]);
+      },
+      [selectedTags],
+   );
+
+   const handleDeleteCategory = useCallback(
+      (id) => {
+         const newTags = selectedTags.filter((item) => item !== id);
+
+         setSelectedTags(newTags);
+      },
+      [selectedTags],
+   );
+
    useEffect(() => {
-      api.get(`/notices?tag=${selected}`).then(({ data }) => {
+      api.get(`/notices?tag=${selectedTags}`).then(({ data }) => {
          setNotices(
             data.map((d) => (
                <li key={d.id}>
@@ -27,7 +55,7 @@ export default function ListNotices() {
             )),
          );
       });
-   }, [selected]);
+   }, [selectedTags]);
 
    useEffect(() => {
       api.get('/tags').then(({ data }) => {
@@ -44,8 +72,7 @@ export default function ListNotices() {
 
                <Search>
                   <select
-                     onChange={(e) => setSelected(e.target.value)}
-                     key=""
+                     onChange={(e) => handleSelectCategory(e.target.value)}
                      name="tags"
                      id="tags"
                      className="select-form"
@@ -58,6 +85,19 @@ export default function ListNotices() {
                      ))}
                   </select>
                </Search>
+
+               <TagContainer>
+                  {selectedTags.map((id) => (
+                     <TagButton
+                        onClick={() => {
+                           handleDeleteCategory(id);
+                        }}
+                     >
+                        <span>{tags[id - 1].description}</span>
+                        <FiXCircle size={18} color="#fff" />
+                     </TagButton>
+                  ))}
+               </TagContainer>
             </ContainerPesquisa>
 
             <ContainerNoticia>

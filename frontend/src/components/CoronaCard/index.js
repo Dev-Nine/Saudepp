@@ -8,9 +8,9 @@ export default function CoronaCard() {
    const [covid, setCovid] = useState({});
 
    const { CancelToken } = axios;
-   const source = CancelToken.source();
 
    useEffect(() => {
+      const source = CancelToken.source();
       async function loadCovidData() {
          try {
             const { data } = await api.get('/covid', {
@@ -28,9 +28,10 @@ export default function CoronaCard() {
       }
 
       loadCovidData();
-   }, [source.token]);
+   }, [CancelToken]);
 
    useEffect(() => {
+      const source = CancelToken.source();
       return () => {
          source.cancel('Operation canceled by the user.');
       };

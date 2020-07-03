@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Sobre } from './styles';
 
 import CardGroup from '../../components/CardGroup';
@@ -27,7 +28,7 @@ export default function Home() {
                   Coronavírus e entre outras doenças que continuam presentes na
                   nossa sociedade, como a Dengue.
                </p>
-               <a href="#">Saiba mais</a>
+               <Link to="/about">Saiba mais</Link>
             </Sobre>
 
             <div>

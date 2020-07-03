@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import parse from 'html-react-parser';
 
-import data from './testHtml.txt';
+import { FiFrown } from 'react-icons/fi';
+
 import loadingNotice from '../../assets/loadingNotice.png';
 
 import Header from '../../components/Header';
@@ -15,6 +16,9 @@ import api from '../../services/api';
 import { ContainerNoticia, TextContainer } from './styles';
 
 export default function NoticeDisplay(props) {
+   const { computedMatch } = props;
+   const { params } = computedMatch;
+
    const [content, setContent] = useState({
       title: '',
       abstract: '',
@@ -62,18 +66,19 @@ export default function NoticeDisplay(props) {
       let timer;
       const { CancelToken } = axios;
       const source = CancelToken.source();
-      const { noticeId } = props.match.params;
+      const { noticeId } = params;
       if (noticeId !== undefined) {
          api.get(`/notices/${noticeId}`, {
             cancelToken: source.token,
          })
-            .then(({ apiData }) => {
+            .then(({ data }) => {
+               document.title = data.title || 'Notícia';
                setContent({
-                  title: apiData.title,
-                  text: apiData.text,
-                  abstract: apiData.abstract,
-                  user: apiData.user,
-                  date: new Date(apiData.date),
+                  title: data.title,
+                  text: data.text,
+                  abstract: data.abstract,
+                  user: data.user,
+                  date: new Date(data.date),
                });
                setIsLoading(false);
                timer = setTimeout(() => {
@@ -86,15 +91,23 @@ export default function NoticeDisplay(props) {
                if (axios.isCancel(err)) {
                   console.log('Notice API request cancelled.', err.message);
                } else {
+                  setContent((prevContent) => ({
+                     ...prevContent,
+                     title: (
+                        <>
+                           Houve um erro ao carregar a notícia <FiFrown />
+                        </>
+                     ),
+                  }));
                   setIsLoading(false);
                }
             });
-         return () => {
-            source.cancel('Operation canceled by the user.');
-            clearTimeout(timer);
-         };
       }
-   }, [props.match.params]);
+      return () => {
+         source.cancel('Operation canceled by the user.');
+         clearTimeout(timer);
+      };
+   }, [params]);
 
    return (
       <>
@@ -103,19 +116,30 @@ export default function NoticeDisplay(props) {
             <CoronaCard />
             <ContainerNoticia>
                {isLoading ? (
-                  <img src={loadingNotice} />
+                  <img src={loadingNotice} alt="Notice load" />
                ) : (
                   <div>
-                     <h1>{content.title}</h1>
-                     <p>{content.abstract}</p>
-                     {content.date === '' ? undefined : (
+                     <div className="container">
+                        <div className="gradient" />
+                        <div className="banner" />
+                     </div>
+                     <div className="header">
+                        <h1>{content.title}</h1>
+                        <p>{content.abstract}</p>
                         <p>
-                           Escrito por {content.user.name} -{' '}
-                           {content.date.getDate()} de{' '}
-                           {getMonthAsName(content.date.getMonth())} de{' '}
-                           {content.date.getFullYear()}
+                           {content.user.name !== '' ? (
+                              <>Escrito por {content.user.name} - </>
+                           ) : undefined}{' '}
+                           {content.date ? (
+                              <>
+                                 {content.date.getDate()} de{' '}
+                                 {getMonthAsName(content.date.getMonth())} de{' '}
+                                 {content.date.getFullYear()}
+                              </>
+                           ) : undefined}
                         </p>
-                     )}
+                     </div>
+
                      <TextContainer>{parse(content.text)}</TextContainer>
                   </div>
                )}

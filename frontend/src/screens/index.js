@@ -8,6 +8,7 @@ import Register from './Register';
 import RegisterMedic from './RegisterMedic';
 import RegisterProfessional from './RegisterProfessional';
 import Faq from './Faq';
+import About from './About';
 import FaqCovid19 from './Faq/Subpages/Covid19';
 
 export {
@@ -22,4 +23,5 @@ export {
    RegisterProfessional,
    Faq,
    FaqCovid19,
+   About,
 };

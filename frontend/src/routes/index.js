@@ -1,5 +1,6 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch } from 'react-router-dom';
+import Route from './Route';
 
 import {
    CreateNoticies,
@@ -13,6 +14,7 @@ import {
    RegisterMedic,
    Faq,
    FaqCovid19,
+   About,
 } from '../screens';
 
 export default function Routes() {
@@ -21,6 +23,7 @@ export default function Routes() {
          <Route path="/" exact component={Home} />
          <Route path="/login" exact component={Login} />
          <Route path="/notices" exact component={ListNotices} />
+         <Route path="/about" exact component={About} />
          <Route path="/faq" exact component={Faq} />
          <Route path="/faq/covid19" exact component={FaqCovid19} />
          <Route path="/notices/:noticeId" exact component={NoticeDisplay} />
@@ -38,12 +41,12 @@ export default function Routes() {
             component={RegisterProfessional}
          />
          <Route
-            pasth="/painel/register/medic"
-            isPrivate
+            path="/painel/register/medic"
             exact
+            isPrivate
             component={RegisterMedic}
          />
-         <Route path="" component={NotFound} />
+         <Route path="*" component={NotFound} />
       </Switch>
    );
 }

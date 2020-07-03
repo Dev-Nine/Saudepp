@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import { shade } from 'polished';
 
 export const ContainerPesquisa = styled.div`
-   width: 70%;
-   margin-bottom: 30px;
+   width: 100%;
+   margin-bottom: 32px;
 `;
 
 export const Search = styled.div`
@@ -80,6 +80,7 @@ export const ContainerNoticia = styled.div`
    }
 
    @media (max-width: 1099px) {
+      width: 100%;
       ul {
          grid-template-columns: repeat(1, 1fr);
       }

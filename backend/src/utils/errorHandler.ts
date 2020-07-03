@@ -3,30 +3,41 @@ import { QueryFailedError } from 'typeorm';
 import { BaseError } from '../Errors';
 
 export default function (err: Error | BaseError, req: Request, res: Response, next: Function) {    
-    // Se estiver em ambiente de desenvolvimento e o erro não for uma instancia de NotFound
-    if (process.env.DEV && !(err.name != BaseError.name)) {
-	console.error(err.stack);
-	console.error(err.message);  
-    }
+	let status: number = 400;
 
-    if (err instanceof QueryFailedError) {
-	if (process.env.DEV) {
-	    console.error(err['detail']);
-	    console.error(err['code']);
+	// Se estiver em ambiente de desenvolvimento e o erro não for uma instancia de NotFound
+    const isBaseError = err.name == BaseError.name;
+	console.dir(err);	
+	console.log(isBaseError);
+
+	// Se nao for um BaseError
+	if (!isBaseError) {
+		if (process.env.DEV) {
+			console.error(err.stack);
+			console.error(err.message);  
+		}
+
+		// Se for um erro do typeorm
+		if (err instanceof QueryFailedError) {
+			// Err status 23505 representa que ocorreu conflito de chave primaria no DB
+			if (Number(err['code']) === 23505) {
+				let detail = err['detail'].split('=')[0];
+				detail = detail.split(' ')[1];
+				detail = detail.replace('(', '');
+				detail = detail.replace(')', '');
+				//[1].replace(['(', ']'], ' ');	    
+				err.message = `This ${detail} is already registered`;
+				
+				// Codigo http para conflito de chave primaria
+				status = 409;
+			}
+		}
+	} else {
+		// Se for um BaseError, realize um cast e armazene o statusCode
+		status = (<BaseError>err).statusCode;	
 	}
 
-	if (Number(err['code']) === 23505) {
-	    let detail = err['detail'].split('=')[0];
-	    detail = detail.split(' ')[1];
-	    detail = detail.replace('(', '');
-	    detail = detail.replace(')', '');
-	    //[1].replace(['(', ']'], ' ');	    
-	    err.message = `This ${detail} is already registered`;
-	}
-    }
-
-    res.status((err instanceof BaseError)? err.statusCode : 400);
-	return res.send({
+	return res.status(status).send({
 	    error: err.message,
 	});
 }

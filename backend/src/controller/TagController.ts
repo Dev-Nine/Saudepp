@@ -57,7 +57,7 @@ export default class TagController {
             return res.json(tags);
         
         const err = new NotFound;
-	return next(err);
+		return next(err);
     }
 
     public async getByPk(req : Request, res : Response, next) : Promise<Response> {
@@ -65,8 +65,8 @@ export default class TagController {
         if(tag)
             return res.json(tag);
         
-	const err = new NotFound;
-	return next(err);
+		const err = new NotFound;
+		return next(err);
     }
 
     public async create(req : Request, res : Response, next) : Promise<Response>{
@@ -121,7 +121,7 @@ export default class TagController {
             else
                 return res.status(404).send();
         }catch(err){
-	    return next(err);
+			return next(err);
         }
     }
 }

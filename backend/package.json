@@ -3,7 +3,7 @@
    "version": "0.0.1",
    "description": "Awesome project developed with TypeORM.",
    "scripts": {
-      "start": "ts-node src/server.ts",
+      "start": "node dist/server.js",
       "dev": "nodemon src/server.ts",
       "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files",
       "migration:run": "ts-node ./node_modules/typeorm/cli.js migration:run",

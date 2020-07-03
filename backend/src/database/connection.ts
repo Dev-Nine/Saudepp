@@ -8,13 +8,13 @@ export default async function connection() {
 		"url": process.env.DATABASE_URL,
 		"synchronize": false,
 		"logging": ["query", "error"],
-		"entities": ["src/model/**/*.ts"],
-		"migrations": ["src/migration/**/*.ts"],
-		"subscribers": ["src/subscriber/**/*.ts"],
+		"entities": [process.env.TYPEORM_ENTITIES],
+		"migrations": [process.env.TYPEORM_MIGRATIONS],
+		"subscribers": [process.env.TYPEORM_SUBSCRIBERS],
 		"cli": {
-			"entitiesDir": "src/model",
-			"migrationsDir": "src/migration",
-			"subscribersDir": "src/subscriber"
+			"entitiesDir": process.env.TYPEORM_ENTITIES_DIR,
+			"migrationsDir": process.env.TYPEORM_MIGRATIONS_DIR,
+			"subscribersDir": process.env.TYPEORM_SUBSCRIBERS_DIR
 		}
 	});
 } 

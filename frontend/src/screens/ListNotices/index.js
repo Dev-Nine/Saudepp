@@ -77,7 +77,7 @@ export default function ListNotices() {
          <Header />
          <div className="main">
             <ContainerPesquisa>
-               <h1>Pesquisar {loading && ' - Carregando as notícias...'}</h1>
+               <h1>Pesquisar {loading && ' - Carregando...'}</h1>
 
                <Search>
                   <select

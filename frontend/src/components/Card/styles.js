@@ -67,9 +67,9 @@ export const Container = styled.div`
       flex-direction: row;
 
       img {
-         max-width: 40%;
+         max-width: 32%;
          height: auto;
-         max-height: 40%;
+         max-height: 32%;
       }
 
       div strong {

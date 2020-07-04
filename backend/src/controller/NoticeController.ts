@@ -98,7 +98,17 @@ export default class NoticeController {
         if(viewed == 'true'){
             getConnection().transaction(async manager => {
                 const repository = manager.getRepository(Notice);
-                const foundNotice = await repository.findOne(req.params["id"]);
+				const foundNotice = await repository.findOne(req.params["id"], { select: [
+					'id',
+					'title',
+					'abstract',
+					'date',
+					'text',
+					'views',
+					'user',
+					'tags'
+				]});
+
                 foundNotice.views++;
                 const result = await repository.save(foundNotice);
                 return res.json(result);

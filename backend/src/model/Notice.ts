@@ -22,8 +22,7 @@ export class Notice {
     @IsDate({ always: false })
     date: Date;
 
-    @Column()
-    @IsString()
+	@Column({ select: false })
     text: string;
 
     @Column({ default: 0 })

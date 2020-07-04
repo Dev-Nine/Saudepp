@@ -22,7 +22,7 @@ export default class App {
 	this.initializeMiddlewares();
 
 	// Define routes
-        this.routes = new Routes;
+	this.routes = new Routes;
 	this.routes.defineRoutes();
 	this.app.use(this.routes.routes);
     

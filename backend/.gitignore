@@ -7,3 +7,4 @@ temp/
 yarn-error.log
 .env
 dist/
+.deploy

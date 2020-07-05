@@ -107,11 +107,14 @@ export default class CommentController {
             const comment: Comment = await this.processEditData(req);
 
             const foundComment = await this.repository.findOne(req.params["id"]);
-            this.repository.merge(foundComment, comment);
+            if (foundComment) {
+				this.repository.merge(foundComment, comment);
 
-            const result = await this.repository.save(foundComment);
+				const result = await this.repository.save(foundComment);
 
-            return res.json(result);
+				return res.json(result);
+			}
+			throw new NotFound;
         }catch(err){
             return next();
         }

@@ -95,11 +95,8 @@ export default class TagController {
 
             const foundTag = await this.repository.findOne(req.params["id"]);
             if(foundTag){
-                
                 this.repository.merge(foundTag, tag);
-
                 const result = await this.repository.save(foundTag);
-
                 return res.json(result);
             }
             throw new NotFound;

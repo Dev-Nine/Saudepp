@@ -207,11 +207,13 @@ export default class NoticeController {
             const notice: Notice = await this.processEditData(req);
 
             const foundNotice = await this.repository.findOne(req.params["id"]);
-            this.repository.merge(foundNotice, notice);
+			if (foundNotice) {
+				this.repository.merge(foundNotice, notice);
 
-            const result = await this.repository.save(foundNotice);
-            return res.json(result);
-            
+				const result = await this.repository.save(foundNotice);
+				return res.json(result);
+			}
+			throw new NotFound;
         }catch(err){
             return next(err);
         }

@@ -22,9 +22,9 @@ export class User {
     @MaxLength(20)
     username: string;
 
-    @Column({ length: 8000, select: false })
+    @Column({ length: 72, select: false })
     @IsString()
-    @MaxLength(8000)
+    @MaxLength(72)
     password: string;
 
     @Column({ unique: true, length: 50, select: false })

@@ -1,6 +1,6 @@
 import React, { useRef, useCallback } from 'react';
 
-import { FiLock, FiUser, FiMail } from 'react-icons/fi';
+import { FiLock, FiUser, FiMail, FiCreditCard, FiKey } from 'react-icons/fi';
 import * as Yup from 'yup';
 import { Form } from '@unform/web';
 import { useHistory } from 'react-router-dom';
@@ -19,8 +19,9 @@ export default function Reguster() {
 
    const handleSubmit = useCallback(async (data) => {
       try {
-         formRef.current.setErrors({});
-      } catch (err) {}
+      } catch (err) {
+         console.log(err);
+      }
    }, []);
 
    return (
@@ -31,14 +32,10 @@ export default function Reguster() {
             <Input icon={FiMail} name="email" placeholder="Email" />
 
             <Input icon={FiUser} name="name" placeholder="Nome Completo" />
-            <Input
-               icon={FiUser}
-               name="username"
-               placeholder="Nome de Usuário"
-            />
+            <Input icon={FiKey} name="username" placeholder="Nome de Usuário" />
 
             <Input
-               icon={FiUser}
+               icon={FiCreditCard}
                name="identifier"
                placeholder="CPF"
                mask="999.999.999-99"

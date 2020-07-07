@@ -1,7 +1,7 @@
 import CreateNoticies from './CreateNoticies';
 import Home from './Home';
 import ListNotices from './ListNotices';
-import Login from './Login';
+import SignIn from './SignIn';
 import NotFound from './NotFound';
 import NoticeDisplay from './NoticeDisplay';
 import Register from './Register';
@@ -15,7 +15,7 @@ export {
    CreateNoticies,
    Home,
    ListNotices,
-   Login,
+   SignIn,
    NotFound,
    NoticeDisplay,
    Register,

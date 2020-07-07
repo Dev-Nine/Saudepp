@@ -6,7 +6,7 @@ import {
    CreateNoticies,
    Home,
    ListNotices,
-   Login,
+   SignIn,
    RegisterProfessional,
    NotFound,
    NoticeDisplay,
@@ -21,7 +21,7 @@ export default function Routes() {
    return (
       <Switch>
          <Route path="/" exact component={Home} />
-         <Route path="/login" exact component={Login} />
+         <Route path="/signIn" exact component={SignIn} />
          <Route path="/notices" exact component={ListNotices} />
          <Route path="/about" exact component={About} />
          <Route path="/faq" exact component={Faq} />

@@ -3,16 +3,14 @@ import React, { useRef, useCallback } from 'react';
 import { FiLock, FiUser } from 'react-icons/fi';
 import * as Yup from 'yup';
 import { Form } from '@unform/web';
-import { FormHandles } from '@unform/core';
 import { useHistory } from 'react-router-dom';
 
 import { useAuth } from '../../hooks/AuthProvider';
-import Return from '../../components/return';
 import Input from '../../components/Input';
 import getValidationErros from '../../utils/getValidationErros';
 import { Container } from './styles';
 
-export default function Login() {
+export default function SignIn() {
    const history = useHistory();
 
    const formRef = useRef(null);

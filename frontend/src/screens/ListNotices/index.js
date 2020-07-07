@@ -49,23 +49,24 @@ export default function ListNotices() {
    );
 
    useEffect(() => {
-      setLoading(true);
-      api.get(`/notices?tag=${selectedTags}`)
-         .then(({ data }) => {
-            setNotices(
-               data.map((d) => (
-                  <li key={d.id}>
-                     <Card data={d} />
-                  </li>
-               )),
-            );
-         })
-         .catch(() => {
-            setNotices(<p>Não encontrado...</p>);
-         })
-         .finally(() => {
+      async function loadNotices() {
+         setLoading(true);
+         const foramttedTags = selectedTags.map((t) => t.id).join(',');
+
+         try {
+            const { data } = await api.get('notices', {
+               params: {
+                  tag: foramttedTags,
+               },
+            });
+
+            setNotices(data);
+         } finally {
             setLoading(false);
-         });
+         }
+      }
+
+      loadNotices();
    }, [selectedTags]);
 
    useEffect(() => {
@@ -112,7 +113,11 @@ export default function ListNotices() {
                </TagContainer>
             </ContainerPesquisa>
             <ContainerNoticia>
-               <ul>{notices}</ul>
+               {notices.map((n) => (
+                  <li key={n.id}>
+                     <Card data={n} />
+                  </li>
+               ))}
             </ContainerNoticia>
          </div>
          <Footer />

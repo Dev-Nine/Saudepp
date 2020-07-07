@@ -7,13 +7,7 @@ export class Tag {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ 
-        unique: true, 
-    })
-    @MinLength(2)
-    title: string;
-
-    @Column()
+    @Column({ unique: true })
     @IsString()
     @MinLength(2)
     description: string;

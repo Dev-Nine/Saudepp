@@ -116,7 +116,11 @@ export default function NoticeDisplay(props) {
             <CoronaCard />
             <ContainerNoticia>
                {isLoading ? (
-                  <img src={loadingNotice} alt="Notice load" />
+                  <img
+                     className="image-banner"
+                     src={loadingNotice}
+                     alt="Notice load"
+                  />
                ) : (
                   <div>
                      <div className="container">

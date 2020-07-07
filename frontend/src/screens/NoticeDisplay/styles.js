@@ -34,7 +34,7 @@ export const ContainerNoticia = styled.div`
       padding: 16px 40px;
    }
 
-   img {
+   .image-banner {
       width: 70%;
       padding: 16px 20px;
    }
@@ -62,7 +62,7 @@ export const ContainerNoticia = styled.div`
          padding: 16px 20px;
       }
 
-      img {
+      .image-banner {
          width: 100%;
          padding: 16px 20px;
       }
@@ -71,6 +71,19 @@ export const ContainerNoticia = styled.div`
 
 export const TextContainer = styled.div`
    padding: 16px 40px;
+   display: flex;
+   flex-direction: column;
+
+   img {
+      max-height: 400px;
+      max-width: 100%;
+      margin: 0 0 24px 0;
+      align-self: center;
+   }
+
+   p {
+      font-size: 20px;
+   }
 
    @media only screen and (max-width: 1099px) {
       padding: 16px 20px;

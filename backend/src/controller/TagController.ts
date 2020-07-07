@@ -35,7 +35,6 @@ export default class TagController {
         const tag = new Tag();
         const body = req["body"];
 
-        tag.title = body.title;
         tag.description = body.description;
 
         return tag;
@@ -45,7 +44,6 @@ export default class TagController {
         const tag = new Tag();
         const body = req["body"];
 
-        tag.title = body.title;
         tag.description = body.description;
 
         return tag;

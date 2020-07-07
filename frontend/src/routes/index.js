@@ -33,15 +33,15 @@ export default function Routes() {
             exact
             component={CreateNoticies}
          />
-         <Route path="/painel/register" isPrivate exact component={Register} />
+         <Route path="/panel/register" isPrivate exact component={Register} />
          <Route
-            path="/painel/register/professional"
+            path="/panel/register/professional"
             isPrivate
             exact
             component={RegisterProfessional}
          />
          <Route
-            path="/painel/register/medic"
+            path="/panel/register/medic"
             exact
             isPrivate
             component={RegisterMedic}

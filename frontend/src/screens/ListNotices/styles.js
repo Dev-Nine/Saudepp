@@ -28,6 +28,12 @@ export const Search = styled.div`
       line-height: 28px;
       background-color: #ffffff;
    }
+
+   @media (max-width: 1099px) {
+      select {
+         width: 100%;
+      }
+   }
 `;
 
 export const TagContainer = styled.div`
@@ -56,7 +62,7 @@ export const TagButton = styled.button`
 
 export const ContainerNoticia = styled.div`
    background-color: #f9f7f7;
-   padding: 15px 40px;
+   padding: 16px 20px;
    border-radius: 10px;
    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
    margin-bottom: 20px;
@@ -70,8 +76,6 @@ export const ContainerNoticia = styled.div`
    }
 
    ul {
-      margin-top: 15px;
-
       display: grid;
       grid-template-columns: repeat(4, minmax(200px, 300px));
       gap: 2rem;
@@ -81,6 +85,7 @@ export const ContainerNoticia = styled.div`
 
    @media (max-width: 1099px) {
       width: 100%;
+      padding: 16px 12px;
       ul {
          grid-template-columns: repeat(1, 1fr);
       }

@@ -97,7 +97,6 @@ export const Container = styled.div`
          right: 30px;
          top: 72px;
          z-index: 20;
-         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
          border-radius: 0 0 8px 8px;
       }
 
@@ -129,7 +128,7 @@ export const Container = styled.div`
       @keyframes show-dropdown {
          0% {
             transform: scale(1, 0);
-            top: -35px;
+            top: -32px;
          }
          100% {
             transform: scale(1, 1);
@@ -142,7 +141,7 @@ export const Container = styled.div`
          }
          100% {
             transform: scale(1, 0);
-            top: -35px;
+            top: -32px;
          }
       }
    }

@@ -46,7 +46,7 @@ export default class Routes {
             celebrate({
                 body: Joi.object().keys({ 
                     username: Joi.string().required().regex(/^[a-z0-9_]{4,20}$/),
-                    password: Joi.string().required().regex(/^[a-zA-Z0-9!@#$%&*]{6,30}$/),
+                    password: Joi.string().required().regex(/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9!@#$%&_-]{6,30})$/),
                     email: Joi.string().required().email(),
                     name: Joi.string().required().regex(/^[a-zA-Z ]{4,50}$/),
                     type: Joi.number().required().min(0).max(3),
@@ -62,7 +62,7 @@ export default class Routes {
             celebrate({
                 body: Joi.object().keys({ 
                     username: Joi.string().regex(/^[a-z0-9_]{4,20}$/),
-                    password: Joi.string().regex(/^[a-zA-Z0-9!@#$%&*]{6,30}$/),
+                    password: Joi.string().regex(/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9!@#$%&_-]{6,30})$/),
                     email: Joi.string().email(),
                     name: Joi.string().regex(/^[a-zA-Z ]{4,50}$/),
                     type: Joi.number().min(0).max(3),
@@ -84,7 +84,6 @@ export default class Routes {
             ensureAuthentication, 
             celebrate({
                 body: Joi.object().keys({ 
-                    title: Joi.string().regex(/^[a-z_]{2,30}$/).required(),
                     description: Joi.string().min(2).max(50).required(),
                 })
             }, {
@@ -95,7 +94,6 @@ export default class Routes {
             ensureAuthentication, 
             celebrate({
                 body: Joi.object().keys({ 
-                    title: Joi.string().regex(/^[a-z_]{2,30}$/),
                     description: Joi.string().min(2).max(50),
                 })
             }, {

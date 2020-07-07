@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useField } from '@unform/core';
 import { FiAlertCircle } from 'react-icons/fi';
+import InputMask from 'react-input-mask';
 
 import { Container, Error } from './styles';
 
@@ -29,7 +30,7 @@ const Input = ({ name, icon: Icon, ...rest }) => {
    return (
       <Container isErrored={!!error} isFilled={isFilled} isFocused={isFocused}>
          {Icon && <Icon size={20} />}
-         <input
+         <InputMask
             onFocus={() => handleInputFocus()}
             onBlur={() => handleInputBlur()}
             ref={inputRef}

@@ -48,7 +48,7 @@ export default class Routes {
                     username: Joi.string().required().regex(/^[a-z0-9_]{4,20}$/),
                     password: Joi.string().required().regex(/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9!@#$%&_-]{6,30})$/),
                     email: Joi.string().required().email(),
-                    name: Joi.string().required().regex(/^[a-zA-Z ]{4,50}$/),
+                    name: Joi.string().required().regex(/^[a-zá-ùA-ZÁ-Ù ]{4,50}$/),
                     type: Joi.number().required().min(0).max(3),
                     identifierType: Joi.string().default('cpf'),
                     identifier: Joi.when('identifierType', { is: Joi.string().regex(/^cpf$/), then: Joi.document().cpf()})

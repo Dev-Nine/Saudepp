@@ -2,12 +2,11 @@ import { Request, Response } from 'express';
 import { QueryFailedError } from 'typeorm';
 import { BaseError } from '../Errors';
 
-export default function (err: Error | BaseError, req: Request, res: Response, next: Function) {    
+export default function (err: BaseError | Error, req: Request, res: Response, next: Function) {    
 	let status: number = 400;
 
 	// Se estiver em ambiente de desenvolvimento e o erro não for uma instancia de NotFound
-    const isBaseError = err.name == BaseError.name;
-	console.dir(err);	
+	const isBaseError = err instanceof BaseError;
 	console.log(isBaseError);
 
 	// Se nao for um BaseError
@@ -34,6 +33,7 @@ export default function (err: Error | BaseError, req: Request, res: Response, ne
 		}
 	} else {
 		// Se for um BaseError, realize um cast e armazene o statusCode
+		
 		status = (<BaseError>err).statusCode;	
 	}
 

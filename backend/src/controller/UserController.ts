@@ -196,14 +196,17 @@ export default class UserController {
                 "username", 
                 "password", 
             ]});
+			
+			if (foundUser) {
+				this.repository.merge(foundUser, user);
 
-            this.repository.merge(foundUser, user);
+				const result = await this.repository.save(foundUser);
+				delete result.id;
+				delete result.password;
 
-            const result = await this.repository.save(foundUser);
-            delete result.id;
-            delete result.password;
-
-            return res.json(result);
+				return res.json(result);
+			}
+			throw new NotFound;
         }catch(err){
             return next(err);
 	}

@@ -98,7 +98,17 @@ export default class NoticeController {
         if(viewed == 'true'){
             getConnection().transaction(async manager => {
                 const repository = manager.getRepository(Notice);
-                const foundNotice = await repository.findOne(req.params["id"]);
+				const foundNotice = await repository.findOne(req.params["id"], { select: [
+					'id',
+					'title',
+					'abstract',
+					'date',
+					'text',
+					'views',
+					'user',
+					'tags'
+				]});
+
                 foundNotice.views++;
                 const result = await repository.save(foundNotice);
                 return res.json(result);
@@ -197,11 +207,13 @@ export default class NoticeController {
             const notice: Notice = await this.processEditData(req);
 
             const foundNotice = await this.repository.findOne(req.params["id"]);
-            this.repository.merge(foundNotice, notice);
+			if (foundNotice) {
+				this.repository.merge(foundNotice, notice);
 
-            const result = await this.repository.save(foundNotice);
-            return res.json(result);
-            
+				const result = await this.repository.save(foundNotice);
+				return res.json(result);
+			}
+			throw new NotFound;
         }catch(err){
             return next(err);
         }

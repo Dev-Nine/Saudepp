@@ -28,18 +28,20 @@ export default function ListNotices() {
 
    const handleSelectCategory = useCallback(
       (id) => {
-         if (!id || selectedTags.includes(id)) {
+         if (!id) {
             return;
          }
 
-         setSelectedTags([...selectedTags, id]);
+         const selectedTag = tags.find((t) => t.id == id);
+
+         setSelectedTags([...selectedTags, selectedTag]);
       },
-      [selectedTags],
+      [selectedTags, tags],
    );
 
    const handleDeleteCategory = useCallback(
       (id) => {
-         const newTags = selectedTags.filter((item) => item !== id);
+         const newTags = selectedTags.filter((t) => t.id !== id);
 
          setSelectedTags(newTags);
       },
@@ -96,14 +98,14 @@ export default function ListNotices() {
                </Search>
 
                <TagContainer>
-                  {selectedTags.map((id) => (
+                  {selectedTags.map((item) => (
                      <TagButton
                         onClick={() => {
-                           handleDeleteCategory(id);
+                           handleDeleteCategory(item.id);
                         }}
-                        key={id}
+                        key={item.id}
                      >
-                        <span>{tags[id - 1].description}</span>
+                        <span>{item.description}</span>
                         <FiXCircle size={18} color="#fff" />
                      </TagButton>
                   ))}

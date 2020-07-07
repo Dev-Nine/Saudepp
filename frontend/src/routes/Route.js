@@ -5,7 +5,6 @@ import { useAuth } from '../hooks/AuthProvider';
 const Route = ({ isPrivate = false, component: Component, ...rest }) => {
    const { user } = useAuth();
    window.scrollTo(0, 0);
-   console.log(isPrivate === !!user);
    return (
       <ReactDOMRoute
          render={({ location }) => {

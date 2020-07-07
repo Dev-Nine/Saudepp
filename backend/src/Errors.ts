@@ -1,36 +1,41 @@
 export class BaseError extends Error {
 	public statusCode: number;
 
-	constructor(message: string) {
+	constructor(message: string, errName : string = 'baseError') {
 		super(message);
-		this.name = 'baseError';	
+		Object.setPrototypeOf(this, BaseError.prototype);
+		this.name = errName;	
 	}
 }
 
 export class NotFound extends BaseError {
 	constructor(){
-		super('Not found');
+		super('Not found', 'notFoundError');
+		Object.setPrototypeOf(this, NotFound.prototype);
 		this.statusCode = 404;
 	}
 }
 
 export class Forbidden extends BaseError {
 	constructor(){
-		super("You don't have permission to acess this resource");
+		super("You don't have permission to acess this resource", 'forbiddenError');
+		Object.setPrototypeOf(this, Forbidden.prototype);
 		this.statusCode = 403;
 	}
 }
 
 export class Unauthorized extends BaseError {
 	constructor(){
-		super("You aren’t authenticated, please login or send your token");
+		super("You aren’t authenticated, please login or send your token", 'unauthorizedError');
+		Object.setPrototypeOf(this, Unauthorized.prototype);
 		this.statusCode = 401;
 	}
 }
 
 export class MissingJWT extends BaseError {
 	constructor(){
-		super("JWT Token is missing");
+		super("JWT Token is missing", 'missingJwtError');
+		Object.setPrototypeOf(this, MissingJWT.prototype);
 		this.statusCode = 400;
 	}
 }

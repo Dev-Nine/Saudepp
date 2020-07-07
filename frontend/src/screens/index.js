@@ -2,9 +2,9 @@ import CreateNoticies from './CreateNoticies';
 import Home from './Home';
 import ListNotices from './ListNotices';
 import SignIn from './SignIn';
+import Register from './Register';
 import NotFound from './NotFound';
 import NoticeDisplay from './NoticeDisplay';
-import Register from './Register';
 import RegisterMedic from './RegisterMedic';
 import RegisterProfessional from './RegisterProfessional';
 import Faq from './Faq';
@@ -16,9 +16,9 @@ export {
    Home,
    ListNotices,
    SignIn,
+   Register,
    NotFound,
    NoticeDisplay,
-   Register,
    RegisterMedic,
    RegisterProfessional,
    Faq,

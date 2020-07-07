@@ -10,11 +10,11 @@ import {
    RegisterProfessional,
    NotFound,
    NoticeDisplay,
-   Register,
    RegisterMedic,
    Faq,
    FaqCovid19,
    About,
+   Register,
 } from '../screens';
 
 export default function Routes() {

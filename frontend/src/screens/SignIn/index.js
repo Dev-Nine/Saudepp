@@ -36,9 +36,7 @@ export default function SignIn() {
                signInData = { email: data.user, password: data.password };
             } else {
                schema = Yup.object().shape({
-                  user: Yup.string()
-                     .required('Insira um Usuário válido')
-                     .min(4),
+                  user: Yup.string().required('Insira um Usuário válido'),
                   password: Yup.string().required('Senha obrigatória'),
                });
 

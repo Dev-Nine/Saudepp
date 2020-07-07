@@ -49,7 +49,7 @@ export default function Reguster() {
 
             password: Yup.string()
                .matches(
-                  /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9!@#$%&_-]{6,30})$/,
+                  /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]{6,30})$/,
                   'Uma senha deve conter ao menos uma letra e um número',
                )
                .matches(

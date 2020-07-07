@@ -76,6 +76,7 @@ export const TextContainer = styled.div`
 
    img {
       max-height: 400px;
+      max-width: 100%;
       margin: 0 0 24px 0;
       align-self: center;
    }

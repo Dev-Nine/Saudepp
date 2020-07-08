@@ -9,6 +9,7 @@ import { cpf } from 'cpf-cnpj-validator';
 import { useAuth } from '../../hooks/AuthProvider';
 import Input from '../../components/Input';
 import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 
 import getValidationErros from '../../utils/getValidationErros';
 import { Container } from './styles';
@@ -142,6 +143,7 @@ export default function Reguster() {
                </div>
             </Form>
          </Container>
+         <Footer />
       </>
    );
 }

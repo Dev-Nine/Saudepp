@@ -4,6 +4,7 @@ import { FiLock, FiUser, FiMail, FiCreditCard, FiKey } from 'react-icons/fi';
 import * as Yup from 'yup';
 import { Form } from '@unform/web';
 import { useHistory } from 'react-router-dom';
+import { cpf } from 'cpf-cnpj-validator';
 
 import { useAuth } from '../../hooks/AuthProvider';
 import Input from '../../components/Input';
@@ -32,7 +33,6 @@ export default function Reguster() {
                )
                .max(50, 'Um nome deve ter no máximo 50 letras')
                .min(4, 'Um nome deve ter ao menos 4 letras.'),
-
             username: Yup.string()
                .matches(
                   /^[a-z0-9_]{4,20}$/,
@@ -46,7 +46,11 @@ export default function Reguster() {
                   4,
                   'Um nome de usuário deve ter ao menos 4 letras ou números',
                ),
-
+            identifier: Yup.string().test(
+               'valid cpf',
+               'is not a valid cpf',
+               (value) => cpf.isValid(value),
+            ),
             password: Yup.string()
                .matches(
                   /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9])$/,
@@ -58,7 +62,6 @@ export default function Reguster() {
                )
                .max(20, 'Uma senha deve ter no máximo 20 caracteres')
                .min(6, 'Uma senha deve ter ao menos 6 caracteres'),
-
             confirmPassword: Yup.string().oneOf(
                [Yup.ref('password'), null],
                'As senhas não coincidem',

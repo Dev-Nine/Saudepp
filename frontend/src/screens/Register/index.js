@@ -8,6 +8,8 @@ import { cpf } from 'cpf-cnpj-validator';
 
 import { useAuth } from '../../hooks/AuthProvider';
 import Input from '../../components/Input';
+import Header from '../../components/Header';
+
 import getValidationErros from '../../utils/getValidationErros';
 import { Container } from './styles';
 import api from '../../services/api';
@@ -98,41 +100,48 @@ export default function Reguster() {
    );
 
    return (
-      <Container>
-         <Form ref={formRef} onSubmit={handleSubmit}>
-            <h1>Cadastrar Novo Usuário</h1>
+      <>
+         <Header />
+         <Container>
+            <Form ref={formRef} onSubmit={handleSubmit}>
+               <h1>Cadastrar Novo Usuário</h1>
 
-            <Input icon={FiMail} name="email" placeholder="Email" />
+               <Input icon={FiMail} name="email" placeholder="Email" />
 
-            <Input icon={FiUser} name="name" placeholder="Nome Completo" />
-            <Input icon={FiKey} name="username" placeholder="Nome de Usuário" />
+               <Input icon={FiUser} name="name" placeholder="Nome Completo" />
+               <Input
+                  icon={FiKey}
+                  name="username"
+                  placeholder="Nome de Usuário"
+               />
 
-            <Input
-               icon={FiCreditCard}
-               name="identifier"
-               placeholder="CPF"
-               mask="999.999.999-99"
-            />
+               <Input
+                  icon={FiCreditCard}
+                  name="identifier"
+                  placeholder="CPF"
+                  mask="999.999.999-99"
+               />
 
-            <Input
-               icon={FiLock}
-               name="password"
-               placeholder="Sua Senha"
-               type="password"
-            />
-            <Input
-               icon={FiLock}
-               name="confirmPassword"
-               placeholder="Confirme sua Senha"
-               type="password"
-            />
+               <Input
+                  icon={FiLock}
+                  name="password"
+                  placeholder="Sua Senha"
+                  type="password"
+               />
+               <Input
+                  icon={FiLock}
+                  name="confirmPassword"
+                  placeholder="Confirme sua Senha"
+                  type="password"
+               />
 
-            <button type="submit">Criar Conta</button>
+               <button type="submit">Criar Conta</button>
 
-            <div>
-               <a href="asd">Já tem uma conta? Entre.</a>
-            </div>
-         </Form>
-      </Container>
+               <div>
+                  <a href="asd">Já tem uma conta? Entre.</a>
+               </div>
+            </Form>
+         </Container>
+      </>
    );
 }

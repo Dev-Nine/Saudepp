@@ -10,6 +10,7 @@ import { useAuth } from '../../hooks/AuthProvider';
 import Input from '../../components/Input';
 import getValidationErros from '../../utils/getValidationErros';
 import { Container } from './styles';
+import api from '../../services/api';
 
 export default function Reguster() {
    const history = useHistory();
@@ -18,70 +19,83 @@ export default function Reguster() {
 
    const { signIn } = useAuth();
 
-   const handleSubmit = useCallback(async (data) => {
-      try {
-         console.log(data);
-         formRef.current.setErrors({});
-         const schema = Yup.object().shape({
-            email: Yup.string()
-               .required('Informe um email válido')
-               .email('Informe um email válido'),
-            name: Yup.string()
-               .matches(
-                  /^[a-zá-ùA-ZÁ-Ù ]{4,50}$/,
-                  'Um nome não pode conter caracteres espeiciais',
-               )
-               .max(50, 'Um nome deve ter no máximo 50 letras')
-               .min(4, 'Um nome deve ter ao menos 4 letras.'),
-            username: Yup.string()
-               .matches(
-                  /^[a-z0-9_]{4,20}$/,
-                  'Um nome de usuário não pode conter símbolos',
-               )
-               .max(
-                  20,
-                  'Um nome de usuário deve ter no máximo 20 letras ou números',
-               )
-               .min(
-                  4,
-                  'Um nome de usuário deve ter ao menos 4 letras ou números',
+   const handleSubmit = useCallback(
+      async (data) => {
+         try {
+            console.log(data);
+            formRef.current.setErrors({});
+            const schema = Yup.object().shape({
+               email: Yup.string()
+                  .required('Informe um email válido')
+                  .email('Informe um email válido'),
+               name: Yup.string()
+                  .matches(
+                     /^[a-zá-ùA-ZÁ-Ù ]{4,50}$/,
+                     'Um nome não pode conter caracteres espeiciais',
+                  )
+                  .max(50, 'Um nome deve ter no máximo 50 letras')
+                  .min(4, 'Um nome deve ter ao menos 4 letras.'),
+               username: Yup.string()
+                  .matches(
+                     /^[a-z0-9_]{4,20}$/,
+                     'Um nome de usuário não pode conter símbolos',
+                  )
+                  .max(
+                     20,
+                     'Um nome de usuário deve ter no máximo 20 letras ou números',
+                  )
+                  .min(
+                     4,
+                     'Um nome de usuário deve ter ao menos 4 letras ou números',
+                  ),
+               identifier: Yup.string().test(
+                  'CPF válido',
+                  'Informe um CPF válido',
+                  (value) => cpf.isValid(value),
                ),
-            identifier: Yup.string().test(
-               'valid cpf',
-               'is not a valid cpf',
-               (value) => cpf.isValid(value),
-            ),
-            password: Yup.string()
-               .matches(
-                  /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9])$/,
-                  'Uma senha deve conter ao menos uma letra e um número',
-               )
-               .matches(
-                  /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9!@#$%&_-])$/,
-                  'São permitidos somente estes caracteres especiais: !, @, #, $, &, %, _ e -',
-               )
-               .max(20, 'Uma senha deve ter no máximo 20 caracteres')
-               .min(6, 'Uma senha deve ter ao menos 6 caracteres'),
-            confirmPassword: Yup.string().oneOf(
-               [Yup.ref('password'), null],
-               'As senhas não coincidem',
-            ),
-         });
+               password: Yup.string()
+                  .matches(
+                     /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9])$/,
+                     'Uma senha deve conter ao menos uma letra e um número',
+                  )
+                  .matches(
+                     /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9!@#$%&_-])$/,
+                     'São permitidos somente estes caracteres especiais: !, @, #, $, &, %, _ e -',
+                  )
+                  .max(20, 'Uma senha deve ter no máximo 20 caracteres')
+                  .min(6, 'Uma senha deve ter ao menos 6 caracteres'),
+               confirmPassword: Yup.string().oneOf(
+                  [Yup.ref('password'), null],
+                  'As senhas não coincidem',
+               ),
+            });
 
-         await schema.validate(data, {
-            abortEarly: false,
-         });
-      } catch (err) {
-         if (err instanceof Yup.ValidationError) {
-            const erros = getValidationErros(err);
+            await schema.validate(data, {
+               abortEarly: false,
+            });
 
-            formRef.current.setErrors(erros);
-            return;
+            await api.post('users', {
+               ...data,
+               identifierType: 'cpf',
+               type: 0,
+            });
+
+            await signIn({ username: data.username, password: data.password });
+
+            history.push('/');
+         } catch (err) {
+            if (err instanceof Yup.ValidationError) {
+               const erros = getValidationErros(err);
+
+               formRef.current.setErrors(erros);
+               return;
+            }
+
+            console.log(err);
          }
-
-         console.log(err);
-      }
-   }, []);
+      },
+      [history, signIn],
+   );
 
    return (
       <Container>

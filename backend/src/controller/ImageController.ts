@@ -1,14 +1,9 @@
 import { Request, Response } from 'express';
 import fs = require('fs')
-import imgurApi from '../utils/imgurApi';
+import imgurApi, {config} from '../utils/imgurApi';
 import { NotFound } from '../Errors';
 
-export default class CommentController {
-    private config = {
-        headers: {
-            Authorization: `Client-ID ${process.env.IMGUR_ID}`
-        }
-    };
+export default class ImageController {
 
     public async create(req : Request, res : Response, next) : Promise<Response>{
         const {path} = req.file;
@@ -20,7 +15,7 @@ export default class CommentController {
                     image: base64image
                 }
     
-                imgurApi.post("upload/", form, this.config)
+                imgurApi.post("upload/", form, config)
                 .then(response => {
                     const result = response.data
                     const data = {
@@ -38,16 +33,5 @@ export default class CommentController {
         } finally {
             fs.unlink(path, () => {});
         }
-    }
-
-    public async delete(req : Request, res : Response, next) : Promise<Response>{
-        const deleteHash = req.params["deleteHash"]
-        imgurApi.delete(`image/${deleteHash}`, this.config)
-        .then(response => {
-            const result = response.data
-            return res.status(result.status).json(result.data)
-        }).catch(err => {
-            return next(err);
-        })
     }
 }

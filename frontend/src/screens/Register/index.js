@@ -57,13 +57,14 @@ export default function Reguster() {
                   (value) => cpf.isValid(value),
                ),
                password: Yup.string()
+
                   .matches(
-                     /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9])$/,
-                     'Uma senha deve conter ao menos uma letra e um número',
+                     /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9!@#$%&_-]{6,30})$/,
+                     'São permitidos somente estes caracteres especiais: !, @, #, $, &, %, _ e -',
                   )
                   .matches(
-                     /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9!@#$%&_-])$/,
-                     'São permitidos somente estes caracteres especiais: !, @, #, $, &, %, _ e -',
+                     /^(?=.*[0-9])(?=.*[a-zA-Z])(^.{6,30})$/,
+                     'Uma senha deve conter ao menos uma letra e um número',
                   )
                   .max(20, 'Uma senha deve ter no máximo 20 caracteres')
                   .min(6, 'Uma senha deve ter ao menos 6 caracteres'),

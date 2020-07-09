@@ -5,6 +5,7 @@ import UserController from "./controller/UserController";
 import NoticeController from "./controller/NoticeController";
 import TagController from "./controller/TagController";
 import SessionController from "./controller/SessionController";
+import ImageController from "./controller/ImageController";
 
 import ensureAuthentication from './middlewares/ensureAuthentication'
 import verifyAuthentication from './middlewares/verifyAuthentication'
@@ -16,6 +17,8 @@ import { BaseError } from './Errors';
 import { celebrate } from 'celebrate';
 import validator from 'cpf-cnpj-validator'
 const Joi = require('@hapi/joi').extend(validator)
+import multer = require('multer');
+import multerConfig from './config/multerConfig'
 
 export default class Routes {
     public routes: Router;
@@ -24,6 +27,8 @@ export default class Routes {
     // private commentController: CommentController;
     private tagController: TagController;
     private sessionController: SessionController;
+    private imageController: ImageController;
+    private upload = multer(multerConfig);
 
     constructor() {
         this.routes = Router();
@@ -32,6 +37,8 @@ export default class Routes {
         // this.commentController = new CommentController();
         this.tagController = new TagController();
         this.sessionController = new SessionController();
+        this.imageController = new ImageController();
+
     }
 
     public defineRoutes() {
@@ -111,13 +118,15 @@ export default class Routes {
                 body: Joi.object().keys({ 
                     title: Joi.string().min(5).max(70).required(),
                     abstract: Joi.string().min(5).max(120).required(),
+                    imageId: Joi.string().max(8).optional(),
                     text: Joi.string().required(),
                     tags: Joi.array().items({ id: Joi.number() }),
                 })
             }, {
                 abortEarly: false
             }),
-            this.noticeController.create.bind(this.noticeController));
+            //this.noticeController.create.bind(this.noticeController)
+        );
         this.routes.put("/notices/:id", 
             ensureAuthentication, 
             celebrate({
@@ -132,6 +141,18 @@ export default class Routes {
             }),
             this.noticeController.edit.bind(this.noticeController));
         this.routes.delete("/notices/:id", ensureAuthentication, this.noticeController.delete.bind(this.noticeController));
+
+        // IMAGEM
+        this.routes.post("/images", 
+            ensureAuthentication,
+            this.upload.single('image'),
+            this.imageController.create.bind(this.imageController)
+        );
+
+        this.routes.delete("/images/:deleteHash", 
+            ensureAuthentication,
+            this.imageController.delete.bind(this.imageController)
+        );
 
         // COMENTARIOS
         // this.routes.get("/comments", this.commentController.getAll.bind(this.commentController));

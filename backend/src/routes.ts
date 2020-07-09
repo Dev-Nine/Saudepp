@@ -118,14 +118,16 @@ export default class Routes {
                 body: Joi.object().keys({ 
                     title: Joi.string().min(5).max(70).required(),
                     abstract: Joi.string().min(5).max(120).required(),
-                    imageId: Joi.string().max(8).optional(),
                     text: Joi.string().required(),
                     tags: Joi.array().items({ id: Joi.number() }),
+                    imageId: Joi.string().max(8).optional(),
+                    imageType: Joi.when('imageId', { is: Joi.exist(), then: Joi.string().max(5).required(), otherwise: Joi.string().default(null)}),
+                    deleteHash: Joi.when('imageId', { is: Joi.exist(), then: Joi.string().max(16).required(), otherwise: Joi.string().default(null)}),
                 })
             }, {
                 abortEarly: false
             }),
-            //this.noticeController.create.bind(this.noticeController)
+            this.noticeController.create.bind(this.noticeController)
         );
         this.routes.put("/notices/:id", 
             ensureAuthentication, 
@@ -135,6 +137,9 @@ export default class Routes {
                     abstract: Joi.string().min(5).max(120),
                     text: Joi.string(),
                     tags: Joi.array().items({ id: Joi.number() }),
+                    imageId: Joi.string().max(8).optional(),
+                    imageType: Joi.when('imageId', { is: Joi.exist(), then: Joi.string().max(5).required(), otherwise: Joi.string().default(null)}),
+                    deleteHash: Joi.when('imageId', { is: Joi.exist(), then: Joi.string().max(16).required(), otherwise: Joi.string().default(null)}),
                 })
             }, {
                 abortEarly: false
@@ -148,12 +153,7 @@ export default class Routes {
             this.upload.single('image'),
             this.imageController.create.bind(this.imageController)
         );
-
-        this.routes.delete("/images/:deleteHash", 
-            ensureAuthentication,
-            this.imageController.delete.bind(this.imageController)
-        );
-
+        
         // COMENTARIOS
         // this.routes.get("/comments", this.commentController.getAll.bind(this.commentController));
         // this.routes.get("/comments/:id", this.commentController.getByPk.bind(this.commentController));

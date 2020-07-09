@@ -26,6 +26,18 @@ export class Notice {
     @IsString()
     text: string;
 
+    @Column({ length: 8 })
+    @IsString()
+    imageId: string;
+
+    @Column({ length: 5 })
+    @IsString()
+    imageType: string;
+
+    @Column({ length: 16 })
+    @IsString()
+    deleteHash: string;
+
     @Column({ default: 0 })
     @IsNumber()
     views: number;

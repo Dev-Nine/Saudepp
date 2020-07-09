@@ -3,6 +3,7 @@ import { Notice } from '../model/Notice';
 import { Request, Response } from 'express';
 import { User, UserRole } from '../model/User';
 import { Tag } from '../model/Tag';
+import imgurApi, { config } from '../utils/imgurApi'
 
 import { NotFound } from '../Errors';
 
@@ -24,10 +25,13 @@ export default class NoticeController {
     public async validateEdit(req : Request): Promise<number>{
         // somente o próprio usuário que criou pode alterar
         const editedNotice : Notice = await this.repository.findOne(req.params["id"]);
-        if(parseInt(req.user.id) == editedNotice.user.id)
-            return 200;
-
-        return 403;
+        if(editedNotice){
+            if(parseInt(req.user.id) == editedNotice.user.id)
+                return 200;
+            return 403;
+        }else{
+            return 404
+        }
     }
 
     public async validateDelete(req : Request): Promise<number>{
@@ -143,6 +147,12 @@ export default class NoticeController {
         notice.abstract = body.abstract;
         notice.date = new Date;
 
+        if(body.imageId){
+            notice.imageId = body.imageId;
+            notice.imageType = body.imageType;
+            notice.deleteHash = body.deleteHash;
+        }
+
         notice.views = 0;
 
         return notice;
@@ -150,7 +160,6 @@ export default class NoticeController {
 
     public async processEditData(req : Request): Promise<Notice> {
         const notice = new Notice();
-        notice.user = new User();
         const body = req["body"];
 
         if(body.tags !== undefined){
@@ -164,16 +173,20 @@ export default class NoticeController {
 
         notice.title = body.title;
         notice.text = body.text;
-        notice.user.id = parseInt(req.user.id);
         notice.abstract = body.abstract;
+
+        if(body.imageId){
+            notice.imageId = body.imageId;
+            notice.imageType = body.imageType;
+            notice.deleteHash = body.deleteHash;
+        }
 
         return notice;
     }
 
     public async verifyTags(tags: Tag[]) {
-	const data = await getRepository(Tag).findByIds(tags.map(tag => (tag.id)));
-
-	return tags.length === data.length;
+        const data = await getRepository(Tag).findByIds(tags.map(tag => (tag.id)));
+        return tags.length === data.length;
     }
 
     public async create(req : Request, res : Response, next) : Promise<Response>{
@@ -198,7 +211,6 @@ export default class NoticeController {
     }
 
     public async edit(req : Request, res : Response, next): Promise<Response> {
-        
         try{
             const statusCode = await this.validateEdit(req);
             if(statusCode != 200)
@@ -206,8 +218,28 @@ export default class NoticeController {
 
             const notice: Notice = await this.processEditData(req);
 
-            const foundNotice = await this.repository.findOne(req.params["id"]);
+            const foundNotice = await this.repository.findOne(req.params["id"], {
+                select: [
+                    "id", 
+                    "title", 
+                    "abstract", 
+                    "text",
+                    "imageId",
+                    "imageType",
+                    "deleteHash",
+                ]});
+
 			if (foundNotice) {
+                console.log(foundNotice.deleteHash)
+                if (foundNotice.imageId && notice.imageId){
+                    try{
+                        await imgurApi.delete(`image/${foundNotice.deleteHash}`, config)
+                    } catch(err) {
+                        console.log("Error deleting the image...")
+                        return next(err);
+                    }
+                }
+
 				this.repository.merge(foundNotice, notice);
 
 				const result = await this.repository.save(foundNotice);
@@ -225,11 +257,31 @@ export default class NoticeController {
             if(statusCode != 200)
                 return res.status(statusCode).send();
 
-            const result: DeleteResult = await this.repository.delete(req.params["id"]);
-            if(result.affected >= 1)
+            const notice = await this.repository.findOne(req.params["id"], {
+                select: [
+                    "id", 
+                    "title", 
+                    "abstract", 
+                    "text",
+                    "imageId",
+                    "imageType",
+                    "deleteHash",
+                ]});
+            if(notice){
+                if (notice.imageId){
+                    console.log(notice.deleteHash)
+                    try{
+                        await imgurApi.delete(`image/${notice.deleteHash}`, config)
+                    } catch(err) {
+                        console.error("Error deleting the image...")
+                        return next(err);
+                    }
+                }    
+                const result: DeleteResult = await this.repository.delete(req.params["id"]);
                 return res.status(200).send();
-            else
-                return res.status(404).send();
+            }else{
+                throw new NotFound();
+            }
         }catch(err){
             return next(err);
         }

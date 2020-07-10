@@ -4,27 +4,25 @@ import authConfig from '../config/auth';
 
 import AuthenticateUserService from '../services/AuthenticateUserService'
 
-export default class SessionController {
-   public async auth (req: Request, res: Response, next): Promise<any> {
-      try {
-         const {email, username, password} = req.body;
-         const authenticateUser = new AuthenticateUserService();
+export async function auth (req: Request, res: Response, next): Promise<any> {
+  try {
+	 const {email, username, password} = req.body;
+	 const authenticateUser = new AuthenticateUserService();
 
-         const {user, token} = await authenticateUser.execute({
-            email,
-            username,
-            password
-         })
-         delete user.password;
+	 const {user, token} = await authenticateUser.execute({
+		email,
+		username,
+		password
+	 })
+	 delete user.password;
 
-         return res.json({user, token})
+	 return res.json({user, token})
 
-      } catch(err) {
-         return next(err);
-      }
-   }
+  } catch(err) {
+	 return next(err);
+  }
+}
 
-   public async index (req: Request, res: Response, next) : Promise<any> {
-      return res.status(204).send();
-   }
+export async function index (req: Request, res: Response, next) : Promise<any> {
+  return res.status(204).send();
 }

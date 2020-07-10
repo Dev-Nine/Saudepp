@@ -96,7 +96,7 @@ export async function edit(req : Request, res : Response, next): Promise<Respons
 	}
 }
 
-export async function delete(req : Request, res : Response, next): Promise<Response> {
+export async function remove(req : Request, res : Response, next): Promise<Response> {
 	try{
 		const statusCode = await this.validateDelete(req);
 		if(statusCode != 200)

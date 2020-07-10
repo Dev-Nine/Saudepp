@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { getConnection } from "typeorm";
 
-import UserController from "./controller/UserController";
-import NoticeController from "./controller/NoticeController";
-import TagController from "./controller/TagController";
-import SessionController from "./controller/SessionController";
-import ImageController from "./controller/ImageController";
+import * as userController from "./controller/UserController";
+import * as noticeController from "./controller/NoticeController";
+import * as tagController from "./controller/TagController";
+import * as sessionController from "./controller/SessionController";
+import * as imageController from "./controller/ImageController";
 
 import ensureAuthentication from './middlewares/ensureAuthentication'
 import verifyAuthentication from './middlewares/verifyAuthentication'
@@ -20,168 +20,147 @@ const Joi = require('@hapi/joi').extend(validator)
 import multer = require('multer');
 import multerConfig from './config/multerConfig'
 
-export default class Routes {
-    public routes: Router;
-    private userController: UserController;
-    private noticeController: NoticeController;
-    // private commentController: CommentController;
-    private tagController: TagController;
-    private sessionController: SessionController;
-    private imageController: ImageController;
-    private upload = multer(multerConfig);
+const routes = Router();
+const upload = multer(multerConfig);
 
-    constructor() {
-        this.routes = Router();
-        this.userController = new UserController();
-        this.noticeController = new NoticeController();
-        // this.commentController = new CommentController();
-        this.tagController = new TagController();
-        this.sessionController = new SessionController();
-        this.imageController = new ImageController();
+// USUARIOS
+routes.get("/users", 
+	userController.getAll);
+routes.get("/users/:id",
+	verifyAuthentication,
+	userController.getByPk);
+routes.post("/users",
+	verifyAuthentication, 
+	celebrate({
+		body: Joi.object().keys({ 
+			username: Joi.string().required().regex(/^[a-z0-9_]{4,20}$/),
+			password: Joi.string().required().regex(/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9!@#$%&_-]{6,30})$/),
+			email: Joi.string().required().email(),
+			name: Joi.string().required().regex(/^[a-zá-ùA-ZÁ-Ù ]{4,50}$/),
+			type: Joi.number().required().min(0).max(3),
+			identifierType: Joi.string().default('cpf'),
+			identifier: Joi.when('identifierType', { is: Joi.string().regex(/^cpf$/), then: Joi.document().cpf()})
+		})
+	}, {
+		abortEarly: false
+	}),
+	userController.create);
+routes.put("/users/:id", 
+	ensureAuthentication, 
+	celebrate({
+		body: Joi.object().keys({ 
+			username: Joi.string().regex(/^[a-z0-9_]{4,20}$/),
+			password: Joi.string().regex(/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9!@#$%&_-]{6,30})$/),
+			email: Joi.string().email(),
+			name: Joi.string().regex(/^[a-zá-ùA-ZÁ-Ù ]{4,50}$/),
+			type: Joi.number().min(0).max(3),
+			identifierType: Joi.string(),
+			identifier: Joi.when('identifierType', { is: Joi.string().regex(/^cpf$/), then: Joi.document().cpf()})
+		})
+	}, {
+		abortEarly: false
+	}),
+	userController.edit);
+routes.delete("/users/:id", 
+	ensureAuthentication, 
+	userController.remove);
 
-    }
+// TAG
+routes.get("/tags", tagController.getAll);
+routes.get("/tags/:id", tagController.getByPk);
+routes.post("/tags", 
+	ensureAuthentication, 
+	celebrate({
+		body: Joi.object().keys({ 
+			description: Joi.string().min(2).max(50).required(),
+		})
+	}, {
+		abortEarly: false
+	}),
+	tagController.create);
+routes.put("/tags/:id", 
+	ensureAuthentication, 
+	celebrate({
+		body: Joi.object().keys({ 
+			description: Joi.string().min(2).max(50),
+		})
+	}, {
+		abortEarly: false
+	}),
+	tagController.edit);
+routes.delete("/tags/:id", ensureAuthentication, tagController.remove);
 
-    public defineRoutes() {
-        // USUARIOS
-        this.routes.get("/users", 
-            this.userController.getAll.bind(this.userController));
-        this.routes.get("/users/:id",
-            verifyAuthentication,
-            this.userController.getByPk.bind(this.userController));
-        this.routes.post("/users",
-            verifyAuthentication, 
-            celebrate({
-                body: Joi.object().keys({ 
-                    username: Joi.string().required().regex(/^[a-z0-9_]{4,20}$/),
-                    password: Joi.string().required().regex(/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9!@#$%&_-]{6,30})$/),
-                    email: Joi.string().required().email(),
-                    name: Joi.string().required().regex(/^[a-zá-ùA-ZÁ-Ù ]{4,50}$/),
-                    type: Joi.number().required().min(0).max(3),
-                    identifierType: Joi.string().default('cpf'),
-                    identifier: Joi.when('identifierType', { is: Joi.string().regex(/^cpf$/), then: Joi.document().cpf()})
-                })
-            }, {
-                abortEarly: false
-            }),
-            this.userController.create.bind(this.userController));
-        this.routes.put("/users/:id", 
-            ensureAuthentication, 
-            celebrate({
-                body: Joi.object().keys({ 
-                    username: Joi.string().regex(/^[a-z0-9_]{4,20}$/),
-                    password: Joi.string().regex(/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9!@#$%&_-]{6,30})$/),
-                    email: Joi.string().email(),
-                    name: Joi.string().regex(/^[a-zá-ùA-ZÁ-Ù ]{4,50}$/),
-                    type: Joi.number().min(0).max(3),
-                    identifierType: Joi.string(),
-                    identifier: Joi.when('identifierType', { is: Joi.string().regex(/^cpf$/), then: Joi.document().cpf()})
-                })
-            }, {
-                abortEarly: false
-            }),
-            this.userController.edit.bind(this.userController));
-        this.routes.delete("/users/:id", 
-            ensureAuthentication, 
-            this.userController.delete.bind(this.userController));
+// NOTICIAS
+routes.get("/notices", noticeController.getAll.bind(noticeController));
+routes.get("/notices/:id",noticeController.getByPk.bind(noticeController));
+routes.post("/notices", 
+	ensureAuthentication, 
+	celebrate({
+		body: Joi.object().keys({ 
+			title: Joi.string().min(5).max(70).required(),
+			abstract: Joi.string().min(5).max(120).required(),
+			text: Joi.string().required(),
+			tags: Joi.array().items({ id: Joi.number() }),
+			imageId: Joi.string().max(8).optional(),
+			imageType: Joi.when('imageId', { is: Joi.exist(), then: Joi.string().max(5).required(), otherwise: Joi.string().default(null)}),
+			deleteHash: Joi.when('imageId', { is: Joi.exist(), then: Joi.string().max(16).required(), otherwise: Joi.string().default(null)}),
+		})
+	}, {
+		abortEarly: false
+	}),
+	noticeController.create.bind(noticeController)
+);
+routes.put("/notices/:id", 
+	ensureAuthentication, 
+	celebrate({
+		body: Joi.object().keys({ 
+			title: Joi.string().min(5).max(70),
+			abstract: Joi.string().min(5).max(120),
+			text: Joi.string(),
+			tags: Joi.array().items({ id: Joi.number() }),
+			imageId: Joi.string().max(8).optional(),
+			imageType: Joi.when('imageId', { is: Joi.exist(), then: Joi.string().max(5).required(), otherwise: Joi.string().default(null)}),
+			deleteHash: Joi.when('imageId', { is: Joi.exist(), then: Joi.string().max(16).required(), otherwise: Joi.string().default(null)}),
+		})
+	}, {
+		abortEarly: false
+	}),
+	noticeController.edit.bind(noticeController));
+routes.delete("/notices/:id", ensureAuthentication, noticeController.remove.bind(noticeController));
 
-        // TAG
-        this.routes.get("/tags", this.tagController.getAll.bind(this.tagController));
-        this.routes.get("/tags/:id", this.tagController.getByPk.bind(this.tagController));
-        this.routes.post("/tags", 
-            ensureAuthentication, 
-            celebrate({
-                body: Joi.object().keys({ 
-                    description: Joi.string().min(2).max(50).required(),
-                })
-            }, {
-                abortEarly: false
-            }),
-            this.tagController.create.bind(this.tagController));
-        this.routes.put("/tags/:id", 
-            ensureAuthentication, 
-            celebrate({
-                body: Joi.object().keys({ 
-                    description: Joi.string().min(2).max(50),
-                })
-            }, {
-                abortEarly: false
-            }),
-            this.tagController.edit.bind(this.tagController));
-        this.routes.delete("/tags/:id", ensureAuthentication, this.tagController.delete.bind(this.tagController));
+// IMAGEM
+routes.post("/images", 
+	ensureAuthentication,
+	upload.single('image'),
+	imageController.create.bind(imageController)
+);
 
-        // NOTICIAS
-        this.routes.get("/notices", this.noticeController.getAll.bind(this.noticeController));
-        this.routes.get("/notices/:id",this.noticeController.getByPk.bind(this.noticeController));
-        this.routes.post("/notices", 
-            ensureAuthentication, 
-            celebrate({
-                body: Joi.object().keys({ 
-                    title: Joi.string().min(5).max(70).required(),
-                    abstract: Joi.string().min(5).max(120).required(),
-                    text: Joi.string().required(),
-                    tags: Joi.array().items({ id: Joi.number() }),
-                    imageId: Joi.string().max(8).optional(),
-                    imageType: Joi.when('imageId', { is: Joi.exist(), then: Joi.string().max(5).required(), otherwise: Joi.string().default(null)}),
-                    deleteHash: Joi.when('imageId', { is: Joi.exist(), then: Joi.string().max(16).required(), otherwise: Joi.string().default(null)}),
-                })
-            }, {
-                abortEarly: false
-            }),
-            this.noticeController.create.bind(this.noticeController)
-        );
-        this.routes.put("/notices/:id", 
-            ensureAuthentication, 
-            celebrate({
-                body: Joi.object().keys({ 
-                    title: Joi.string().min(5).max(70),
-                    abstract: Joi.string().min(5).max(120),
-                    text: Joi.string(),
-                    tags: Joi.array().items({ id: Joi.number() }),
-                    imageId: Joi.string().max(8).optional(),
-                    imageType: Joi.when('imageId', { is: Joi.exist(), then: Joi.string().max(5).required(), otherwise: Joi.string().default(null)}),
-                    deleteHash: Joi.when('imageId', { is: Joi.exist(), then: Joi.string().max(16).required(), otherwise: Joi.string().default(null)}),
-                })
-            }, {
-                abortEarly: false
-            }),
-            this.noticeController.edit.bind(this.noticeController));
-        this.routes.delete("/notices/:id", ensureAuthentication, this.noticeController.delete.bind(this.noticeController));
+// COMENTARIOS
+// routes.get("/comments", commentController.getAll);
+// routes.get("/comments/:id", commentController.getByPk);
+// routes.post("/comments", ensureAuthentication, commentController.create);
+// routes.put("/comments/:id", ensureAuthentication, commentController.edit);
+// routes.delete("/comments/:id", ensureAuthentication, commentController.remove);
 
-        // IMAGEM
-        this.routes.post("/images", 
-            ensureAuthentication,
-            this.upload.single('image'),
-            this.imageController.create.bind(this.imageController)
-        );
-        
-        // COMENTARIOS
-        // this.routes.get("/comments", this.commentController.getAll.bind(this.commentController));
-        // this.routes.get("/comments/:id", this.commentController.getByPk.bind(this.commentController));
-        // this.routes.post("/comments", ensureAuthentication, this.commentController.create.bind(this.commentController));
-        // this.routes.put("/comments/:id", ensureAuthentication, this.commentController.edit.bind(this.commentController));
-        // this.routes.delete("/comments/:id", ensureAuthentication, this.commentController.delete.bind(this.commentController));
+// SESSÕES (LOGIN)
+routes.post("/sessions", sessionController.auth.bind(sessionController));
+routes.get("/sessions", ensureAuthentication, sessionController.index.bind(sessionController));
 
-        // SESSÕES (LOGIN)
-        this.routes.post("/sessions", this.sessionController.auth.bind(this.sessionController));
-        this.routes.get("/sessions", ensureAuthentication, this.sessionController.index.bind(this.sessionController));
-    
-        // COVID (INFO)
-        this.routes.get('/covid', async function getInfo (req, res) {
-            const query = getConnection().getRepository(CovidInfo);
+// COVID (INFO)
+routes.get('/covid', async function getInfo (req, res) {
+	const query = getConnection().getRepository(CovidInfo);
 
-            //Get the last request saved
-            const result = await query.findOne({
-                order: {
-                    date: 'DESC',
-                }
-            });
+	//Get the last request saved
+	const result = await query.findOne({
+		order: {
+			date: 'DESC',
+		}
+	});
 
-            // console.log(result);
+	// console.log(result);
 
-            if (result)
-                return res.json(result);
-            else 
-               throw new BaseError('A error ocurred'); 
-        });
-    }
-}
+	if (result)
+		return res.json(result);
+	else 
+	   throw new BaseError('A error ocurred'); 
+});

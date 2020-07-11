@@ -123,7 +123,8 @@ export async function processEditData(req : Request): Promise<User> {
 		user.imageId = body.imageId;
 		user.imageType = body.imageType;
 		user.deleteHash = body.deleteHash;
-	}else if(body.imageId == null){
+	}else if(body.imageId === null){
+		user.imageId = null;
 		user.imageType = null;
 		user.deleteHash = null;
 	}
@@ -177,6 +178,7 @@ export async function create(req : Request, res : Response, next: Function) : Pr
 		const result: User[] = await getRepository(User).save([user]);
 		delete result[0].id;
 		delete result[0].password;
+		delete result[0].deleteHash;
 		return res.json(result);
 
 	}catch(err){	
@@ -202,14 +204,12 @@ export async function edit(req : Request, res : Response, next): Promise<Respons
 		req.params["id"], {
 		select: [
 			"id", 
-			"name", 
-			"email", 
-			"username", 
-			"password", 
+			"imageId", 
+			"deleteHash"
 		]});
 		
 		if (foundUser) {
-			if (foundUser.imageId !== user.imageId || user.imageId === null){
+			if (foundUser.imageId && (foundUser.imageId !== user.imageId || user.imageId === null)){
 				try{
 					await imgurApi.delete(`image/${foundUser.deleteHash}`, config)
 				} catch(err) {
@@ -222,6 +222,7 @@ export async function edit(req : Request, res : Response, next): Promise<Respons
 			const result = await getRepository(User).save(foundUser);
 			delete result.id;
 			delete result.password;
+			delete result.deleteHash;
 
 			return res.json(result);
 		}

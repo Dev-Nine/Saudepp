@@ -193,6 +193,7 @@ export async function create(req : Request, res : Response, next) : Promise<Resp
 			throw Error("Tag doesn't exist");
 
 		const result: Notice[] = await getRepository(Notice).save([notice]);
+		delete result[0].deleteHash;
 		return res.json(result);
 	}catch(err){
 		return next(err);
@@ -217,7 +218,7 @@ export async function edit(req : Request, res : Response, next): Promise<Respons
 			]});
 
 		if (foundNotice) {
-			if (foundNotice.imageId !== notice.imageId || notice.imageId === null){
+			if (foundNotice.imageId && (foundNotice.imageId !== notice.imageId || notice.imageId === null)){
 				try{
 					await imgurApi.delete(`image/${foundNotice.deleteHash}`, config)
 				} catch(err) {
@@ -229,6 +230,7 @@ export async function edit(req : Request, res : Response, next): Promise<Respons
 			getRepository(Notice).merge(foundNotice, notice);
 
 			const result = await getRepository(Notice).save(foundNotice);
+			delete result.deleteHash;
 			return res.json(result);
 		}
 		throw new NotFound;

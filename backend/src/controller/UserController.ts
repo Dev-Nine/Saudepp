@@ -17,7 +17,7 @@ export async function validateCreate(req : Request): Promise<void>{
 	if(req.body.type == UserRole.ADMIN)
 		return;
 
-	throw Forbidden;
+	throw new Forbidden;
 
 	/* codigo abaixo quando tiver usuario comum
 	
@@ -48,26 +48,26 @@ export async function validateEdit(req : Request): Promise<void>{
 	// nao pode alterar o seu tipo
 	if(req.user.id == req.params.id){
 		if(req.body.type && req.body.type != req.user.type)
-			throw Forbidden;
+			throw new Forbidden;
 		return;
 	}
 
 	// jamais editar um usuario para se tornar adm
 	if(req.body.type == UserRole.ADMIN)
-		throw Forbidden;
+		throw new Forbidden;
 
 	// se for um usuario adm logado
 	if(req.body.type) {
 		if(req.user.type == UserRole.ADMIN){
 			// profissional nao é editado, mas sim criado
 			if(req.body.type == UserRole.PROFISSIONAL || editedUser.type == UserRole.PROFISSIONAL)
-				throw Forbidden;
+				throw new Forbidden;
 			// else if(editedUser.type == UserRole.MODERADOR || editedUser.type == UserRole.COMUM)
 			//     return 200;
 		}
 	}
 		
-	throw Forbidden;
+	throw new Forbidden;
 }
 
 export async function validateDelete(req : Request): Promise<void>{
@@ -82,7 +82,7 @@ export async function validateDelete(req : Request): Promise<void>{
 	if(req.user.type == UserRole.ADMIN && deletedUser.type != UserRole.ADMIN)
 		return;
 
-	throw Forbidden;
+	throw new Forbidden;
 }
 
 export async function processCreateData(req : Request): Promise<User> {
@@ -213,7 +213,7 @@ export async function remove(req : Request, res : Response, next): Promise<Respo
 		if(result.affected >= 1)
 			return res.status(200).send();
 		else
-			throw NotFound;
+			throw new NotFound;
 	}catch(err){
 		return next(err);
 }

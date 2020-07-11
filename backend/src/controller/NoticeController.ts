@@ -1,18 +1,18 @@
-import {  DeleteResult, getRepository } from "typeorm";
+import { DeleteResult, getRepository, getConnection } from "typeorm";
 import { Notice } from '../model/Notice';
 import { Request, Response } from 'express';
 import { User, UserRole } from '../model/User';
 import { Tag } from '../model/Tag';
 import imgurApi, { config } from '../utils/imgurApi'
 
-import { NotFound } from '../Errors';
+import { Forbidden, NotFound } from '../Errors';
 
 // semelhante para edição e delete
 export async function validateCreate(req : Request): Promise<number>{
 	// somente usuario adm e profissional pode postar uma noticia
 	if(req.user.type == UserRole.ADMIN || req.user.type == UserRole.PROFISSIONAL)
-		return 200;
-	return 403;
+		return;
+	throw Forbidden;
 }
 
 export async function validateEdit(req : Request): Promise<number>{
@@ -20,24 +20,23 @@ export async function validateEdit(req : Request): Promise<number>{
 	const editedNotice : Notice = await getRepository(Notice).findOne(req.params["id"]);
 	if(editedNotice){
 		if(parseInt(req.user.id) == editedNotice.user.id)
-			return 200;
-		return 403;
-	}else{
-		return 404
+			return;
+		throw new Forbidden;
 	}
+	throw new NotFound;
 }
 
 export async function validateDelete(req : Request): Promise<number>{
 	// adm e mod pode excluir qualquer noticia
 	if(req.user.type == UserRole.ADMIN /*|| req.user.type == UserRole.MODERADOR*/)
-		return 200;
+		return;
 	
 	// somente o proprio usuario pode excluir a sua noticia
 	const editedNotice : Notice = await getRepository(Notice).findOne(req.params["id"]);
 	if(parseInt(req.user.id) == editedNotice.user.id)
-		return 200;
+		return;
 
-	return 403;
+	throw new Forbidden;
 }
 
 export async function getAll(req : Request, res : Response, next) : Promise<Response> {
@@ -62,7 +61,7 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 				.groupBy("notice.id")
 				.having('COUNT(notice.id) = :length', {length: tags.length});
 
-			const data = await (await queryBuilder.getRawMany()).map(obj => obj.id);
+			const data = (await queryBuilder.getRawMany()).map(obj => obj.id);
 
 			if(data.length !== 0){
 				const notices = await getRepository(Notice)
@@ -78,11 +77,8 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 		} else {
 			const notices = await getRepository(Notice).find();
 			if(notices && notices.length > 0)
-			return res.json(notices);
-		
-			const err = new NotFound;
-			return next(err);
-		
+				return res.json(notices);
+			throw new NotFound;
 		}
 	} catch (err) { 
 		return next(err);
@@ -115,7 +111,7 @@ export async function getByPk(req : Request, res : Response, next) : Promise<Res
 		if(notice)
 			return res.json(notice);
 		const err = new NotFound;
-			return next(err);
+		return next(err);
 	}
 }
 
@@ -184,10 +180,7 @@ export async function verifyTags(tags: Tag[]) {
 
 export async function create(req : Request, res : Response, next) : Promise<Response>{
 	try{
-		const statusCode = await this.validateCreate(req);
-
-		if(statusCode != 200)
-			return res.status(statusCode).send();
+		await this.validateCreate(req);
 
 		const notice: Notice = await this.processCreateData(req);
 
@@ -205,9 +198,7 @@ export async function create(req : Request, res : Response, next) : Promise<Resp
 
 export async function edit(req : Request, res : Response, next): Promise<Response> {
 	try{
-		const statusCode = await this.validateEdit(req);
-		if(statusCode != 200)
-			return res.status(statusCode).send();
+		await this.validateEdit(req);
 
 		const notice: Notice = await this.processEditData(req);
 
@@ -246,9 +237,7 @@ export async function edit(req : Request, res : Response, next): Promise<Respons
 
 export async function remove(req : Request, res : Response, next): Promise<Response> {
 	try{
-		const statusCode = await this.validateDelete(req);
-		if(statusCode != 200)
-			return res.status(statusCode).send();
+		await this.validateDelete(req);
 
 		const notice = await getRepository(Notice).findOne(req.params["id"], {
 			select: [
@@ -270,7 +259,7 @@ export async function remove(req : Request, res : Response, next): Promise<Respo
 					return next(err);
 				}
 			}    
-			const result: DeleteResult = await getRepository(Notice).delete(req.params["id"]);
+			await getRepository(Notice).delete(req.params["id"]);
 			return res.status(200).send();
 		}else{
 			throw new NotFound();

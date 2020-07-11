@@ -168,6 +168,9 @@ export async function processEditData(req : Request): Promise<Notice> {
 		notice.imageId = body.imageId;
 		notice.imageType = body.imageType;
 		notice.deleteHash = body.deleteHash;
+	}else if(body.imageId == null){
+		notice.imageType = null;
+		notice.deleteHash = null;
 	}
 
 	return notice;
@@ -214,8 +217,7 @@ export async function edit(req : Request, res : Response, next): Promise<Respons
 			]});
 
 		if (foundNotice) {
-			console.log(foundNotice.deleteHash)
-			if (foundNotice.imageId && notice.imageId){
+			if (foundNotice.imageId !== notice.imageId || notice.imageId === null){
 				try{
 					await imgurApi.delete(`image/${foundNotice.deleteHash}`, config)
 				} catch(err) {
@@ -242,16 +244,11 @@ export async function remove(req : Request, res : Response, next): Promise<Respo
 		const notice = await getRepository(Notice).findOne(req.params["id"], {
 			select: [
 				"id", 
-				"title", 
-				"abstract", 
-				"text",
 				"imageId",
-				"imageType",
 				"deleteHash",
 			]});
 		if(notice){
 			if (notice.imageId){
-				console.log(notice.deleteHash)
 				try{
 					await imgurApi.delete(`image/${notice.deleteHash}`, config)
 				} catch(err) {

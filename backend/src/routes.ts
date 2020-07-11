@@ -162,5 +162,7 @@ routes.get('/covid', async function getInfo (req, res) {
 	if (result)
 		return res.json(result);
 	else 
-	   throw new BaseError('A error ocurred'); 
+		throw new BaseError('A error ocurred'); 
 });
+
+export default routes;

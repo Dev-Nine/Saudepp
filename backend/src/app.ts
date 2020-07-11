@@ -5,7 +5,7 @@ import * as express from 'express';
 import * as cors from 'cors';
 import * as helmet from 'helmet';
 
-import Routes  from './routes';
+import routes from './routes';
 import workerCovidInfo from './services/workerCovidInfo';
 import limiter from './middlewares/rateLimiter'
 
@@ -13,7 +13,6 @@ import ErrorHandler from './utils/errorHandler';
 
 export default class App {
     private app: Application;
-    private routes: Routes;
 
     constructor() {
         this.app = express();
@@ -22,9 +21,7 @@ export default class App {
 	this.initializeMiddlewares();
 
 	// Define routes
-	this.routes = new Routes;
-	this.routes.defineRoutes();
-	this.app.use(this.routes.routes);
+	this.app.use(routes);
     
 	// Define error handler
         this.app.use(ErrorHandler);

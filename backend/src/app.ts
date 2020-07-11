@@ -17,13 +17,13 @@ export default class App {
     constructor() {
         this.app = express();
 
-	// Initialize middlewares
-	this.initializeMiddlewares();
+        // Initialize middlewares
+        this.initializeMiddlewares();
 
-	// Define routes
-	this.app.use(routes);
-    
-	// Define error handler
+        // Define routes
+        this.app.use(routes);
+        
+        // Define error handler
         this.app.use(ErrorHandler);
     }
 

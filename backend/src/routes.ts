@@ -24,6 +24,10 @@ const routes = Router();
 const upload = multer(multerConfig);
 
 // USUARIOS
+
+routes.get("/users/email/:email", userController.verifyEmail);
+routes.get("/users/username/:username", userController.verifyUsername);
+
 routes.get("/users", 
 	userController.getAll);
 routes.get("/users/:id",

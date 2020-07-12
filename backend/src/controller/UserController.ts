@@ -257,5 +257,25 @@ export async function remove(req : Request, res : Response, next): Promise<Respo
 		}
 	}catch(err){
 		return next(err);
+	}
 }
+
+export async function verifyEmail(req : Request, res : Response, next) : Promise<Response> {
+	const user = await getRepository(User)
+		.createQueryBuilder("user")
+		.where(`user.email = '${req.params["email"]}'`)
+		.getOne()
+	if(user)
+		return res.status(409).send()
+	return res.status(204).send()
+}
+
+export async function verifyUsername(req : Request, res : Response, next) : Promise<Response> {
+	const user = await getRepository(User)
+		.createQueryBuilder("user")
+		.where(`user.username = '${req.params["username"]}'`)
+		.getOne()
+	if(user)
+		return res.status(409).send()
+	return res.status(204).send()
 }

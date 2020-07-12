@@ -1,4 +1,4 @@
-import {  DeleteResult, getRepository } from "typeorm";
+import { getConnection, DeleteResult, getRepository } from "typeorm";
 import { Notice } from '../model/Notice';
 import { Request, Response } from 'express';
 import { User, UserRole } from '../model/User';

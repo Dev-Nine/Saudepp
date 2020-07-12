@@ -1,5 +1,4 @@
-import { Application, Request, Response } from 'express';
-import { QueryFailedError } from 'typeorm';
+import { Application } from 'express';
 import { scheduleJob } from 'node-schedule';
 import * as express from 'express';
 import * as cors from 'cors';
@@ -17,13 +16,13 @@ export default class App {
     constructor() {
         this.app = express();
 
-	// Initialize middlewares
-	this.initializeMiddlewares();
+		// Initialize middlewares
+		this.initializeMiddlewares();
 
-	// Define routes
-	this.app.use(routes);
-    
-	// Define error handler
+		// Define routes
+		this.app.use(routes);
+		
+		// Define error handler
         this.app.use(ErrorHandler);
     }
 
@@ -41,8 +40,8 @@ export default class App {
     
     public async start(args? : any): Promise<void> {
         /*
-	 *  Initialize the express micro-service
-	 */ 
+		 *  Initialize the express micro-service
+		 */ 
         try {           
 			const port = Number(process.env.PORT) || 3333;
 
@@ -52,7 +51,7 @@ export default class App {
             await workerCovidInfo();
 
             if (args)
-		this.app.listen(port, args, () => console.log(`App running on port ${port}`));
+				this.app.listen(port, args, () => console.log(`App running on port ${port}`));
             else 
                 this.app.listen(port, () => console.log(`App running on port ${port}`));
             

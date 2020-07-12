@@ -2,6 +2,7 @@ import { getRepository, DeleteResult } from "typeorm";
 import { Request, Response } from 'express';
 import * as bcrypt from 'bcryptjs';
 import { User, UserRole } from '../model/User';
+import imgurApi, { config } from '../utils/imgurApi'
 
 import { Forbidden, NotFound } from '../Errors';
 
@@ -17,7 +18,7 @@ export async function validateCreate(req : Request): Promise<void>{
 	if(req.body.type == UserRole.ADMIN)
 		return;
 
-	throw Forbidden;
+	throw new Forbidden;
 
 	/* codigo abaixo quando tiver usuario comum
 	
@@ -48,26 +49,26 @@ export async function validateEdit(req : Request): Promise<void>{
 	// nao pode alterar o seu tipo
 	if(req.user.id == req.params.id){
 		if(req.body.type && req.body.type != req.user.type)
-			throw Forbidden;
+			throw new Forbidden;
 		return;
 	}
 
 	// jamais editar um usuario para se tornar adm
 	if(req.body.type == UserRole.ADMIN)
-		throw Forbidden;
+		throw new Forbidden;
 
 	// se for um usuario adm logado
 	if(req.body.type) {
 		if(req.user.type == UserRole.ADMIN){
 			// profissional nao é editado, mas sim criado
 			if(req.body.type == UserRole.PROFISSIONAL || editedUser.type == UserRole.PROFISSIONAL)
-				throw Forbidden;
+				throw new Forbidden;
 			// else if(editedUser.type == UserRole.MODERADOR || editedUser.type == UserRole.COMUM)
 			//     return 200;
 		}
 	}
 		
-	throw Forbidden;
+	throw new Forbidden;
 }
 
 export async function validateDelete(req : Request): Promise<void>{
@@ -82,7 +83,7 @@ export async function validateDelete(req : Request): Promise<void>{
 	if(req.user.type == UserRole.ADMIN && deletedUser.type != UserRole.ADMIN)
 		return;
 
-	throw Forbidden;
+	throw new Forbidden;
 }
 
 export async function processCreateData(req : Request): Promise<User> {
@@ -96,6 +97,12 @@ export async function processCreateData(req : Request): Promise<User> {
 	user.identifier = body.identifier;
 	user.identifierType = body.identifierType;
 	user.type = body.type;
+
+	if(body.imageId){
+		user.imageId = body.imageId;
+		user.imageType = body.imageType;
+		user.deleteHash = body.deleteHash;
+	}
 
 	return user;
 }
@@ -111,6 +118,16 @@ export async function processEditData(req : Request): Promise<User> {
 	user.identifier = body.identifier;
 	user.identifierType = body.identifierType;
 	user.type = body.type;
+
+	if(body.imageId){
+		user.imageId = body.imageId;
+		user.imageType = body.imageType;
+		user.deleteHash = body.deleteHash;
+	}else if(body.imageId === null){
+		user.imageId = null;
+		user.imageType = null;
+		user.deleteHash = null;
+	}
 
 	return user;
 }
@@ -131,6 +148,8 @@ export async function getByPk(req : Request, res : Response, next) : Promise<Res
 			"email", 
 			"username", 
 			"type",
+			"imageId",
+			"imageType",
 			"identifierType",
 			"identifier"
 		]});
@@ -150,15 +169,16 @@ export async function getByPk(req : Request, res : Response, next) : Promise<Res
 
 export async function create(req : Request, res : Response, next: Function) : Promise<Response>{
 	try{           
-	await this.validateCreate(req);
+	await validateCreate(req);
 
 		req["body"].password = await bcrypt.hash(req["body"].password, 8);
 
-		const user: User = await this.processCreateData(req);
+		const user: User = await processCreateData(req);
 
 		const result: User[] = await getRepository(User).save([user]);
 		delete result[0].id;
 		delete result[0].password;
+		delete result[0].deleteHash;
 		return res.json(result);
 
 	}catch(err){	
@@ -169,12 +189,12 @@ export async function create(req : Request, res : Response, next: Function) : Pr
 
 export async function edit(req : Request, res : Response, next): Promise<Response> {
 	try{
-		await this.validateEdit(req);
+		await validateEdit(req);
 		
 		if(req["body"].password !== undefined)
 			req["body"].password = await bcrypt.hash(req["body"].password, 8);
 
-		const user: User = await this.processEditData(req);
+		const user: User = await processEditData(req);
 
 		//const errors = await validate(user);
 		//if (errors)
@@ -184,18 +204,25 @@ export async function edit(req : Request, res : Response, next): Promise<Respons
 		req.params["id"], {
 		select: [
 			"id", 
-			"name", 
-			"email", 
-			"username", 
-			"password", 
+			"imageId", 
+			"deleteHash"
 		]});
 		
 		if (foundUser) {
+			if (foundUser.imageId && (foundUser.imageId !== user.imageId || user.imageId === null)){
+				try{
+					await imgurApi.delete(`image/${foundUser.deleteHash}`, config)
+				} catch(err) {
+					console.log("Error deleting the image...")
+					return next(err);
+				}
+			}
 			getRepository(User).merge(foundUser, user);
 
 			const result = await getRepository(User).save(foundUser);
 			delete result.id;
 			delete result.password;
+			delete result.deleteHash;
 
 			return res.json(result);
 		}
@@ -207,14 +234,48 @@ export async function edit(req : Request, res : Response, next): Promise<Respons
 
 export async function remove(req : Request, res : Response, next): Promise<Response> {
 	try{
-		await this.validateDelete(req);
-		
-	const result: DeleteResult = await getRepository(User).delete(req.params["id"]);
-		if(result.affected >= 1)
+		await validateDelete(req);
+		const user = await getRepository(User).findOne(req.params["id"], {
+			select: [
+				"id", 
+				"imageId",
+				"deleteHash",
+			]});
+		if(user){
+			if (user.imageId){
+				try{
+					await imgurApi.delete(`image/${user.deleteHash}`, config)
+				} catch(err) {
+					console.error("Error deleting the image...")
+					return next(err);
+				}
+			}    
+			await getRepository(User).delete(req.params["id"]);
 			return res.status(200).send();
-		else
-			throw NotFound;
+		}else{
+			throw new NotFound();
+		}
 	}catch(err){
 		return next(err);
+	}
 }
+
+export async function verifyEmail(req : Request, res : Response, next) : Promise<Response> {
+	const user = await getRepository(User)
+		.createQueryBuilder("user")
+		.where(`user.email = '${req.params["email"]}'`)
+		.getOne()
+	if(user)
+		return res.status(409).send()
+	return res.status(204).send()
+}
+
+export async function verifyUsername(req : Request, res : Response, next) : Promise<Response> {
+	const user = await getRepository(User)
+		.createQueryBuilder("user")
+		.where(`user.username = '${req.params["username"]}'`)
+		.getOne()
+	if(user)
+		return res.status(409).send()
+	return res.status(204).send()
 }

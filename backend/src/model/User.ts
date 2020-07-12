@@ -40,6 +40,18 @@ export class User {
     @MaxLength(50)
     name: string;
 
+    @Column({ length: 8, nullable: true })
+    @IsString()
+    imageId: string;
+
+    @Column({ length: 5, nullable: true })
+    @IsString()
+    imageType: string;
+
+    @Column({ length: 16, nullable: true, select: false })
+    @IsString()
+    deleteHash: string;
+
     @Column({
         type: "enum",
         enum: UserRole,

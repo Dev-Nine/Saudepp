@@ -24,6 +24,10 @@ const routes = Router();
 const upload = multer(multerConfig);
 
 // USUARIOS
+
+routes.get("/users/email/:email", userController.verifyEmail);
+routes.get("/users/username/:username", userController.verifyUsername);
+
 routes.get("/users", 
 	userController.getAll);
 routes.get("/users/:id",
@@ -38,6 +42,9 @@ routes.post("/users",
 			email: Joi.string().required().email(),
 			name: Joi.string().required().regex(/^[a-zá-ùA-ZÁ-Ù ]{4,50}$/),
 			type: Joi.number().required().min(0).max(3),
+			imageId: Joi.string().max(8).optional().allow(null),
+			imageType: Joi.when('imageId', { is: Joi.exist().not(null), then: Joi.string().max(5).required().allow(null) }),
+			deleteHash: Joi.when('imageId', { is: Joi.exist().not(null), then: Joi.string().max(16).required().allow(null) }),
 			identifierType: Joi.string().default('cpf'),
 			identifier: Joi.when('identifierType', { is: Joi.string().regex(/^cpf$/), then: Joi.document().cpf()})
 		})
@@ -54,6 +61,9 @@ routes.put("/users/:id",
 			email: Joi.string().email(),
 			name: Joi.string().regex(/^[a-zá-ùA-ZÁ-Ù ]{4,50}$/),
 			type: Joi.number().min(0).max(3),
+			imageId: Joi.string().max(8).optional().allow(null),
+			imageType: Joi.when('imageId', { is: Joi.exist().not(null), then: Joi.string().max(5).required().allow(null) }),
+			deleteHash: Joi.when('imageId', { is: Joi.exist().not(null), then: Joi.string().max(16).required().allow(null) }),
 			identifierType: Joi.string(),
 			identifier: Joi.when('identifierType', { is: Joi.string().regex(/^cpf$/), then: Joi.document().cpf()})
 		})
@@ -101,9 +111,9 @@ routes.post("/notices",
 			abstract: Joi.string().min(5).max(120).required(),
 			text: Joi.string().required(),
 			tags: Joi.array().items({ id: Joi.number() }),
-			imageId: Joi.string().max(8).optional(),
-			imageType: Joi.when('imageId', { is: Joi.exist(), then: Joi.string().max(5).required(), otherwise: Joi.string().default(null)}),
-			deleteHash: Joi.when('imageId', { is: Joi.exist(), then: Joi.string().max(16).required(), otherwise: Joi.string().default(null)}),
+			imageId: Joi.string().max(8).optional().allow(null),
+			imageType: Joi.when('imageId', { is: Joi.exist().not(null), then: Joi.string().max(5).required().allow(null) }),
+			deleteHash: Joi.when('imageId', { is: Joi.exist().not(null), then: Joi.string().max(16).required().allow(null) }),
 		})
 	}, {
 		abortEarly: false
@@ -118,9 +128,9 @@ routes.put("/notices/:id",
 			abstract: Joi.string().min(5).max(120),
 			text: Joi.string(),
 			tags: Joi.array().items({ id: Joi.number() }),
-			imageId: Joi.string().max(8).optional(),
-			imageType: Joi.when('imageId', { is: Joi.exist(), then: Joi.string().max(5).required(), otherwise: Joi.string().default(null)}),
-			deleteHash: Joi.when('imageId', { is: Joi.exist(), then: Joi.string().max(16).required(), otherwise: Joi.string().default(null)}),
+			imageId: Joi.string().max(8).optional().allow(null),
+			imageType: Joi.when('imageId', { is: Joi.exist().not(null), then: Joi.string().max(5).required().allow(null) }),
+			deleteHash: Joi.when('imageId', { is: Joi.exist().not(null), then: Joi.string().max(16).required().allow(null) }),
 		})
 	}, {
 		abortEarly: false

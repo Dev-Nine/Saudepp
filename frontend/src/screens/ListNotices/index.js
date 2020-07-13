@@ -32,7 +32,7 @@ export default function ListNotices() {
             return;
          }
 
-         const selectedTag = tags.find((t) => t.id == id);
+         const selectedTag = tags.find((t) => t.id === id);
 
          setSelectedTags([...selectedTags, selectedTag]);
       },

@@ -8,6 +8,8 @@ import { Container } from './styles';
 
 import { useAuth } from '../../hooks/AuthProvider';
 
+import defaultAvatar from '../../image/defaultavatar.png';
+
 function Header() {
    const [dropdown, setDropdown] = useState('');
    const { user, signOut } = useAuth();
@@ -39,13 +41,13 @@ function Header() {
                   <nav className={dropdown}>
                      <Link to="/notices">Notícias</Link>
                      <Link to="/faq">Dúvidas frequentes</Link>
-                     {!!user && <Link to="#">Painel de controle</Link>}
+                     {!!user && <Link to="/panel/">Painel de controle</Link>}
                      <Link to="/about">Sobre nós</Link>
                   </nav>
                   {user && (
                      <img
                         onClick={() => signOut()}
-                        src={user.imageUrl}
+                        src={user.imageUrl ? user.imageUrl : defaultAvatar}
                         alt="Avatar"
                      />
                   )}

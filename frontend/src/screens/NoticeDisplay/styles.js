@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import defaultBanner from '../../image/defaultbanner.png';
+
 export const ContainerNoticia = styled.div`
    background-color: #f9f7f7;
    border-radius: 10px;
@@ -23,7 +25,10 @@ export const ContainerNoticia = styled.div`
    }
 
    .container .banner {
-      background-image: url('https://images.unsplash.com/photo-1593451693781-d32def89a464?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=746&q=80');
+      background-image: url(${(props) =>
+         props.imageId
+            ? `https://i.imgur.com/${props.imageId}.${props.imageType}`
+            : defaultBanner});
       background-size: cover;
       background-position: center;
       border-radius: 8px 8px 0 0;

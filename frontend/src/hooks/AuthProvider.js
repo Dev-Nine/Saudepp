@@ -37,6 +37,12 @@ const AuthProvider = ({ children }) => {
 
       const { token, user } = response.data;
 
+      if (!user.imageId) {
+         user.imageUrl = `https://api.adorable.io/avatars/285/${user.id}.png`;
+      } else {
+         user.ImageUrl = `https://i.imgur.com/${user.imageId}.${user.imageType}`;
+      }
+
       api.defaults.headers.authorization = `Bearer ${token}`;
       localStorage.setItem('@Saude:token', token);
       localStorage.setItem('@Saude:user', JSON.stringify(user));

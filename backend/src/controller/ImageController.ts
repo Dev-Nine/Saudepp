@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import fs = require('fs')
+import * as fs from 'fs';
 import imgurApi, {config} from '../utils/imgurApi';
 
 export async function create(req : Request, res : Response, next) : Promise<Response>{

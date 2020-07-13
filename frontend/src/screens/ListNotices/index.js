@@ -21,6 +21,7 @@ export default function ListNotices() {
    const [selectedTags, setSelectedTags] = useState([]);
    const [notices, setNotices] = useState([]);
    const [loading, setLoading] = useState(true);
+   const [error, setError] = useState('');
 
    useEffect(() => {
       document.title = 'Notícias';
@@ -28,11 +29,14 @@ export default function ListNotices() {
 
    const handleSelectCategory = useCallback(
       (id) => {
-         if (!id) {
+         id = Number(id);
+         if (!id || selectedTags.some((tag) => tag.id === id)) {
             return;
          }
 
-         const selectedTag = tags.find((t) => t.id === id);
+         const selectedTag = tags.find((t) => {
+            return t.id === id;
+         });
 
          setSelectedTags([...selectedTags, selectedTag]);
       },
@@ -41,6 +45,7 @@ export default function ListNotices() {
 
    const handleDeleteCategory = useCallback(
       (id) => {
+         id = Number(id);
          const newTags = selectedTags.filter((t) => t.id !== id);
 
          setSelectedTags(newTags);
@@ -51,16 +56,24 @@ export default function ListNotices() {
    useEffect(() => {
       async function loadNotices() {
          setLoading(true);
-         const foramttedTags = selectedTags.map((t) => t.id).join(',');
+         const formattedTags = selectedTags.map((t) => t.id).join(',');
 
          try {
             const { data } = await api.get('notices', {
                params: {
-                  tag: foramttedTags,
+                  tag: formattedTags,
                },
             });
 
             setNotices(data);
+         } catch (err) {
+            const { status } = err.response;
+            if (status === 404) {
+               setNotices([]);
+               setError('Não encontrado');
+            } else if (status === 429) {
+               setError('Tente novamente em alguns segundos');
+            }
          } finally {
             setLoading(false);
          }
@@ -113,11 +126,16 @@ export default function ListNotices() {
                </TagContainer>
             </ContainerPesquisa>
             <ContainerNoticia>
-               {notices.map((n) => (
-                  <li key={n.id}>
-                     <Card data={n} />
-                  </li>
-               ))}
+               {notices.length > 0 ? (
+                  <ul>
+                     {' '}
+                     {notices.map((n) => (
+                        <Card data={n} key={n.id} />
+                     ))}{' '}
+                  </ul>
+               ) : (
+                  error
+               )}
             </ContainerNoticia>
          </div>
          <Footer />

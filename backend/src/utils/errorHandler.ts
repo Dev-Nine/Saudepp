@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { QueryFailedError } from 'typeorm';
-import { BaseError } from '../Errors';
+import { BaseError, Conflict } from '../Errors';
 
 export default function (err: BaseError | Error, req: Request, res: Response, next: Function) {  
 	let status: number = 400;
@@ -32,10 +32,10 @@ export default function (err: BaseError | Error, req: Request, res: Response, ne
 				err.message = `This ${detail} is already registered`;
 				
 				// Codigo http para conflito de chave primaria
-				let error = new BaseError(detail, data);
-				return res.status(status).send(
-					
-				);
+				let error = new Conflict(detail, data);
+				return res.status(status).send({
+					...error, message: error.message
+				});
 			}
 		}
 	} else {
@@ -46,6 +46,6 @@ export default function (err: BaseError | Error, req: Request, res: Response, ne
 
 	console.log({...err})
 	return res.status(status).send({
-		...err,
+		...err, message: err.message
 	});
 }

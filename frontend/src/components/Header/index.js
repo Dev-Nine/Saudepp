@@ -8,6 +8,8 @@ import { Container } from './styles';
 
 import { useAuth } from '../../hooks/AuthProvider';
 
+import defaultAvatar from '../../image/defaultavatar.png';
+
 function Header() {
    const [dropdown, setDropdown] = useState('');
    const { user, signOut } = useAuth();
@@ -45,7 +47,11 @@ function Header() {
                   {user && (
                      <img
                         onClick={() => signOut()}
-                        src="https://i.redd.it/kgqvza99pno21.jpg"
+                        src={
+                           user.imageId
+                              ? `https://i.imgur.com/${user.imageId}.{$user.imageType}`
+                              : defaultAvatar
+                        }
                         alt="Avatar"
                      />
                   )}

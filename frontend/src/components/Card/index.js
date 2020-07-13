@@ -5,6 +5,8 @@ import showTime from '../../utils/showTime';
 
 import { Container } from './styles';
 
+import defaultCard from '../../image/defaultcard.png';
+
 export default function Card({ data }) {
    if (!data) {
       data = {
@@ -27,7 +29,11 @@ export default function Card({ data }) {
          <Container key={data.id}>
             <img
                alt="descrição"
-               src="https://www.rbsdirect.com.br/imagesrc/17383078.jpg?w=700"
+               src={
+                  data.imageId
+                     ? `https://i.imgur.com/${data.imageId}.${data.imageType}`
+                     : defaultCard
+               }
             />
             <div>
                <strong>{data.title}</strong>

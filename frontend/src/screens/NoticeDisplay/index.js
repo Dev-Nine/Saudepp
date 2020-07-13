@@ -27,6 +27,8 @@ export default function NoticeDisplay(props) {
       },
       date: '',
       text: '',
+      imageId: '',
+      imageType: '',
    });
 
    const [isLoading, setIsLoading] = useState(true);
@@ -79,6 +81,8 @@ export default function NoticeDisplay(props) {
                   abstract: data.abstract,
                   user: data.user,
                   date: new Date(data.date),
+                  imageId: data.imageId,
+                  imageType: data.imageType,
                });
                setIsLoading(false);
                timer = setTimeout(() => {
@@ -114,7 +118,12 @@ export default function NoticeDisplay(props) {
          <Header />
          <div style={{ marginBottom: 50 }} className="main">
             <CoronaCard />
-            <ContainerNoticia>
+            <ContainerNoticia
+               imageData={{
+                  imageId: content.imageId,
+                  imageType: content.imageType,
+               }}
+            >
                {isLoading ? (
                   <img
                      className="image-banner"

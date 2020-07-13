@@ -4,7 +4,7 @@ import * as bcrypt from 'bcryptjs';
 import { User, UserRole } from '../model/User';
 import imgurApi, { config } from '../utils/imgurApi'
 
-import { Forbidden, NotFound } from '../Errors';
+import { Forbidden, NotFound, Conflict } from '../Errors';
 
 // unused
 //import { validate } from 'class-validator';
@@ -266,7 +266,7 @@ export async function verifyEmail(req : Request, res : Response, next) : Promise
 		.where(`user.email = '${req.params["email"]}'`)
 		.getOne()
 	if(user)
-		return res.status(409).send()
+		return next(new Conflict('email', req.params["email"]))
 	return res.status(204).send()
 }
 
@@ -276,6 +276,6 @@ export async function verifyUsername(req : Request, res : Response, next) : Prom
 		.where(`user.username = '${req.params["username"]}'`)
 		.getOne()
 	if(user)
-		return res.status(409).send()
+	return next(new Conflict('username', req.params["username"]))
 	return res.status(204).send()
 }

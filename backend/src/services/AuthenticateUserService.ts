@@ -29,10 +29,10 @@ export default class AuthenticateUserService {
       const userRepository = typeorm.getRepository(User);
       var user;
       if(email){
-         user = await userRepository.findOne({select: ["id", "name", "email", "username", "password"], 
+         user = await userRepository.findOne({select: ["id", "name", "email", "username", "password", "imageId", "imageType"], 
             where: {email}});
       }else{
-         user = await userRepository.findOne({select: ["id", "name", "email", "username", "password"], 
+         user = await userRepository.findOne({select: ["id", "name", "email", "username", "password", "imageId", "imageType"], 
             where: {username}});
       }
       

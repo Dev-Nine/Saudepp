@@ -78,6 +78,8 @@ export default function Reguster() {
                abortEarly: false,
             });
 
+            delete data.confirmPassword;
+
             await api.post('users', {
                ...data,
                identifierType: 'cpf',
@@ -95,7 +97,7 @@ export default function Reguster() {
                return;
             }
 
-            console.log(err);
+            console.log(err.response);
          }
       },
       [history, signIn],

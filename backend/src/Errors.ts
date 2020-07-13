@@ -8,6 +8,18 @@ export class BaseError extends Error {
 	}
 }
 
+export class Conflict extends BaseError {
+	private column: string;
+	private data: string;
+	constructor(column, data){
+		super(`Data conflict`, 'conflictError');
+		this.column = column;
+		this.data = data;
+		Object.setPrototypeOf(this, NotFound.prototype);
+		this.statusCode = 409;
+	}
+}
+
 export class NotFound extends BaseError {
 	constructor(){
 		super('Not found', 'notFoundError');

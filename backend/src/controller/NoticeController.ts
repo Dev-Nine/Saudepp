@@ -91,23 +91,19 @@ export async function getByPk(req : Request, res : Response, next) : Promise<Res
 	if(viewed == 'true'){
 		getConnection().transaction(async manager => {
 			const repository = manager.getRepository(Notice);
-			const foundNotice = await repository.findOne(req.params["id"], { select: [
-				'id',
-				'title',
-				'abstract',
-				'date',
-				'text',
-				'views',
-				'user',
-				'tags'
-			]});
+			const foundNotice = await repository.findOne(req.params["id"]);
 
 			foundNotice.views++;
 			const result = await repository.save(foundNotice);
 			return res.json(result);
 		});
 	}else{
-		const notice = await getRepository(Notice).findOne(req.params["id"]);
+		const notice = await getRepository(Notice).findOne(req.params["id"], { select: [
+				'id', 'title', 'abstract', 'text',
+				'date', 'imageId', 'imageType', 'views',
+			],
+			relations: ['user', 'tags']
+		});
 		if(notice)
 			return res.json(notice);
 		const err = new NotFound;

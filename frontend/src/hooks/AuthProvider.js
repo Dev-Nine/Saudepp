@@ -38,7 +38,7 @@ const AuthProvider = ({ children }) => {
       const { token, user } = response.data;
 
       if (!user.imageId) {
-         user.imageUrl = `https://api.adorable.io/avatars/285/${user.id}.png`;
+         user.imageUrl = `https://ui-avatars.com/api/?background=0086e6&bold=true&color=fff&uppercase=false&size=256&name=${user.name}`;
       } else {
          user.ImageUrl = `https://i.imgur.com/${user.imageId}.${user.imageType}`;
       }

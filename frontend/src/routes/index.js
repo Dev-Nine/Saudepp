@@ -15,6 +15,7 @@ import {
    FaqCovid19,
    About,
    Register,
+   Panel,
 } from '../screens';
 
 export default function Routes() {
@@ -28,11 +29,12 @@ export default function Routes() {
          <Route path="/faq/covid19" exact component={FaqCovid19} />
          <Route path="/notices/:noticeId" exact component={NoticeDisplay} />
          <Route
-            path="/painel/notices"
+            path="/panel/notices"
             isPrivate
             exact
             component={CreateNoticies}
          />
+         <Route path="/panel" isPrivate exact component={Panel} />
          <Route
             path="/panel/register/professional"
             isPrivate

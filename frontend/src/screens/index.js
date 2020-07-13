@@ -10,6 +10,7 @@ import RegisterProfessional from './RegisterProfessional';
 import Faq from './Faq';
 import About from './About';
 import FaqCovid19 from './Faq/Subpages/Covid19';
+import Panel from './Panel';
 
 export {
    CreateNoticies,
@@ -24,4 +25,5 @@ export {
    Faq,
    FaqCovid19,
    About,
+   Panel,
 };

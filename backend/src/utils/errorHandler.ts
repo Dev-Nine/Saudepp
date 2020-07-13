@@ -37,7 +37,8 @@ export default function (err: BaseError | Error, req: Request, res: Response, ne
 		status = (<BaseError>err).statusCode;	
 	}
 
+	delete err.stack;
 	return res.status(status).send({
-	    error: err.message,
+	    ...err, message: err.message,
 	});
 }

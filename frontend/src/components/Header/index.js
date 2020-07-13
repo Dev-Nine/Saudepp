@@ -47,7 +47,7 @@ function Header() {
                   {user && (
                      <img
                         onClick={() => signOut()}
-                        src={user.imageUrl ? user.imageUrl : defaultAvatar}
+                        src={user.imageUrl}
                         alt="Avatar"
                      />
                   )}

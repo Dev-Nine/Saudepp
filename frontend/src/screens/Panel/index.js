@@ -2,7 +2,11 @@ import React from 'react';
 
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FiUsers, FiFileText, FiTag } from 'react-icons/fi';
+
+import { MdPeopleOutline } from 'react-icons/md';
+import { RiPagesLine } from 'react-icons/ri';
+import { AiOutlineTags } from 'react-icons/ai';
+
 import { Container } from './styles';
 
 import Header from '../../components/Header';
@@ -29,18 +33,21 @@ export default function Panel() {
                <div>
                   <Link to="/panel/users/">
                      <PanelButton
-                        icon={<FiUsers size={32} />}
+                        icon={<MdPeopleOutline size={32} />}
                         text="Profissionais"
                      />
                   </Link>
                   <Link to="/panel/notices/">
                      <PanelButton
-                        icon={<FiFileText size={32} />}
+                        icon={<RiPagesLine size={32} />}
                         text="Notícias"
                      />
                   </Link>
                   <Link to="/panel/tags/">
-                     <PanelButton icon={<FiTag size={32} />} text="Tags" />
+                     <PanelButton
+                        icon={<AiOutlineTags size={32} />}
+                        text="Tags"
+                     />
                   </Link>
                </div>
             </Container>

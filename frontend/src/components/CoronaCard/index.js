@@ -11,15 +11,66 @@ export default function CoronaCard() {
 
    useEffect(() => {
       const source = CancelToken.source();
+
       async function loadCovidData() {
          try {
-            const { data } = await api.get('/covid', {
-               cancelToken: source.token,
-            });
-            setCovid({
-               confirmed: data.confirmed.toLocaleString('pt'),
-               deaths: data.deaths.toLocaleString('pt'),
-            });
+            let confirmed = localStorage.getItem('@Saude:confirmed');
+            let deaths = localStorage.getItem('@Saude:deaths');
+            let time = localStorage.getItem('@Saude:time');
+
+            // Data does not exist
+            if (!(confirmed && deaths && time)) {
+               // console.log('Data dont exist');
+               //  console.log(confirmed, deaths, time);
+
+               // I don't know why
+               // But only works making this monster
+               // If you want to change it
+               // Good luck, you will need it
+               const { data } = await api.get('/covid', {
+                  cancelToken: source.token,
+               });
+               confirmed = data.confirmed.toLocaleString('pt');
+               deaths = data.deaths.toLocaleString('pt');
+               time = new Date();
+
+               localStorage.setItem('@Saude:confirmed', confirmed);
+               localStorage.setItem('@Saude:deaths', deaths);
+               localStorage.setItem('@Saude:time', time);
+
+               // console.log(confirmed, deaths, time);
+               setCovid({
+                  confirmed,
+                  deaths,
+               });
+            } else {
+               // Verify if data is expired
+               const diffHours = new Date().getHours() - new Date(time).getHours();
+
+               // console.log(diffHours);
+               if (diffHours >= 1) {
+                  // I don't know why
+                  // But only works making this monster
+                  // If you want to change it
+                  // Good luck, you will need it
+                  const { data } = await api.get('/covid', {
+                     cancelToken: source.token,
+                  });
+                  confirmed = data.confirmed.toLocaleString('pt');
+                  deaths = data.deaths.toLocaleString('pt');
+                  time = new Date();
+
+                  localStorage.setItem('@Saude:confirmed', confirmed);
+                  localStorage.setItem('@Saude:deaths', deaths);
+                  localStorage.setItem('@Saude:time', time);
+               }
+
+               // console.log(confirmed, deaths, time);
+               setCovid({
+                  confirmed,
+                  deaths,
+               });
+            }
          } catch (err) {
             if (axios.isCancel(err)) {
                console.log('Covid-19 API request cancelled.', err.message);

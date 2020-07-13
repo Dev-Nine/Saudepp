@@ -2,12 +2,11 @@ import { Request, Response } from 'express';
 import { QueryFailedError } from 'typeorm';
 import { BaseError } from '../Errors';
 
-export default function (err: BaseError | Error, req: Request, res: Response, next: Function) {    
+export default function (err: BaseError | Error, req: Request, res: Response, next: Function) {  
 	let status: number = 400;
 
 	// Se estiver em ambiente de desenvolvimento e o erro não for uma instancia de NotFound
 	const isBaseError = err instanceof BaseError;
-	console.log(isBaseError);
 
 	// Se nao for um BaseError
 	if (!isBaseError) {
@@ -24,11 +23,19 @@ export default function (err: BaseError | Error, req: Request, res: Response, ne
 				detail = detail.split(' ')[1];
 				detail = detail.replace('(', '');
 				detail = detail.replace(')', '');
-				//[1].replace(['(', ']'], ' ');	    
+
+				let data = err['detail'].split('=')[1];
+				data = data.split(' ')[0];
+				data = data.replace('(', '');
+				data = data.replace(')', '');
+    
 				err.message = `This ${detail} is already registered`;
 				
 				// Codigo http para conflito de chave primaria
-				status = 409;
+				let error = new BaseError(detail, data);
+				return res.status(status).send(
+					
+				);
 			}
 		}
 	} else {
@@ -37,8 +44,8 @@ export default function (err: BaseError | Error, req: Request, res: Response, ne
 		status = (<BaseError>err).statusCode;	
 	}
 
-	delete err.stack;
+	console.log({...err})
 	return res.status(status).send({
-	    ...err, message: err.message,
+		...err,
 	});
 }

@@ -179,11 +179,11 @@ export async function verifyTags(tags: Tag[]) {
 
 export async function create(req : Request, res : Response, next) : Promise<Response>{
 	try{
-		await this.validateCreate(req);
+		await validateCreate(req);
 
-		const notice: Notice = await this.processCreateData(req);
+		const notice: Notice = await processCreateData(req);
 
-		const tags = await this.verifyTags(notice.tags);
+		const tags = await verifyTags(notice.tags);
 
 		if (!tags)
 			throw Error("Tag doesn't exist");
@@ -198,9 +198,9 @@ export async function create(req : Request, res : Response, next) : Promise<Resp
 
 export async function edit(req : Request, res : Response, next): Promise<Response> {
 	try{
-		await this.validateEdit(req);
+		await validateEdit(req);
 
-		const notice: Notice = await this.processEditData(req);
+		const notice: Notice = await processEditData(req);
 
 		const foundNotice = await getRepository(Notice).findOne(req.params["id"], {
 			select: [
@@ -237,7 +237,7 @@ export async function edit(req : Request, res : Response, next): Promise<Respons
 
 export async function remove(req : Request, res : Response, next): Promise<Response> {
 	try{
-		await this.validateDelete(req);
+		await validateDelete(req);
 
 		const notice = await getRepository(Notice).findOne(req.params["id"], {
 			select: [

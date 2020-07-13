@@ -76,12 +76,12 @@ export async function processEditData(req : Request): Promise<Comment> {
 
 export async function create(req : Request, res : Response, next) : Promise<Response>{
 	try{
-		const statusCode = await this.validateCreate(req);
+		const statusCode = await validateCreate(req);
 
 		if(statusCode != 200)
 			return res.status(statusCode).send();
 
-		const comment: Comment = await this.processCreateData(req);
+		const comment: Comment = await processCreateData(req);
 
 		const result: Comment[] = await getRepository(Comment).save([comment]);
 		return res.json(result);
@@ -92,11 +92,11 @@ export async function create(req : Request, res : Response, next) : Promise<Resp
 
 export async function edit(req : Request, res : Response, next): Promise<Response> {
 	try{
-		const statusCode = await this.validateEdit(req);
+		const statusCode = await validateEdit(req);
 		if(statusCode != 200)
 			return res.status(statusCode).send();
 
-		const comment: Comment = await this.processEditData(req);
+		const comment: Comment = await processEditData(req);
 
 		const foundComment = await getRepository(Comment).findOne(req.params["id"]);
 		if (foundComment) {
@@ -114,7 +114,7 @@ export async function edit(req : Request, res : Response, next): Promise<Respons
 
 export async function remove(req : Request, res : Response, next): Promise<Response> {
 	try{
-		const statusCode = await this.validateDelete(req);
+		const statusCode = await validateDelete(req);
 		if(statusCode != 200)
 			return res.status(statusCode).send();
 

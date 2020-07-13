@@ -9,13 +9,13 @@ export class BaseError extends Error {
 }
 
 export class Conflict extends BaseError {
-	private column: string;
-	private data: string;
+	public column: string;
+	public data: string;
 	constructor(column, data){
 		super(`Data conflict`, 'conflictError');
 		this.column = column;
 		this.data = data;
-		Object.setPrototypeOf(this, NotFound.prototype);
+		Object.setPrototypeOf(this, Conflict.prototype);
 		this.statusCode = 409;
 	}
 }

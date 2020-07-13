@@ -44,7 +44,6 @@ export default function (err: BaseError | Error, req: Request, res: Response, ne
 		status = (<BaseError>err).statusCode;	
 	}
 
-	console.log({...err})
 	return res.status(status).send({
 		...err, message: err.message
 	});

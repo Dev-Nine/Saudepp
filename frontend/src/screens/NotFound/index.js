@@ -7,7 +7,7 @@ export default function NotFound() {
    return (
       <>
          <Header />
-         <h1> Page don't found </h1>
+         <h1 style={{ padding: 20 }}> 404 - Page not found </h1>
          <Footer />
       </>
    );

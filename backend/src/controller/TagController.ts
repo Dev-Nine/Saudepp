@@ -21,7 +21,7 @@ export async function validateEdit(req : Request): Promise<number>{
 }
 
 export async function validateDelete(req : Request): Promise<number>{
-	return this.validateEdit(req);
+	return validateEdit(req);
 }
 
 export async function processCreateData(req : Request): Promise<Tag> {
@@ -62,12 +62,12 @@ export async function getByPk(req : Request, res : Response, next) : Promise<Res
 
 export async function create(req : Request, res : Response, next) : Promise<Response>{
 	try{
-		const statusCode = await this.validateCreate(req);
+		const statusCode = await validateCreate(req);
 
 		if(statusCode != 200)
 			return res.status(statusCode).send();
 
-		const tag: Tag = await this.processCreateData(req);
+		const tag: Tag = await processCreateData(req);
 
 		const result: Tag[] = await getRepository(Tag).save([tag]);
 		return res.json(result);
@@ -78,11 +78,11 @@ export async function create(req : Request, res : Response, next) : Promise<Resp
 
 export async function edit(req : Request, res : Response, next): Promise<Response> {
 	try{
-		const statusCode = await this.validateEdit(req);
+		const statusCode = await validateEdit(req);
 		if(statusCode != 200)
 			return res.status(statusCode).send();
 
-		const tag: Tag = await this.processEditData(req);
+		const tag: Tag = await processEditData(req);
 
 		const foundTag = await getRepository(Tag).findOne(req.params["id"]);
 		if(foundTag){
@@ -98,7 +98,7 @@ export async function edit(req : Request, res : Response, next): Promise<Respons
 
 export async function remove(req : Request, res : Response, next): Promise<Response> {
 	try{
-		const statusCode = await this.validateDelete(req);
+		const statusCode = await validateDelete(req);
 		if(statusCode != 200)
 			return res.status(statusCode).send();
 			

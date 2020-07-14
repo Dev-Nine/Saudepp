@@ -1,9 +1,10 @@
-import { DeleteResult, getRepository, getConnection } from "typeorm";
+import { DeleteResult, getRepository, getConnection, Like, Raw } from "typeorm";
 import { Notice } from '../model/Notice';
 import { Request, Response } from 'express';
 import { User, UserRole } from '../model/User';
 import { Tag } from '../model/Tag';
 import imgurApi, { config } from '../utils/imgurApi'
+import * as escape from 'pg-escape'
 
 import { Forbidden, NotFound } from '../Errors';
 
@@ -75,7 +76,30 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 			throw new NotFound;
 			
 		} else {
-			const notices = await getRepository(Notice).find();
+			let options = {};
+			let limit = 8; // default
+			if(req.query["limit"])
+				limit = Number(req.query["limit"]);
+			if(req.query["page"]){
+				const page = Number(req.query["page"]);
+				options = {order: {id : "ASC"}, take: limit, skip: (limit * page)};
+			}
+			// searchable attributes:
+			// title
+			// abstract
+			let queryName;
+			if(req.query["title"])
+				queryName = "title"
+			else if(req.query["abstract"])
+				queryName = "abstract"
+			if(queryName){
+				const attribute = String(req.query[queryName]).toLocaleLowerCase();
+				const query = escape(`ILIKE %L`, `%${attribute}%`)
+				options = {...options, where: 
+					{[queryName]: Raw(alias => `LOWER(${alias}) ${query}`)}
+				}
+			}
+			const notices = await getRepository(Notice).find(options);
 			if(notices && notices.length > 0)
 				return res.json(notices);
 			throw new NotFound;

@@ -1,8 +1,9 @@
-import { getRepository, DeleteResult } from "typeorm";
+import { getRepository, Raw } from "typeorm";
 import { Request, Response } from 'express';
 import * as bcrypt from 'bcryptjs';
 import { User, UserRole } from '../model/User';
 import imgurApi, { config } from '../utils/imgurApi'
+import * as escape from 'pg-escape'
 
 import { Forbidden, NotFound, Conflict } from '../Errors';
 
@@ -133,11 +134,39 @@ export async function processEditData(req : Request): Promise<User> {
 }
 
 export async function getAll(req : Request, res : Response, next) : Promise<Response> {
-	const users = await getRepository(User).find();
-	if(users && users.length > 0)
-		return res.json(users);
-	
-	return next(new NotFound);
+	let options;
+	try{
+		let limit = 8; // default
+		if(req.query["limit"])
+			limit = Number(req.query["limit"]);
+		if(req.query["page"]){
+			const page = Number(req.query["page"]);
+			options = {order: {id : "ASC"}, take: limit, skip: (limit * page)};
+		}
+
+		// searchable attributes:
+		// name
+		// identifier
+		let queryName;
+		if(req.query["name"])
+			queryName = "name"
+		else if(req.query["identifier"])
+			queryName = "identifier"
+		if(queryName){
+			const attribute = String(req.query[queryName]).toLocaleLowerCase();
+			const query = escape(`ILIKE %L`, `%${attribute}%`)
+			options = {...options, where: 
+				{[queryName]: Raw(alias => `LOWER(${alias}) ${query}`)}
+			}
+		}
+		const users = await getRepository(User).find(options);
+		if(users && users.length > 0)
+			return res.json(users);
+		
+		return next(new NotFound);
+	} catch(err){
+		return next(err);
+	}
 }
 
 export async function getByPk(req : Request, res : Response, next) : Promise<Response> {

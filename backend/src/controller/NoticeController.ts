@@ -110,27 +110,31 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 }
 
 export async function getByPk(req : Request, res : Response, next) : Promise<Response> {
-	const { viewed } = req.query;
+	try {
+		const { viewed } = req.query;
 
-	if(viewed == 'true'){
-		getConnection().transaction(async manager => {
-			const repository = manager.getRepository(Notice);
-			const foundNotice = await repository.findOne(req.params["id"]);
+		if (viewed == 'true') {
+			getConnection().transaction(async manager => {
+				const repository = manager.getRepository(Notice);
+				const foundNotice = await repository.findOne(req.params["id"]);
 
-			foundNotice.views++;
-			const result = await repository.save(foundNotice);
-			return res.json(result);
-		});
-	}else{
-		const notice = await getRepository(Notice).findOne(req.params["id"], { select: [
-				'id', 'title', 'abstract', 'text',
-				'date', 'imageId', 'imageType', 'views',
-			],
-			relations: ['user', 'tags']
-		});
-		if(notice)
+				foundNotice.views++;
+				const result = await repository.save(foundNotice);
+				return res.json(result);
+			});
+		} else {
+			const notice = await getRepository(Notice).findOne(req.params["id"], { select: [
+					'id', 'title', 'abstract', 'text',
+					'date', 'imageId', 'imageType', 'views',
+				],
+				relations: ['user', 'tags']
+			});
+			if (!notice)
+				throw new NotFound;
+
 			return res.json(notice);
-		const err = new NotFound;
+		}
+	} catch (err) {
 		return next(err);
 	}
 }

@@ -16,6 +16,7 @@ export default function CoronaCard() {
          try {
             let confirmed = localStorage.getItem('@Saude:confirmed');
             let deaths = localStorage.getItem('@Saude:deaths');
+            let recovered = localStorage.getItem('@Saude:recovered');
             let time = localStorage.getItem('@Saude:time');
 
             // Data does not exist
@@ -32,20 +33,24 @@ export default function CoronaCard() {
                });
                confirmed = data.confirmed.toLocaleString('pt');
                deaths = data.deaths.toLocaleString('pt');
+               recovered = data.recovered.toLocaleString('pt');
                time = new Date();
 
                localStorage.setItem('@Saude:confirmed', confirmed);
                localStorage.setItem('@Saude:deaths', deaths);
                localStorage.setItem('@Saude:time', time);
+               localStorage.setItem('@Saude:recovered', recovered);
 
                // console.log(confirmed, deaths, time);
                setCovid({
                   confirmed,
                   deaths,
+                  recovered,
                });
             } else {
                // Verify if data is expired
-               const diffHours = new Date().getHours() - new Date(time).getHours();
+               const diffHours =
+                  new Date().getHours() - new Date(time).getHours();
 
                // console.log(diffHours);
                if (diffHours >= 1) {
@@ -57,10 +62,12 @@ export default function CoronaCard() {
                      cancelToken: source.token,
                   });
                   confirmed = data.confirmed.toLocaleString('pt');
+                  recovered = data.recovered.toLocaleString('pt');
                   deaths = data.deaths.toLocaleString('pt');
                   time = new Date();
 
                   localStorage.setItem('@Saude:confirmed', confirmed);
+                  localStorage.setItem('@Saude:recovered', recovered);
                   localStorage.setItem('@Saude:deaths', deaths);
                   localStorage.setItem('@Saude:time', time);
                }
@@ -69,6 +76,7 @@ export default function CoronaCard() {
                setCovid({
                   confirmed,
                   deaths,
+                  recovered,
                });
             }
          } catch (err) {
@@ -79,7 +87,7 @@ export default function CoronaCard() {
       }
 
       loadCovidData();
-   }, [CancelToken]);
+   }, [CancelToken, covid]);
 
    useEffect(() => {
       const source = CancelToken.source();
@@ -100,9 +108,15 @@ export default function CoronaCard() {
          </div>
          <div className="corona-data">
             <p>
+               <strong style={{ color: 'cyan' }}>{covid.recovered} </strong>
+            </p>
+            <p>Recuperados</p>
+
+            <p>
                <strong>{covid.confirmed}</strong>
             </p>
             <p>Casos confirmados</p>
+
             <p>
                <strong style={{ color: 'red' }}>{covid.deaths} </strong>
             </p>

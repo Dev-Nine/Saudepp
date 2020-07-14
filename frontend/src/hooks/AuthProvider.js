@@ -40,7 +40,7 @@ const AuthProvider = ({ children }) => {
       if (!user.imageId) {
          user.imageUrl = `https://ui-avatars.com/api/?background=0086e6&bold=true&color=fff&uppercase=false&size=256&name=${user.name}`;
       } else {
-         user.ImageUrl = `https://i.imgur.com/${user.imageId}.${user.imageType}`;
+         user.imageUrl = `https://i.imgur.com/${user.imageId}.${user.imageType}`;
       }
 
       api.defaults.headers.authorization = `Bearer ${token}`;

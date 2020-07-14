@@ -38,17 +38,17 @@ export default function Routes() {
          <Route path="/panel" isPrivate exact component={Panel} />
          <Route path="/panel/users" isPrivate exact component={PanelUsers} />
          <Route
-            path="/panel/register/professional"
+            path="/panel/users/register"
             isPrivate
             exact
             component={Register}
          />
-         <Route
+         {/* <Route
             path="/panel/register/medic"
             exact
             isPrivate
             component={RegisterMedic}
-         />
+         /> */}
          <Route path="*" component={NotFound} />
       </Switch>
    );

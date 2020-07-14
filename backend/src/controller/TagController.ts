@@ -1,7 +1,8 @@
-import { getRepository, DeleteResult } from "typeorm";
+import { getRepository, DeleteResult, Raw } from "typeorm";
 import { Request, Response } from 'express';
 import { Tag } from '../model/Tag';
 import { UserRole } from '../model/User';
+import * as escape from 'pg-escape'
 
 import { NotFound } from '../Errors';
 
@@ -43,12 +44,33 @@ export async function processEditData(req : Request): Promise<Tag> {
 }
 
 export async function getAll(req : Request, res : Response, next) : Promise<Response> {
-	const tags = await getRepository(Tag).find();
-	if(tags && tags.length > 0)
-		return res.json(tags);
-	
-	const err = new NotFound;
-	return next(err);
+	let options;
+	try{
+		let limit = 8; // default
+		if(req.query["limit"])
+			limit = Number(req.query["limit"]);
+		if(req.query["page"]){
+			const page = Number(req.query["page"]);
+			options = {order: {id : "ASC"}, take: limit, skip: (limit * page)};
+		}
+		let queryName;
+		if(req.query["description"])
+			queryName = "description"
+		if(queryName){
+			const attribute = String(req.query[queryName]).toLocaleLowerCase();
+			const query = escape(`ILIKE %L`, `%${attribute}%`)
+			options = {...options, where: 
+				{[queryName]: Raw(alias => `${alias} ${query}`)}
+			}
+		}
+		const tags = await getRepository(Tag).find(options);
+		if(tags && tags.length > 0)
+			return res.json(tags);
+		
+		throw new NotFound();
+	}catch(err){
+		return next(err);
+	}
 }
 
 export async function getByPk(req : Request, res : Response, next) : Promise<Response> {

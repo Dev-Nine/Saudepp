@@ -20,7 +20,7 @@ export default function CoronaCard() {
             let time = localStorage.getItem('@Saude:time');
 
             // Data does not exist
-            if (!(confirmed && deaths && time)) {
+            if (!(confirmed && deaths && recovered && time)) {
                // console.log('Data dont exist');
                //  console.log(confirmed, deaths, time);
 
@@ -87,7 +87,7 @@ export default function CoronaCard() {
       }
 
       loadCovidData();
-   }, [CancelToken, covid]);
+   }, [CancelToken]);
 
    useEffect(() => {
       const source = CancelToken.source();
@@ -118,7 +118,7 @@ export default function CoronaCard() {
             <p>Casos confirmados</p>
 
             <p>
-               <strong style={{ color: 'red' }}>{covid.deaths} </strong>
+               <strong style={{ color: '#ff3333' }}>{covid.deaths} </strong>
             </p>
             <p>Óbitos confirmados</p>
          </div>

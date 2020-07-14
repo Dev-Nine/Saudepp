@@ -15,12 +15,18 @@ export const Container = styled.div`
    background-size: cover;
    background-position: center;
    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-   background-color: rgba(0, 0, 0, 0.45);
+   background-color: rgba(0, 0, 0, 0.3);
    background-blend-mode: darken;
+   filter: hue-rotate(100deg);
 
    display: flex;
    align-items: center;
    justify-content: space-between;
+
+   .corona-data,
+   .corona-text {
+      filter: hue-rotate(-100deg);
+   }
 
    h1 {
       font-size: 60px;

@@ -1,5 +1,4 @@
-import {Entity, Column, PrimaryColumn, PrimaryGeneratedColumn} from "typeorm";
-import { IsString, MinLength } from 'class-validator';
+import {Entity, Column, PrimaryGeneratedColumn} from "typeorm";
 
 @Entity()
 export class Tag {
@@ -8,7 +7,5 @@ export class Tag {
     id: number;
 
     @Column({ unique: true })
-    @IsString()
-    @MinLength(2)
     description: string;
 }

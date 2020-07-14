@@ -1,6 +1,4 @@
 import {Request, Response} from 'express'
-import * as jwt from 'jsonwebtoken';
-import authConfig from '../config/auth';
 
 import AuthenticateUserService from '../services/AuthenticateUserService'
 

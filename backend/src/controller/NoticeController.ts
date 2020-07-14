@@ -1,10 +1,10 @@
-import { DeleteResult, getRepository, getConnection, Like, Raw } from "typeorm";
+import { getRepository, getConnection, Raw } from "typeorm";
 import { Notice } from '../model/Notice';
 import { Request, Response } from 'express';
 import { User, UserRole } from '../model/User';
 import { Tag } from '../model/Tag';
 import imgurApi, { config } from '../utils/imgurApi'
-import * as escape from 'pg-escape'
+import * as escape from 'pg-escape';
 
 import { Forbidden, NotFound } from '../Errors';
 

@@ -1,4 +1,3 @@
-import { IsString, IsDate, MinLength } from 'class-validator';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, BeforeInsert } from "typeorm";
 import { Notice } from "./Notice";
 import { User } from "./User";
@@ -10,12 +9,9 @@ export class Comment {
     id: number;
 
     @Column()
-    @IsString()
-    @MinLength(1)
     content: string;
 
     @Column()
-    @IsDate()
     date: Date;
 
     @ManyToOne(type => Notice, notice => notice.comments, {

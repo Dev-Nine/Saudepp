@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { createConnection, Connection, ConnectionOptions } from 'typeorm';
+import { createConnection } from 'typeorm';
 require('dotenv').config();
 
 export default async function connection() {

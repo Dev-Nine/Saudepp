@@ -1,4 +1,3 @@
-import { MinLength, MaxLength, IsInt, IsEmail, IsString, Min, Max } from 'class-validator';
 import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
 import { Notice } from './Notice';
 import { Comment } from './Comment';
@@ -17,39 +16,24 @@ export class User {
     id: number;
 
     @Column({ unique: true, length: 20, select: false })
-    @IsString()
-    @MinLength(2)
-    @MaxLength(20)
     username: string;
 
     @Column({ length: 72, select: false })
-    @IsString()
-    @MaxLength(72)
     password: string;
 
     @Column({ unique: true, length: 50, select: false })
-    @IsString()
-    @IsEmail()
-    @MinLength(5) // so pra ter certeza kk
-    @MaxLength(50)
     email: string;
 
     @Column({ length: 50 })
-    @IsString()
-    @MinLength(5)
-    @MaxLength(50)
     name: string;
 
     @Column({ length: 8, nullable: true })
-    @IsString()
     imageId: string;
 
     @Column({ length: 5, nullable: true })
-    @IsString()
     imageType: string;
 
     @Column({ length: 16, nullable: true, select: false })
-    @IsString()
     deleteHash: string;
 
     @Column({
@@ -58,23 +42,16 @@ export class User {
         default: UserRole.PROFISSIONAL,
         select: false
     })
-    @IsInt()
-    @Min(0)
-    @Max(3)
     type: UserRole;
 
     // tipo de identificador
     // caso seja profissional, pode ser crm, crf, etc...
     @Column({ default: "cpf", select: false })
-    @IsString()
-    @MaxLength(10)
     identifierType : string
 
     // valor do identificador
     // cada cpf, crm e crf tem o seu próprio
     @Column({ select: false })
-    @IsString()
-    @MaxLength(50)
     identifier: string
 
     @OneToMany(type => Notice, notice => notice.user)

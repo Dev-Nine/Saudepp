@@ -1,5 +1,4 @@
-import { getRepository, getConnection } from 'typeorm';
-import { Request, Response } from 'express';
+import { getConnection } from 'typeorm';
 
 import api from '../utils/api';
 import { CovidInfo } from '../model/CovidInfo';

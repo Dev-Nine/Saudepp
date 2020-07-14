@@ -8,8 +8,6 @@ import { Container } from './styles';
 
 import { useAuth } from '../../hooks/AuthProvider';
 
-import defaultAvatar from '../../image/defaultavatar.png';
-
 function Header() {
    const [dropdown, setDropdown] = useState('');
    const { user, signOut } = useAuth();

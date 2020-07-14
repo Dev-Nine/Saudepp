@@ -156,7 +156,7 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 			const attribute = String(req.query[queryName]).toLocaleLowerCase();
 			const query = escape(`ILIKE %L`, `%${attribute}%`)
 			options = {...options, where: 
-				{[queryName]: Raw(alias => `LOWER(${alias}) ${query}`)}
+				{[queryName]: Raw(alias => `${alias} ${query}`)}
 			}
 		}
 		const users = await getRepository(User).find(options);

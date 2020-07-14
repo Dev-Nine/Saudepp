@@ -44,35 +44,37 @@ export async function processEditData(req : Request): Promise<Tag> {
 }
 
 export async function getAll(req : Request, res : Response, next) : Promise<Response> {
-	try{
+	try {
 		let options;
 
 		const limit = Number(req.query["limit"]) || 8;
 		console.log(`Limit: ${limit}`);
 
-		if(req.query["page"]){
+		if (req.query["page"]) {
 			const page = Number(req.query["page"]);
 			options = {order: {id : "ASC"}, take: limit, skip: (limit * (page - 1))};
 			console.log(`Page: ${page}`);
 		}
 
 		let queryName;
-		if(req.query["description"])
-			queryName = "description"
-		if(queryName){
+		if (req.query["description"])
+			queryName = "description";
+		if (queryName) {
 			const attribute = String(req.query[queryName]).toLocaleLowerCase();
-			const query = escape(`ILIKE %L`, `%${attribute}%`)
+			const query = escape(`ILIKE %L`, `%${attribute}%`);
 			options = {...options, where: 
 				{[queryName]: Raw(alias => `${alias} ${query}`)}
-			}
+			};
 		}
+
 		const tags = await getRepository(Tag).find(options);
 		console.log(tags);
+
 		if(tags && tags.length > 0)
 			return res.json(tags);
 		
 		throw new NotFound();
-	}catch(err){
+	} catch(err) {
 		return next(err);
 	}
 }

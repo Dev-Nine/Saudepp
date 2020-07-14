@@ -51,7 +51,7 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 			limit = Number(req.query["limit"]);
 		if(req.query["page"]){
 			const page = Number(req.query["page"]);
-			options = {order: {id : "ASC"}, take: limit, skip: (limit * page)};
+			options = {order: {id : "ASC"}, take: limit, skip: (limit * page - 1)};
 		}
 		let queryName;
 		if(req.query["description"])

@@ -25,9 +25,9 @@ export const ContainerNoticia = styled.div`
    }
 
    .container .banner {
-      background-image: url(${(props) =>
-         props.imageId
-            ? `https://i.imgur.com/${props.imageId}.${props.imageType}`
+      background-image: url(${({ imageData }) =>
+         imageData.imageId
+            ? `https://i.imgur.com/${imageData.imageId}.${imageData.imageType}`
             : defaultBanner});
       background-size: cover;
       background-position: center;
@@ -86,8 +86,9 @@ export const TextContainer = styled.div`
       align-self: center;
    }
 
-   p {
-      font-size: 20px;
+   p,
+   li {
+      font-size: 18px;
    }
 
    @media only screen and (max-width: 1099px) {

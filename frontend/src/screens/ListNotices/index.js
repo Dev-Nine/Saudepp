@@ -61,7 +61,7 @@ export default function ListNotices() {
          try {
             const { data } = await api.get('notices', {
                params: {
-                  tag: formattedTags,
+                  tags: formattedTags,
                },
             });
 

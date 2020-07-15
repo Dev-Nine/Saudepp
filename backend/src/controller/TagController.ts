@@ -56,16 +56,11 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 			console.log(`Page: ${page}`);
 		}
 
-		let queryName;
-		if (req.query["description"])
-			queryName = "description";
-		if (queryName) {
-			const attribute = String(req.query[queryName]).toLocaleLowerCase();
-			const query = escape(`ILIKE %L`, `%${attribute}%`);
-			options = {...options, where: 
-				{[queryName]: Raw(alias => `${alias} ${query}`)}
-			};
-		}
+		let query : string;
+		if(req.query["description"])
+			query = escape(`"description" ILIKE %L`, `%${req.query["description"]}%`)
+		if(query)
+			options = {...options, where: query}
 
 		const tags = await getRepository(Tag).find(options);
 		console.log(tags);

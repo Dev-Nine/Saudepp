@@ -1,6 +1,6 @@
-import * as typeorm from 'typeorm';
-import * as bcrypt from 'bcryptjs';
-import * as jwt from 'jsonwebtoken';
+import typeorm from 'typeorm';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 import authConfig from '../config/auth';
 import { User } from '../model/User';

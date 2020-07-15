@@ -1,9 +1,9 @@
 import { getRepository, Raw } from "typeorm";
 import { Request, Response } from 'express';
-import * as bcrypt from 'bcryptjs';
+import bcrypt from 'bcryptjs';
 import { User, UserRole } from '../model/User';
 import imgurApi, { config } from '../utils/imgurApi'
-import * as escape from 'pg-escape'
+import escape from 'pg-escape'
 
 import { Forbidden, NotFound, Conflict } from '../Errors';
 

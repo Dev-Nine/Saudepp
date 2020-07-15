@@ -17,7 +17,7 @@ import { BaseError } from './Errors';
 import { celebrate } from 'celebrate';
 import validator from 'cpf-cnpj-validator'
 const Joi = require('@hapi/joi').extend(validator)
-import * as multer from 'multer';
+import multer from 'multer';
 import multerConfig from './config/multerConfig'
 
 const routes = Router();

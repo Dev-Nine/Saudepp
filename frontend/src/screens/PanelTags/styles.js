@@ -32,14 +32,41 @@ export const Table = styled.div`
    width: 100%;
 `;
 
-export const TableLine = styled.div`
+export const TableHeader = styled.div`
    width: 100%;
-   border-bottom: 1px #989898;
+   border-width: 0 0 1px 0;
+   border-color: #989898;
+   border-style: solid;
+
    display: flex;
+   align-items: center;
+
+   font-weight: bold;
+   font-size: 24px;
+   line-height: 28px;
+   height: 50px;
 
    div {
       width: 80%;
-      background-color: red;
+   }
+
+   div + div {
+      width: 20%;
+      text-align: center;
+      font-size: 50px;
+   }
+`;
+
+export const TableLine = styled.div`
+   width: 100%;
+   border-width: 0 0 1px 0;
+   border-color: #989898;
+   border-style: solid;
+   display: flex;
+   height: 50px;
+
+   div {
+      width: 80%;
    }
 
    div + div {

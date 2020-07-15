@@ -1,4 +1,5 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import { shade } from 'polished';
 
 export const Container = styled.div`
    width: 100%;
@@ -67,7 +68,7 @@ export const TableLine = styled.div`
    display: flex;
    align-items: center;
 
-   height: 40px;
+   height: 60px;
 
    div {
       width: 80%;
@@ -78,5 +79,27 @@ export const TableLine = styled.div`
 
       display: flex;
       justify-content: center;
+   }
+`;
+
+export const Button = styled.button`
+   width: 40px;
+   height: 40px;
+
+   ${(props) =>
+      props.isDelete
+         ? css`
+              background: #ff7777;
+              box-shadow: 0px 4px 1px #6fa9d3;
+              border-radius: 8px;
+           `
+         : css`
+              background: #77c6ff;
+              box-shadow: 0px 4px 1px #6fa9d3;
+              border-radius: 8px;
+           `}
+
+   & + button {
+      margin-left: 8px;
    }
 `;

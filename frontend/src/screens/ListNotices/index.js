@@ -17,14 +17,11 @@ import {
 
 import api, { useAxios } from '../../services/api';
 
-const fetchNoticesByTags = async (url, tags) => {
-   const formattedTags = tags.map((t) => t.id).join(',');
+const fetchNoticesByTags = async (url, selTags) => {
+   let config;
+   if (selTags) config = { params: { tags: selTags } };
 
-   const response = await api.get('/notices', {
-      params: {
-         tags: formattedTags,
-      },
-   });
+   const response = await api.get('/notices', config);
 
    return response.data;
 };
@@ -32,12 +29,13 @@ const fetchNoticesByTags = async (url, tags) => {
 export default function ListNotices() {
    const { data: tags } = useAxios('/tags');
    const [selectedTags, setSelectedTags] = useState([]);
-   const { data: notices } = useSWR(
-      ['/notices', selectedTags],
+   const { data: notices, error } = useSWR(
+      [
+         '/notices',
+         setSelectedTags ? selectedTags.map((t) => t.id).join(',') : undefined,
+      ],
       fetchNoticesByTags,
    );
-   const [loading, setLoading] = useState(true);
-   const [error, setError] = useState('');
 
    useEffect(() => {
       document.title = 'Notícias';

@@ -1,16 +1,21 @@
 import axios from 'axios';
 import useSWR from 'swr';
 
-const api = axios.create({
+const config = {
    baseURL: 'https://saudepp.herokuapp.com',
-});
+};
 
-export function useAxios(url, params) {
-   const { data, error } = useSWR(url, async (link) => {
-      const response = await api.get(link, params);
+const api = axios.create(config);
 
-      return response.data;
-   });
+export function useAxios(url, requestConfig) {
+   const { data, error } = useSWR(
+      [url, requestConfig],
+      async (route, reqConf) => {
+         const response = await api.get(route, reqConf);
+
+         return response.data;
+      },
+   );
    return { data, error };
 }
 

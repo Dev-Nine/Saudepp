@@ -33,12 +33,12 @@ export default function CoronaCard() {
                </strong>
             </p>
             <p>Recuperados</p>
-
             <p>
-               <strong>{covid.confirmed.toLocaleString('pt')}</strong>
+               <strong>
+                  {covid.confirmed.toLocaleString('pt')}
+               </strong>
             </p>
             <p>Casos confirmados</p>
-
             <p>
                <strong style={{ color: '#ff3333' }}>
                   {covid.deaths.toLocaleString('pt')}

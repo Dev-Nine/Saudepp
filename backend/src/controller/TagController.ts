@@ -52,7 +52,7 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 
 		if (req.query["page"]) {
 			const page = Number(req.query["page"]);
-			options = {order: {id : "ASC"}, take: limit, skip: (limit * (page - 1))};
+			options = {order: {id : "DESC"}, take: limit, skip: (limit * (page - 1))};
 			console.log(`Page: ${page}`);
 		}
 

@@ -5,7 +5,7 @@ import { Container } from './styles';
 
 import Card from '../Card';
 
-export default function CardGroup({ title, type, data }) {
+export default function CardGroup({ title, data }) {
    function parseData() {
       if (data) {
          return (

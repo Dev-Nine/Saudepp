@@ -2,7 +2,7 @@ import { getRepository, DeleteResult, Raw } from "typeorm";
 import { Request, Response } from 'express';
 import { Tag } from '../model/Tag';
 import { UserRole } from '../model/User';
-import * as escape from 'pg-escape'
+import escape from 'pg-escape'
 
 import { NotFound } from '../Errors';
 

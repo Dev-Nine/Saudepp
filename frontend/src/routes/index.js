@@ -51,6 +51,7 @@ export default function Routes() {
             isPrivate
             component={RegisterMedic}
          /> */}
+         <Route path="/panel/tags" isPrivate exact component={PanelTags} />
          <Route path="*" component={NotFound} />
       </Switch>
    );

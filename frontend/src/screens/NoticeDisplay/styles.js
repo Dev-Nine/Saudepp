@@ -86,8 +86,9 @@ export const TextContainer = styled.div`
       align-self: center;
    }
 
-   p {
-      font-size: 20px;
+   p,
+   li {
+      font-size: 18px;
    }
 
    @media only screen and (max-width: 1099px) {

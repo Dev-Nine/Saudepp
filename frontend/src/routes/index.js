@@ -17,6 +17,7 @@ import {
    Register,
    Panel,
    PanelUsers,
+   PanelTags,
 } from '../screens';
 
 export default function Routes() {
@@ -36,6 +37,7 @@ export default function Routes() {
             component={CreateNoticies}
          />
          <Route path="/panel" isPrivate exact component={Panel} />
+         <Route path="/panel/tags" isPrivate exact component={PanelTags} />
          <Route path="/panel/users" isPrivate exact component={PanelUsers} />
          <Route
             path="/panel/users/register"

@@ -11,6 +11,7 @@ import Faq from './Faq';
 import About from './About';
 import FaqCovid19 from './Faq/Subpages/Covid19';
 import Panel from './Panel';
+import PanelTags from './PanelTags';
 import PanelUsers from './PanelUsers';
 
 export {
@@ -27,5 +28,6 @@ export {
    FaqCovid19,
    About,
    Panel,
+   PanelTags,
    PanelUsers,
 };

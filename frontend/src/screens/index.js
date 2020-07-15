@@ -12,6 +12,7 @@ import About from './About';
 import FaqCovid19 from './Faq/Subpages/Covid19';
 import Panel from './Panel';
 import PanelUsers from './PanelUsers';
+import Tags from './Tags';
 
 export {
    CreateNoticies,
@@ -28,4 +29,5 @@ export {
    About,
    Panel,
    PanelUsers,
+   Tags,
 };

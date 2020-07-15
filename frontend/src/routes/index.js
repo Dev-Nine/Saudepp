@@ -17,6 +17,7 @@ import {
    Register,
    Panel,
    PanelUsers,
+   Tags,
 } from '../screens';
 
 export default function Routes() {
@@ -49,6 +50,7 @@ export default function Routes() {
             isPrivate
             component={RegisterMedic}
          /> */}
+         <Route path="/panel/tags" isPrivate exact component={Tags} />
          <Route path="*" component={NotFound} />
       </Switch>
    );

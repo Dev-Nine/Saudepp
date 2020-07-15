@@ -41,8 +41,8 @@ export const TableHeader = styled.div`
    display: flex;
    align-items: center;
 
-   font-weight: bold;
    font-size: 24px;
+   font-weight: bold;
    line-height: 28px;
    height: 50px;
 
@@ -62,8 +62,12 @@ export const TableLine = styled.div`
    border-width: 0 0 1px 0;
    border-color: #989898;
    border-style: solid;
+   font-size: 22px;
+
    display: flex;
-   height: 50px;
+   align-items: center;
+
+   height: 40px;
 
    div {
       width: 80%;
@@ -71,5 +75,8 @@ export const TableLine = styled.div`
 
    div + div {
       width: 20%;
+
+      display: flex;
+      justify-content: center;
    }
 `;

@@ -21,9 +21,7 @@ export default function PanelTags() {
                      <div>+</div>
                   </TableHeader>
                   <TableLine>
-                     <div>
-                        <b>Covid 19</b>
-                     </div>
+                     <div>Covid 19</div>
                      <div>+ ou X</div>
                   </TableLine>
                </Table>

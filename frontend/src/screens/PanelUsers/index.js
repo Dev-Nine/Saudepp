@@ -44,9 +44,12 @@ export default function Panel() {
                         <th> Name </th>
                      </thead>
                      <tbody>
-                        {
-                           users.map(u => (<tr><td>u.id</td><td>u.name</td></tr>))
-                        }
+                        {users.map((u) => (
+                           <tr>
+                              <td>u.id</td>
+                              <td>u.name</td>
+                           </tr>
+                        ))}
                      </tbody>
                   </table>
                </div>

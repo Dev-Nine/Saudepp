@@ -1,9 +1,9 @@
 import { getRepository, Raw } from "typeorm";
 import { Request, Response } from 'express';
-import * as bcrypt from 'bcryptjs';
+import bcrypt from 'bcryptjs';
 import { User, UserRole } from '../model/User';
 import imgurApi, { config } from '../utils/imgurApi'
-import * as escape from 'pg-escape'
+import escape from 'pg-escape'
 
 import { Forbidden, NotFound, Conflict } from '../Errors';
 
@@ -141,24 +141,20 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 			limit = Number(req.query["limit"]);
 		if(req.query["page"]){
 			const page = Number(req.query["page"]);
-			options = {order: {id : "ASC"}, take: limit, skip: (limit * page)};
+			options = {order: {id : "DESC"}, take: limit, skip: (limit * page)};
 		}
 
 		// searchable attributes:
 		// name
 		// identifier
-		let queryName;
+		let query : string;
 		if(req.query["name"])
-			queryName = "name"
+			query = escape(`"name" ILIKE %L`, `%${req.query["name"]}%`)
 		else if(req.query["identifier"])
-			queryName = "identifier"
-		if(queryName){
-			const attribute = String(req.query[queryName]).toLocaleLowerCase();
-			const query = escape(`ILIKE %L`, `%${attribute}%`)
-			options = {...options, where: 
-				{[queryName]: Raw(alias => `${alias} ${query}`)}
-			}
-		}
+			query = escape(`"identifier" ILIKE %L`, `%${req.query["identifier"]}%`)
+		if(query)
+			options = {...options, where: query}
+
 		const users = await getRepository(User).find(options);
 		if(users && users.length > 0)
 			return res.json(users);

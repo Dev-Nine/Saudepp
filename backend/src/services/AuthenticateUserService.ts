@@ -1,6 +1,6 @@
-import * as typeorm from 'typeorm';
-import * as bcrypt from 'bcryptjs';
-import * as jwt from 'jsonwebtoken';
+import { getRepository } from 'typeorm';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 import authConfig from '../config/auth';
 import { User } from '../model/User';
@@ -26,7 +26,7 @@ export default class AuthenticateUserService {
 
       // console.log(teste);
 
-      const userRepository = typeorm.getRepository(User);
+      const userRepository = getRepository(User);
       var user;
       if(email){
          user = await userRepository.findOne({select: ["id", "name", "email", "username", "password", "imageId", "imageType"], 

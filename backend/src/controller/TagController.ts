@@ -2,7 +2,7 @@ import { getRepository, DeleteResult, Raw } from "typeorm";
 import { Request, Response } from 'express';
 import { Tag } from '../model/Tag';
 import { UserRole } from '../model/User';
-import * as escape from 'pg-escape'
+import escape from 'pg-escape'
 
 import { NotFound } from '../Errors';
 
@@ -52,20 +52,15 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 
 		if (req.query["page"]) {
 			const page = Number(req.query["page"]);
-			options = {order: {id : "ASC"}, take: limit, skip: (limit * (page - 1))};
+			options = {order: {id : "DESC"}, take: limit, skip: (limit * (page - 1))};
 			console.log(`Page: ${page}`);
 		}
 
-		let queryName;
-		if (req.query["description"])
-			queryName = "description";
-		if (queryName) {
-			const attribute = String(req.query[queryName]).toLocaleLowerCase();
-			const query = escape(`ILIKE %L`, `%${attribute}%`);
-			options = {...options, where: 
-				{[queryName]: Raw(alias => `${alias} ${query}`)}
-			};
-		}
+		let query : string;
+		if(req.query["description"])
+			query = escape(`"description" ILIKE %L`, `%${req.query["description"]}%`)
+		if(query)
+			options = {...options, where: query}
 
 		const tags = await getRepository(Tag).find(options);
 		console.log(tags);

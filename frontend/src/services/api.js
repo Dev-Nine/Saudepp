@@ -2,7 +2,7 @@ import axios from 'axios';
 import useSWR from 'swr';
 
 const api = axios.create({
-   baseURL: 'http://localhost:3333',
+   baseURL: 'https://saudepp.herokuapp.com',
 });
 
 export function useAxios(url) {

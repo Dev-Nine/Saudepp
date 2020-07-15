@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import { User, UserRole } from '../model/User';
 import { Tag } from '../model/Tag';
 import imgurApi, { config } from '../utils/imgurApi'
-import * as escape from 'pg-escape';
+import escape from 'pg-escape';
 
 import { Forbidden, NotFound } from '../Errors';
 
@@ -42,8 +42,8 @@ export async function validateDelete(req : Request): Promise<number>{
 
 export async function getAll(req : Request, res : Response, next) : Promise<Response> {
 	try{
-		if (req.query.tag) {
-			const queryTag = String(req.query.tag).split(',').map(tag => tag.trim());
+		if (req.query["tags"]) {
+			const queryTag = String(req.query["tags"]).split(',').map(tag => tag.trim());
 			const tagObjects = queryTag.map(tag => ({id: tag}));
 			const tags = await getRepository(Tag)
 				.find({
@@ -82,23 +82,23 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 				limit = Number(req.query["limit"]);
 			if(req.query["page"]){
 				const page = Number(req.query["page"]);
-				options = {order: {id : "ASC"}, take: limit, skip: (limit * page)};
+				options = {order: {id : "DESC"}, take: limit, skip: (limit * page)};
 			}
 			// searchable attributes:
 			// title
 			// abstract
-			let queryName;
+			// tagId
+			let query : string;
 			if(req.query["title"])
-				queryName = "title"
+				query = escape(`title ILIKE %L`, `%${req.query["title"]}%`);
 			else if(req.query["abstract"])
-				queryName = "abstract"
-			if(queryName){
-				const attribute = String(req.query[queryName]).toLocaleLowerCase();
-				const query = escape(`ILIKE %L`, `%${attribute}%`)
-				options = {...options, where: 
-					{[queryName]: Raw(alias => `${alias} ${query}`)}
-				}
-			}
+				query = escape(`abstract ILIKE %L`, `%${req.query["abstract"]}%`);
+			else if(req.query["tag"])
+				query = escape(`"Notice_tags".description ILIKE %L`, `%${req.query["tag"]}%`);
+				
+			if(query)
+				options = {...options, where: query}
+
 			const notices = await getRepository(Notice).find(options);
 			if(notices && notices.length > 0)
 				return res.json(notices);

@@ -18,12 +18,6 @@ export const Container = styled.div`
       color: inherit;
    }
 
-   div table {
-      width: 100%;
-      border-style: solid;
-      border-width: 1px;
-   }
-
    @media only screen and (max-width: 1099px) {
       h1 {
          font-size: 32px;
@@ -31,5 +25,24 @@ export const Container = styled.div`
       .description {
          font-size: 20px;
       }
+   }
+`;
+
+export const Table = styled.div`
+   width: 100%;
+`;
+
+export const TableLine = styled.div`
+   width: 100%;
+   border-bottom: 1px #989898;
+   display: flex;
+
+   div {
+      width: 80%;
+      background-color: red;
+   }
+
+   div + div {
+      width: 20%;
    }
 `;

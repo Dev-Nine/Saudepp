@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Container } from './styles';
+import { Container, Table, TableLine } from './styles';
 
 import api from '../../services/api';
 
@@ -14,20 +14,13 @@ export default function PanelTags() {
          <div className="main">
             <Container>
                <h1>Painel de Tag's</h1>
-               <table>
-                  <thead>
-                     <tr>
-                        <td>Descrição</td>
-                        <td>Icone de +</td>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     <tr>
-                        <td>Covid 19</td>
-                        <td>outros icones</td>
-                     </tr>
-                  </tbody>
-               </table>
+
+               <Table>
+                  <TableLine>
+                     <div>a</div>
+                     <div>a</div>
+                  </TableLine>
+               </Table>
             </Container>
          </div>
 

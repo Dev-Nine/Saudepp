@@ -21,7 +21,7 @@ export default function Home() {
    useEffect(() => {
       const { CancelToken } = axios;
       const source = CancelToken.source();
-      api.get('/notices?limit=4?page=1', {
+      api.get('/notices?page=0&limit=4', {
          cancelToken: source.token,
       })
          .then(({ data }) => {

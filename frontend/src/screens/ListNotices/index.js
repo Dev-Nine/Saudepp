@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 import { FiXCircle } from 'react-icons/fi';
 
+import useSWR from 'swr';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import Card from '../../components/Card';
@@ -14,14 +15,27 @@ import {
    TagContainer,
 } from './styles';
 
-import api from '../../services/api';
+import api, { useAxios } from '../../services/api';
+
+const fetchNoticesByTags = async (url, selTags) => {
+   let config;
+   if (selTags) config = { params: { tags: selTags } };
+
+   const response = await api.get('/notices', config);
+
+   return response.data;
+};
 
 export default function ListNotices() {
-   const [tags, setTags] = useState([]);
+   const { data: tags } = useAxios('/tags');
    const [selectedTags, setSelectedTags] = useState([]);
-   const [notices, setNotices] = useState([]);
-   const [loading, setLoading] = useState(true);
-   const [error, setError] = useState('');
+   const { data: notices, error } = useSWR(
+      [
+         '/notices',
+         setSelectedTags ? selectedTags.map((t) => t.id).join(',') : undefined,
+      ],
+      fetchNoticesByTags,
+   );
 
    useEffect(() => {
       document.title = 'Notícias';
@@ -53,47 +67,12 @@ export default function ListNotices() {
       [selectedTags],
    );
 
-   useEffect(() => {
-      async function loadNotices() {
-         setLoading(true);
-         const formattedTags = selectedTags.map((t) => t.id).join(',');
-
-         try {
-            const { data } = await api.get('notices', {
-               params: {
-                  tags: formattedTags,
-               },
-            });
-
-            setNotices(data);
-         } catch (err) {
-            const { status } = err.response;
-            if (status === 404) {
-               setNotices([]);
-               setError('Não encontrado');
-            } else if (status === 429) {
-               setError('Tente novamente em alguns segundos');
-            }
-         } finally {
-            setLoading(false);
-         }
-      }
-
-      loadNotices();
-   }, [selectedTags]);
-
-   useEffect(() => {
-      api.get('/tags').then(({ data }) => {
-         setTags(data);
-      });
-   }, []);
-
    return (
       <>
          <Header />
          <div className="main">
             <ContainerPesquisa>
-               <h1>Pesquisar {loading && ' - Carregando...'}</h1>
+               <h1>Pesquisar</h1>
 
                <Search>
                   <select
@@ -103,11 +82,15 @@ export default function ListNotices() {
                      className="select-form"
                   >
                      <option value="">Selecione as categorias</option>
-                     {tags.map((item) => (
-                        <option key={item.id} value={item.id}>
-                           {item.description}
-                        </option>
-                     ))}
+                     {tags ? (
+                        tags.map((item) => (
+                           <option key={item.id} value={item.id}>
+                              {item.description}
+                           </option>
+                        ))
+                     ) : (
+                        <p>Carregando</p>
+                     )}
                   </select>
                </Search>
 
@@ -126,7 +109,7 @@ export default function ListNotices() {
                </TagContainer>
             </ContainerPesquisa>
             <ContainerNoticia>
-               {notices.length > 0 ? (
+               {notices ? (
                   <ul>
                      {' '}
                      {notices.map((n) => (

@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Sobre } from './styles';
-import api from '../../services/api';
+import api, { useAxios } from '../../services/api';
 
 import CardGroup from '../../components/CardGroup';
 import Header from '../../components/Header';
@@ -12,26 +12,10 @@ import CoronaCard from '../../components/CoronaCard';
 import Footer from '../../components/Footer';
 
 export default function Home() {
-   const [notices, setNotices] = useState([]);
+   const { data: notices } = useAxios('/notices?page=0&limit=4');
 
    useEffect(() => {
       document.title = 'Home';
-   }, []);
-
-   useEffect(() => {
-      const { CancelToken } = axios;
-      const source = CancelToken.source();
-      api.get('/notices?page=0&limit=4', {
-         cancelToken: source.token,
-      })
-         .then(({ data }) => {
-            setNotices(data);
-         })
-         .catch((err) => {});
-
-      return () => {
-         source.cancel('Operation canceled by the user.');
-      };
    }, []);
 
    return (
@@ -52,7 +36,11 @@ export default function Home() {
             </Sobre>
 
             <div>
-               <CardGroup title="Novas noticias" data={notices} />
+               {notices ? (
+                  <CardGroup title="Novas noticias" data={notices} />
+               ) : (
+                  <p>Carregando</p>
+               )}
             </div>
          </div>
 

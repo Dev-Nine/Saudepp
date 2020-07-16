@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Container } from './styles';
+import { FiSearch, FiX } from 'react-icons/fi';
+import { Container, Table, TableHeader, TableLine, Button } from './styles';
 
 import api from '../../services/api';
 
@@ -14,20 +15,24 @@ export default function PanelTags() {
          <div className="main">
             <Container>
                <h1>Painel de Tag's</h1>
-               <table>
-                  <thead>
-                     <tr>
-                        <td>Descrição</td>
-                        <td>Icone de +</td>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     <tr>
-                        <td>Covid 19</td>
-                        <td>outros icones</td>
-                     </tr>
-                  </tbody>
-               </table>
+
+               <Table>
+                  <TableHeader>
+                     <div>Descrição</div>
+                     <div>+</div>
+                  </TableHeader>
+                  <TableLine>
+                     <div>Covid 19</div>
+                     <div>
+                        <Button>
+                           <FiSearch />
+                        </Button>
+                        <Button isDelete>
+                           <FiX />
+                        </Button>
+                     </div>
+                  </TableLine>
+               </Table>
             </Container>
          </div>
 

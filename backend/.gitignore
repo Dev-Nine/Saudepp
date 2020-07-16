@@ -6,6 +6,7 @@ tmp/
 temp/
 yarn-error.log
 .env
+.env.alternate
 dist/
 .deploy
 .uploads/

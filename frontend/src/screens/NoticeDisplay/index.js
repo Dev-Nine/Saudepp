@@ -147,7 +147,9 @@ export default function NoticeDisplay(props) {
                               <>
                                  {content.date.getDate()} de{' '}
                                  {getMonthAsName(content.date.getMonth())} de{' '}
-                                 {content.date.getFullYear()}
+                                 {content.date.getFullYear()}, às{' '}
+                                 {content.date.getHours()}:
+                                 {content.date.getMinutes()}
                               </>
                            ) : undefined}
                         </p>

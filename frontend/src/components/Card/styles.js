@@ -63,6 +63,12 @@ export const Container = styled.div`
       color: #787878;
    }
 
+   @media (min-width: 1100px) {
+      div span:nth-child(3) {
+         margin-top: auto;
+      }
+   }
+
    @media (max-width: 1099px) {
       flex-direction: row;
 

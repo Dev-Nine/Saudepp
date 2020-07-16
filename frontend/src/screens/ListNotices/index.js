@@ -32,7 +32,7 @@ export default function ListNotices() {
    const { data: notices, error } = useSWR(
       [
          '/notices',
-         setSelectedTags ? selectedTags.map((t) => t.id).join(',') : undefined,
+         selectedTags[0] ? selectedTags.map((t) => t.id).join(',') : undefined,
       ],
       fetchNoticesByTags,
    );

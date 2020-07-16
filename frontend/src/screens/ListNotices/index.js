@@ -41,6 +41,9 @@ export default function ListNotices() {
       document.title = 'Notícias';
    });
 
+   let message = <p>Carregando</p>;
+   if (error) message = <p>Noticias não encontradas</p>;
+
    const handleSelectCategory = useCallback(
       (id) => {
          id = Number(id);
@@ -61,7 +64,6 @@ export default function ListNotices() {
       (id) => {
          id = Number(id);
          const newTags = selectedTags.filter((t) => t.id !== id);
-
          setSelectedTags(newTags);
       },
       [selectedTags],
@@ -111,13 +113,12 @@ export default function ListNotices() {
             <ContainerNoticia>
                {notices ? (
                   <ul>
-                     {' '}
                      {notices.map((n) => (
                         <Card data={n} key={n.id} />
-                     ))}{' '}
+                     ))}
                   </ul>
                ) : (
-                  error
+                  message
                )}
             </ContainerNoticia>
          </div>

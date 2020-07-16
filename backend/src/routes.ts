@@ -107,8 +107,8 @@ routes.post("/notices",
 	ensureAuthentication, 
 	celebrate({
 		body: Joi.object().keys({ 
-			title: Joi.string().min(5).max(70).required(),
-			abstract: Joi.string().min(5).max(120).required(),
+			title: Joi.string().min(5).max(100).required(),
+			abstract: Joi.string().min(5).max(150).required(),
 			text: Joi.string().required(),
 			tags: Joi.array().items({ id: Joi.number() }),
 			imageId: Joi.string().max(8).optional().allow(null),
@@ -124,8 +124,8 @@ routes.put("/notices/:id",
 	ensureAuthentication, 
 	celebrate({
 		body: Joi.object().keys({ 
-			title: Joi.string().min(5).max(70),
-			abstract: Joi.string().min(5).max(120),
+			title: Joi.string().min(5).max(100),
+			abstract: Joi.string().min(5).max(150),
 			text: Joi.string(),
 			tags: Joi.array().items({ id: Joi.number() }),
 			imageId: Joi.string().max(8).optional().allow(null),

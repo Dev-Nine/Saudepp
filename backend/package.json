@@ -9,7 +9,7 @@
       "migration:run": "ts-node ./node_modules/typeorm/cli.js migration:run",
       "migration:generate": "ts-node ./node_modules/typeorm/cli.js migration:generate",
       "migration:revert": "ts-node ./node_modules/typeorm/cli.js migration:revert",
-      "typeorm": "node ./node_modules/typeorm/cli.js",
+      "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
       "dev:server": "ts-node-dev --inspect --transpileOnly --ignore-watch node_modules src/server.ts"
    },
    "devDependencies": {

@@ -28,7 +28,9 @@ export default function CoronaCard() {
          </div>
          <div className="corona-data">
             <p>
-               <strong style={{ color: '#44E544' }}>{covid.recovered}</strong>
+               <strong style={{ color: '#44E544' }}>
+                  {covid.recovered.toLocaleString('pt')}
+               </strong>
             </p>
             <p>Recuperados</p>
             <p>

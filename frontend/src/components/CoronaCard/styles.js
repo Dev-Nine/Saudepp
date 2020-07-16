@@ -15,7 +15,7 @@ export const Container = styled.div`
    background-size: cover;
    background-position: center;
    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-   background-color: rgba(0, 0, 0, 0.4);
+   background-color: rgba(0, 0, 0, 0.52);
    background-blend-mode: darken;
    filter: hue-rotate(100deg);
 
@@ -76,7 +76,8 @@ export const Container = styled.div`
          font-size: 24px;
       }
 
-      .corona-data p:nth-child(2) {
+      .corona-data p:nth-child(2),
+      .corona-data p:nth-child(4) {
          margin-bottom: 20px;
       }
    }

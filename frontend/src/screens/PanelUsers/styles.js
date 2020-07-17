@@ -24,6 +24,10 @@ export const Container = styled.div`
       border-width: 1px;
    }
 
+   #center {
+      text-align: center;
+   }
+
    @media only screen and (max-width: 1099px) {
       h1 {
          font-size: 32px;

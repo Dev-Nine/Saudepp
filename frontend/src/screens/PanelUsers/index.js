@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
+import useSWR from 'swr';
 import { Container } from './styles';
 
 import api from '../../services/api';
@@ -9,26 +10,23 @@ import api from '../../services/api';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
+async function getInfo() {
+   const bearer = localStorage.getItem('@Saude:token');
+   const response = await api.get('/users', {
+      headers: {
+         Authorization: `Bearer ${bearer}`,
+      },
+   });
+   console.log(response.data);
+   return response.data;
+}
+
 export default function Panel() {
-   const [users, setUsers] = useState([]);
+   const { data: users } = useSWR('/users', getInfo);
 
    useEffect(() => {
       document.title = 'Painel de controle';
    });
-
-   useEffect(() => {
-      async function getInfo() {
-         const bearer = localStorage.getItem('@Saude:token');
-         const response = await api.get('/users', {
-            headers: {
-               Authorization: `Bearer ${bearer}`,
-            },
-         });
-         console.log(response.data);
-      }
-
-      getInfo();
-   }, []);
 
    return (
       <>
@@ -40,16 +38,23 @@ export default function Panel() {
                <div>
                   <table>
                      <thead>
-                        <th> id </th>
+                        <th> ID </th>
                         <th> Name </th>
                      </thead>
                      <tbody>
-                        {users.map((u) => (
+                        {users ? (
+                           users.map((u) => (
+                              <tr>
+                                 <td id="center">{u.id}</td>
+                                 <td>{u.name}</td>
+                              </tr>
+                           ))
+                        ) : (
                            <tr>
-                              <td>u.id</td>
-                              <td>u.name</td>
+                              <td> </td>
+                              <td> </td>
                            </tr>
-                        ))}
+                        )}
                      </tbody>
                   </table>
                </div>

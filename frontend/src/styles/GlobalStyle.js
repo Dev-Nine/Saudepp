@@ -2,6 +2,17 @@ import { createGlobalStyle } from 'styled-components';
 
 export default createGlobalStyle`
 
+   :root {
+      --main-color: #0094de;
+      --main-ref-color: #4893dd;
+      --main-light-color: #505050;
+      --main-text-color: #303030;
+      --main-contrast-color: #eaeaea;
+
+      --title-fontsize: 36px;
+      --text-fontsize: 22px;
+   }
+
    * {
       /* overflow-x: hidden; //horizontal */
       margin: 0;

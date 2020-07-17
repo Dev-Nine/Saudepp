@@ -51,7 +51,7 @@ export const TableHeader = styled.div`
       width: 80%;
    }
 
-   div + div {
+   div:last-child {
       width: 20%;
       text-align: center;
       font-size: 50px;
@@ -74,7 +74,7 @@ export const TableLine = styled.div`
       width: 80%;
    }
 
-   div + div {
+   div:last-child {
       width: 20%;
 
       display: flex;

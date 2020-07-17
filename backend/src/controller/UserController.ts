@@ -4,8 +4,12 @@ import bcrypt from 'bcryptjs';
 import { User, UserRole } from '../model/User';
 import imgurApi, { config } from '../utils/imgurApi'
 import escape from 'pg-escape'
+import cloudinary from 'cloudinary'
+import cloudConfig from '../config/cloudinaryConfig'
 
 import { Forbidden, NotFound, Conflict } from '../Errors';
+
+cloudinary.v2.config(cloudConfig)
 
 // unused
 //import { validate } from 'class-validator';
@@ -102,7 +106,6 @@ export async function processCreateData(req : Request): Promise<User> {
 	if(body.imageId){
 		user.imageId = body.imageId;
 		user.imageType = body.imageType;
-		user.deleteHash = body.deleteHash;
 	}
 
 	return user;
@@ -123,11 +126,9 @@ export async function processEditData(req : Request): Promise<User> {
 	if(body.imageId){
 		user.imageId = body.imageId;
 		user.imageType = body.imageType;
-		user.deleteHash = body.deleteHash;
 	}else if(body.imageId === null){
 		user.imageId = null;
 		user.imageType = null;
-		user.deleteHash = null;
 	}
 
 	return user;
@@ -203,7 +204,6 @@ export async function create(req : Request, res : Response, next: Function) : Pr
 		const result: User[] = await getRepository(User).save([user]);
 		delete result[0].id;
 		delete result[0].password;
-		delete result[0].deleteHash;
 		return res.json(result);
 
 	}catch(err){	
@@ -230,13 +230,12 @@ export async function edit(req : Request, res : Response, next): Promise<Respons
 		select: [
 			"id", 
 			"imageId", 
-			"deleteHash"
 		]});
 		
 		if (foundUser) {
 			if (foundUser.imageId && (foundUser.imageId !== user.imageId || user.imageId === null)){
 				try{
-					await imgurApi.delete(`image/${foundUser.deleteHash}`, config)
+					await cloudinary.v2.uploader.destroy(foundUser.imageId)
 				} catch(err) {
 					console.log("Error deleting the image...")
 					return next(err);
@@ -247,7 +246,6 @@ export async function edit(req : Request, res : Response, next): Promise<Respons
 			const result = await getRepository(User).save(foundUser);
 			delete result.id;
 			delete result.password;
-			delete result.deleteHash;
 
 			return res.json(result);
 		}
@@ -264,14 +262,13 @@ export async function remove(req : Request, res : Response, next): Promise<Respo
 			select: [
 				"id", 
 				"imageId",
-				"deleteHash",
 			]});
 		if(user){
 			if (user.imageId){
 				try{
-					await imgurApi.delete(`image/${user.deleteHash}`, config)
+					await cloudinary.v2.uploader.destroy(user.imageId)
 				} catch(err) {
-					console.error("Error deleting the image...")
+					console.log("Error deleting the image...")
 					return next(err);
 				}
 			}    

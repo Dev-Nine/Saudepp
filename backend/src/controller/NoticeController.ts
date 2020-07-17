@@ -5,8 +5,12 @@ import { User, UserRole } from '../model/User';
 import { Tag } from '../model/Tag';
 import imgurApi, { config } from '../utils/imgurApi'
 import escape from 'pg-escape';
+import cloudinary from 'cloudinary'
+import cloudConfig from '../config/cloudinaryConfig'
 
 import { Forbidden, NotFound } from '../Errors';
+
+cloudinary.v2.config(cloudConfig)
 
 // semelhante para edição e delete
 export async function validateCreate(req : Request): Promise<number>{
@@ -163,7 +167,6 @@ export async function processCreateData(req : Request): Promise<Notice> {
 	if(body.imageId){
 		notice.imageId = body.imageId;
 		notice.imageType = body.imageType;
-		notice.deleteHash = body.deleteHash;
 	}
 
 	notice.views = 0;
@@ -191,10 +194,8 @@ export async function processEditData(req : Request): Promise<Notice> {
 	if(body.imageId){
 		notice.imageId = body.imageId;
 		notice.imageType = body.imageType;
-		notice.deleteHash = body.deleteHash;
 	}else if(body.imageId == null){
 		notice.imageType = null;
-		notice.deleteHash = null;
 	}
 
 	return notice;
@@ -217,7 +218,6 @@ export async function create(req : Request, res : Response, next) : Promise<Resp
 			throw Error("Tag doesn't exist");
 
 		const result: Notice[] = await getRepository(Notice).save([notice]);
-		delete result[0].deleteHash;
 		return res.json(result);
 	}catch(err){
 		return next(err);
@@ -237,14 +237,13 @@ export async function edit(req : Request, res : Response, next): Promise<Respons
 				"abstract", 
 				"text",
 				"imageId",
-				"imageType",
-				"deleteHash",
+				"imageType"
 			]});
 
 		if (foundNotice) {
 			if (foundNotice.imageId && (foundNotice.imageId !== notice.imageId || notice.imageId === null)){
 				try{
-					await imgurApi.delete(`image/${foundNotice.deleteHash}`, config)
+					await cloudinary.v2.uploader.destroy(foundNotice.imageId)
 				} catch(err) {
 					console.log("Error deleting the image...")
 					return next(err);
@@ -254,7 +253,6 @@ export async function edit(req : Request, res : Response, next): Promise<Respons
 			getRepository(Notice).merge(foundNotice, notice);
 
 			const result = await getRepository(Notice).save(foundNotice);
-			delete result.deleteHash;
 			return res.json(result);
 		}
 		throw new NotFound;
@@ -270,15 +268,14 @@ export async function remove(req : Request, res : Response, next): Promise<Respo
 		const notice = await getRepository(Notice).findOne(req.params["id"], {
 			select: [
 				"id", 
-				"imageId",
-				"deleteHash",
+				"imageId"
 			]});
 		if(notice){
 			if (notice.imageId){
 				try{
-					await imgurApi.delete(`image/${notice.deleteHash}`, config)
+					await cloudinary.v2.uploader.destroy(notice.imageId)
 				} catch(err) {
-					console.error("Error deleting the image...")
+					console.log("Error deleting the image...")
 					return next(err);
 				}
 			}    

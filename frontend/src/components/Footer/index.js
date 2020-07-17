@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Container, Header, Content } from './styles';
 
 import logo from '../../assets/logoepitacio.png';
@@ -16,10 +17,18 @@ const Footer = () => {
                   <h2>Acesso</h2>
                   <hr />
                   <div>
-                     <p>Principal</p>
-                     <p>Notícias</p>
-                     <p>Saúde e bem estar</p>
-                     <p>Sobre nós</p>
+                     <Link to="/">
+                        <p>Principal</p>
+                     </Link>
+                     <Link to="/notices">
+                        <p>Notícias</p>
+                     </Link>
+                     <Link to="/faq">
+                        <p>Dúvidas frequentes</p>
+                     </Link>
+                     <Link to="/about">
+                        <p>Sobre nós</p>
+                     </Link>
                   </div>
                </div>
                <div>
@@ -28,18 +37,22 @@ const Footer = () => {
                   <div>
                      <p>saude@presidenteepitacio.sp.gov.br</p>
                      <p>gabinete@presidenteepitacio.sp.gov.br</p>
-                     <p>(18) 3281 2211</p>
-                     <p>(18) 3281 9777</p>
+                     <p>(18) 3281-2211</p>
+                     <p>(18) 3281-9777</p>
                   </div>
                </div>
                <div>
                   <h2>Redes sociais</h2>
                   <hr />
                   <div>
-                     <p>Facebook</p>
+                     <a href="https://www.facebook.com/Prefeitura-de-Presidente-Epitácio-603852299814825">
+                        <p>Facebook</p>
+                     </a>
                      <p>Instagram</p>
                      <p>YouTube</p>
-                     <p>Site</p>
+                     <a href="http://www.presidenteepitacio.sp.gov.br">
+                        <p>Site</p>
+                     </a>
                   </div>
                </div>
                <div>
@@ -47,7 +60,7 @@ const Footer = () => {
                   <hr />
                   <div>
                      <p>Dev Nine Startup</p>
-                     <p>devnine.com.br</p>
+                     <p>www.devnine.com.br</p>
                   </div>
                </div>
             </Content>

@@ -18,8 +18,13 @@ export const Container = styled.div`
       width: 30%;
    }
 
+   div a {
+      text-decoration: none;
+   }
+
    p {
       font-weight: 400;
+      color: var(--main-contrast-color);
       margin-bottom: 16px;
    }
 

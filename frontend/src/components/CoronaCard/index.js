@@ -19,7 +19,7 @@ export default function CoronaCard() {
    return (
       <Container>
          <div className="corona-text">
-            <h1>CORONA VIRUS</h1>
+            <h1>CORONA VÍRUS</h1>
             <p>
                Fique em <strong>CASA</strong>
                <br />

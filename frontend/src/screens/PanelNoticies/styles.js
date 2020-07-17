@@ -49,8 +49,7 @@ export const TableHeader = styled.div`
 
    div {
       width: 80%;
-   } 
-
+   }
 
    div:last-child {
       width: 20%;
@@ -75,7 +74,10 @@ export const TableLine = styled.div`
       width: 80%;
    }
 
-
+   #noOverflow {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
    }
 
    div:last-child {

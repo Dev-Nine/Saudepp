@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 import { FiX, FiSearch } from 'react-icons/fi';
 import useSWR from 'swr';
@@ -39,7 +40,9 @@ export default function Panel() {
                   <TableHeader>
                      <div> ID </div>
                      <div> Name </div>
-                     <div>+</div>
+                     <div>
+                        <Link to="register">+</Link>
+                     </div>
                   </TableHeader>
                   {users ? (
                      users.map((u) => (

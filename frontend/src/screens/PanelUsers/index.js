@@ -2,8 +2,9 @@ import React from 'react';
 
 import { useEffect } from 'react';
 
+import { FiX, FiSearch } from 'react-icons/fi';
 import useSWR from 'swr';
-import { Container } from './styles';
+import { Container, Table, TableHeader, TableLine, Button } from './styles';
 
 import api from '../../services/api';
 
@@ -14,7 +15,7 @@ async function getInfo() {
    const bearer = localStorage.getItem('@Saude:token');
    const response = await api.get('/users', {
       headers: {
-         Authorization: `Bearer ${bearer}`,
+         Audivorization: `Bearer ${bearer}`,
       },
    });
    console.log(response.data);
@@ -31,33 +32,37 @@ export default function Panel() {
    return (
       <>
          <Header />
-
          <div className="main">
             <Container>
                <h1>Painel de usuarios</h1>
-               <div>
-                  <table>
-                     <thead>
-                        <th> ID </th>
-                        <th> Name </th>
-                     </thead>
-                     <tbody>
-                        {users ? (
-                           users.map((u) => (
-                              <tr>
-                                 <td id="center">{u.id}</td>
-                                 <td>{u.name}</td>
-                              </tr>
-                           ))
-                        ) : (
-                           <tr>
-                              <td> </td>
-                              <td> </td>
-                           </tr>
-                        )}
-                     </tbody>
-                  </table>
-               </div>
+               <Table>
+                  <TableHeader>
+                     <div> ID </div>
+                     <div> Name </div>
+                     <div>+</div>
+                  </TableHeader>
+                  {users ? (
+                     users.map((u) => (
+                        <TableLine>
+                           <div>{u.id}</div>
+                           <div>{u.name}</div>
+                           <div>
+                              <Button>
+                                 <FiSearch />
+                              </Button>
+                              <Button isDelete>
+                                 <FiX />
+                              </Button>
+                           </div>
+                        </TableLine>
+                     ))
+                  ) : (
+                     <tr>
+                        <div> </div>
+                        <div> </div>
+                     </tr>
+                  )}
+               </Table>
             </Container>
          </div>
 

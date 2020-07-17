@@ -31,7 +31,7 @@ export default function Card({ data }) {
                alt="descrição"
                src={
                   data.imageId
-                     ? `https://i.imgur.com/${data.imageId}.${data.imageType}`
+                     ? `https://res.cloudinary.com/saudepp/image/upload/${data.imageId}.${data.imageType}`
                      : defaultCard
                }
             />

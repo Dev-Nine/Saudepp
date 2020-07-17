@@ -27,7 +27,7 @@ export const ContainerNoticia = styled.div`
    .container .banner {
       background-image: url(${({ imageData }) =>
          imageData.imageId
-            ? `https://i.imgur.com/${imageData.imageId}.${imageData.imageType}`
+            ? `https://res.cloudinary.com/saudepp/image/upload/${imageData.imageId}.${imageData.imageType}`
             : defaultBanner});
       background-size: cover;
       background-position: center;
@@ -36,7 +36,7 @@ export const ContainerNoticia = styled.div`
    }
 
    .header {
-      padding: 16px 40px;
+      padding: 0px 40px;
    }
 
    .image-banner {
@@ -47,6 +47,7 @@ export const ContainerNoticia = styled.div`
    .header h1,
    p {
       margin-bottom: 16px;
+      color: #303030;
    }
 
    .header p:last-child {
@@ -54,8 +55,8 @@ export const ContainerNoticia = styled.div`
    }
 
    .header p:nth-child(2) {
-      font-weight: 400;
       font-style: italic;
+      font-family: 'Open Sans', sans-serif;
       color: #4a4a4a;
    }
 
@@ -86,9 +87,24 @@ export const TextContainer = styled.div`
       align-self: center;
    }
 
+   h1,
+   h2,
+   h3,
+   h4,
+   h5,
+   h6 {
+      color: #303030;
+      margin-bottom: 10px;
+   }
+
+   li {
+      margin-bottom: 10px;
+   }
+
    p,
    li {
       font-size: 18px;
+      color: #303030;
    }
 
    @media only screen and (max-width: 1099px) {

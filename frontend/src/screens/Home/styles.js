@@ -11,9 +11,10 @@ export const Sobre = styled.div`
    max-width: 1300px;
 
    p {
-      color: black;
+      color: #161616;
       font-style: italic;
-      font-size: 28px;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 26px;
       font-weight: 500;
       text-align: justify;
       padding-right: 0.1em;
@@ -22,10 +23,10 @@ export const Sobre = styled.div`
    a {
       margin-top: 8px;
       font-style: normal;
-      font-weight: bold;
       align-self: flex-end;
-      font-size: 24px;
+      font-size: 22px;
       text-align: justify;
+      color: #679cd0;
    }
 
    @media only screen and (max-width: 1099px) {

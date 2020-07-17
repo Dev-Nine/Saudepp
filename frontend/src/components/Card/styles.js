@@ -8,7 +8,7 @@ export const Container = styled.div`
 
    background: #ffffff;
 
-   border: 2px solid #a2a2a2;
+   border: 0px solid #a2a2a2;
    box-sizing: border-box;
    border-radius: 10px;
    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -45,6 +45,7 @@ export const Container = styled.div`
       margin-top: 10px;
       font-weight: bold;
       font-size: 20px;
+      color: var(--main-text-color);
    }
 
    div p {
@@ -53,14 +54,14 @@ export const Container = styled.div`
 
       margin-bottom: 15px;
 
-      color: #4a4a4a;
+      color: var(--main-text-color);
    }
 
    div span {
       font-weight: 500;
       font-size: 16px;
 
-      color: #787878;
+      color: var(--main-light-color);
    }
 
    @media (min-width: 1100px) {

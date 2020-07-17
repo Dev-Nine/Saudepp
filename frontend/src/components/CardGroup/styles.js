@@ -4,22 +4,21 @@ export const Container = styled.div`
    margin-bottom: 30px;
 
    div a {
-      color: blue;
-      font-size: 20px;
-      font-weight: 500;
+      color: #679cd0;
+      font-size: 22px;
       float: right;
    }
 
    h1 {
       font-size: 26px;
-      color: #000000;
+      color: var(--main-text-color);
    }
 
    hr {
       width: 210px;
       height: 5px;
 
-      background: #333333;
+      background: var(--main-text-color);
 
       border: 0;
       border-radius: 0px 10px 10px 0px;

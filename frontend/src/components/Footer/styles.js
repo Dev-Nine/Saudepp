@@ -1,17 +1,17 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-   background-color: #333333;
+   background-color: var(--main-text-color);
    align-items: center;
    display: flex;
    flex-direction: column;
-   color: #eaeaea;
+   color: var(--main-contrast-color);
    margin-top: auto;
 
    .content {
       max-width: 1300px;
       width: 100%;
-      padding: 50px;
+      padding: 20px;
    }
 
    img {
@@ -20,7 +20,7 @@ export const Container = styled.div`
 
    p {
       font-weight: 400;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
    }
 
    hr {
@@ -35,7 +35,7 @@ export const Container = styled.div`
 `;
 
 export const Header = styled.div`
-   margin-bottom: 40px;
+   margin-bottom: 20px;
    hr {
       width: 40%;
    }
@@ -56,7 +56,7 @@ export const Header = styled.div`
 export const Content = styled.div`
    display: flex;
    justify-content: space-between;
-   margin-bottom: 40px;
+   margin-bottom: 20px;
 
    hr {
       width: 200px;

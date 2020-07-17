@@ -4,12 +4,14 @@ export const Container = styled.div`
    width: 100%;
 
    h1 {
-      font-weight: 400;
-      font-size: 48px;
+      font-weight: 500;
+      color: var(--main-text-color);
+      font-size: var(--title-fontsize);
    }
 
    .description {
-      font-size: 24px;
+      font-size: var(--text-fontsize);
+      color: var(--main-text-color);
       margin-bottom: 40px;
    }
 

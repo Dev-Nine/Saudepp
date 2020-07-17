@@ -4,26 +4,8 @@ export const Container = styled.div`
    width: 100%;
 
    h1 {
-      font-size: 48px;
-      color: #0094de;
-   }
-
-   h2 {
-      font-size: 28px;
-   }
-
-   ul {
-      margin-left: 40px;
-      margin-top: 16px;
-   }
-
-   ul li {
-      list-style: none;
-      margin-bottom: 8px;
-   }
-
-   ul li:last-child {
-      margin-bottom: 0;
+      font-size: 36px;
+      color: var(--main-color);
    }
 
    div {
@@ -32,16 +14,14 @@ export const Container = styled.div`
       height: auto;
       box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
       border-radius: 8px;
-      margin-bottom: 38px;
-      padding: 24px 40px;
+      padding: 24px;
       max-width: 1300px;
    }
 
    div p {
-      color: black;
-      font-size: 24px;
-      text-align: justify;
-      margin-bottom: 16px;
+      color: var(--main-text-color);
+      font-size: 22px;
+      line-height: 1.5;
    }
 
    @media only screen and (max-width: 1099px) {

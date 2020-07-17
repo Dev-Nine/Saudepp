@@ -10,6 +10,10 @@ export const Container = styled.div`
       margin: 0 auto;
    }
 
+   nav a {
+      font-size: 18px;
+   }
+
    .menu {
       display: flex;
       transition: padding 1s;
@@ -28,8 +32,7 @@ export const Container = styled.div`
    }
 
    .menu-logo p {
-      font-weight: bold;
-      color: black;
+      color: #161616;
    }
 
    .icon {
@@ -48,17 +51,20 @@ export const Container = styled.div`
          display: flex;
          flex-grow: 1;
          align-items: center;
-         justify-content: space-around;
+         justify-content: flex-end;
       }
 
       nav a {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         margin-right: 8px;
          text-align: center;
          width: 110px;
-         font-size: 18px;
+         height: 100%;
          font-weight: bold;
          color: #0094de;
          text-decoration: none;
-         margin: 0 10px;
          transition: filter 0.2s;
       }
 
@@ -101,7 +107,6 @@ export const Container = styled.div`
       }
 
       nav a {
-         font-size: 18px;
          font-weight: bold;
          color: #0094de;
          text-decoration: none;

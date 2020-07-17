@@ -3,6 +3,12 @@ import styled from 'styled-components';
 export const Container = styled.div`
    width: 100%;
 
+   h1,
+   h2,
+   p {
+      color: #303030;
+   }
+
    h2 {
       font-size: 32px;
    }
@@ -29,7 +35,6 @@ export const Container = styled.div`
    ul.faq li p {
       font-size: 20px;
       font-weight: 300;
-      text-align: justify;
       margin-bottom: 16px;
    }
 

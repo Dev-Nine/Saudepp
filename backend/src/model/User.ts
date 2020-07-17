@@ -27,14 +27,11 @@ export class User {
     @Column({ length: 50 })
     name: string;
 
-    @Column({ length: 8, nullable: true })
+    @Column({ length: 25, nullable: true })
     imageId: string;
 
     @Column({ length: 5, nullable: true })
     imageType: string;
-
-    @Column({ length: 16, nullable: true, select: false })
-    deleteHash: string;
 
     @Column({
         type: "enum",

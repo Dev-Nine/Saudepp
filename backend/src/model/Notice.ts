@@ -21,14 +21,11 @@ export class Notice {
     @Column({ type: "text", select: false })
     text: string;
 
-    @Column({ length: 8, nullable: true })
+    @Column({ length: 25, nullable: true })
     imageId: string;
 
     @Column({ length: 5, nullable: true })
     imageType: string;
-
-    @Column({ length: 16, nullable: true, select: false })
-    deleteHash: string;
 
     @Column({ default: 0 })
     views: number;

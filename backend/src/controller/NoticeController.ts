@@ -46,6 +46,13 @@ export async function validateDelete(req : Request): Promise<number>{
 
 export async function getAll(req : Request, res : Response, next) : Promise<Response> {
 	try{
+		let page = 1;
+		if(req.query["page"])
+			page = Number(req.query["page"]);
+		let limit = 8;
+		if(req.query["limit"])
+			limit = Number(req.query["limit"]);
+
 		if (req.query["tags"]) {
 			const queryTag = String(req.query["tags"]).split(',').map(tag => tag.trim());
 			const tagObjects = queryTag.map(tag => ({id: tag}));
@@ -64,9 +71,14 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 				.leftJoin("notice.tags", "tags")
 				.where("notice_tags.tagId IN (:...tagsId)", { tagsId })
 				.groupBy("notice.id")
-				.having('COUNT(notice.id) = :length', {length: tags.length});
+				.having('COUNT(notice.id) = :length', {length: tags.length})
+				.orderBy("id", "DESC");
 
-			const data = (await queryBuilder.getRawMany()).map(obj => obj.id);
+			const count = (await queryBuilder.getRawMany()).length;
+			res.header('X-Total-Count', String(count));
+
+			const data = (await queryBuilder.limit(limit).offset(limit * (page - 1))
+				.getRawMany()).map(obj => obj.id);
 
 			if(data.length !== 0){
 				const notices = await getRepository(Notice)
@@ -75,23 +87,14 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 					.leftJoinAndSelect("notice.user", "user")
 					.leftJoinAndSelect("notice.tags", "tags")
 					.getMany()
-				res.send(notices);
+				return res.json(notices);
 			}
 			throw new NotFound;
 			
 		} else {
-			let options = {};
-			let limit = 8; // default
-			if(req.query["limit"])
-				limit = Number(req.query["limit"]);
-			if(req.query["page"]){
-				const page = Number(req.query["page"]);
-				options = {order: {id : "DESC"}, take: limit, skip: (limit * page)};
-			}
-			// searchable attributes:
-			// title
-			// abstract
-			// tagId
+			let options = {}
+			options = {order: {id : "DESC"}, take: limit, skip: (limit * (page - 1))};
+			
 			let query : string;
 			if(req.query["title"])
 				query = escape(`title ILIKE %L`, `%${req.query["title"]}%`);
@@ -102,6 +105,9 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 				
 			if(query)
 				options = {...options, where: query}
+
+			const count = await getRepository(Notice).count();
+			res.header('X-Total-Count', String(count));
 
 			const notices = await getRepository(Notice).find(options);
 			if(notices && notices.length > 0)

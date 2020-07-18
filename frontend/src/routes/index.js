@@ -16,8 +16,9 @@ import {
    About,
    Register,
    Panel,
-   PanelUsers,
    PanelTags,
+   PanelUsers,
+   PanelNoticies,
 } from '../screens';
 
 export default function Routes() {
@@ -32,6 +33,12 @@ export default function Routes() {
          <Route path="/notices/:noticeId" exact component={NoticeDisplay} />
          <Route
             path="/panel/notices"
+            isPrivate
+            exact
+            component={PanelNoticies}
+         />
+         <Route
+            path="/panel/notices/register"
             isPrivate
             exact
             component={CreateNoticies}

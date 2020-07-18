@@ -12,9 +12,10 @@ import api from '../../services/api';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
-async function getInfo() {
+async function getInfo(url) {
+   console.log(url);
    const bearer = localStorage.getItem('@Saude:token');
-   const response = await api.get('/users', {
+   const response = await api.get(url, {
       headers: {
          Audivorization: `Bearer ${bearer}`,
       },
@@ -24,7 +25,7 @@ async function getInfo() {
 }
 
 export default function Panel() {
-   const { data: users } = useSWR('/users', getInfo);
+   const { data: noticies } = useSWR('/notices', getInfo);
 
    useEffect(() => {
       document.title = 'Painel de controle';
@@ -35,20 +36,22 @@ export default function Panel() {
          <Header />
          <div className="main">
             <Container>
-               <h1>Painel de usuarios</h1>
+               <h1>Painel de Noticias</h1>
                <Table>
                   <TableHeader>
-                     <div> ID </div>
-                     <div> Name </div>
+                     <div> Titulo </div>
+                     <div> Data </div>
+                     <div> Autor </div>
                      <div>
                         <Link to="register">+</Link>
                      </div>
                   </TableHeader>
-                  {users ? (
-                     users.map((u) => (
+                  {noticies ? (
+                     noticies.map((n) => (
                         <TableLine>
-                           <div>{u.id}</div>
-                           <div>{u.name}</div>
+                           <div id="noOverflow">{n.title}</div>
+                           <div>{new Date(n.date).toLocaleDateString()}</div>
+                           <div>{n.user.name}</div>
                            <div>
                               <Button>
                                  <FiSearch />

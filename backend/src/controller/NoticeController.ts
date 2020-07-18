@@ -46,12 +46,8 @@ export async function validateDelete(req : Request): Promise<number>{
 
 export async function getAll(req : Request, res : Response, next) : Promise<Response> {
 	try{
-		let page = 1;
-		if(req.query["page"])
-			page = Number(req.query["page"]);
-		let limit = 8;
-		if(req.query["limit"])
-			limit = Number(req.query["limit"]);
+		let page = Number(req.query["page"]) || 1;
+		let limit = Number(req.query["limit"]) || 8;			
 
 		if (req.query["tags"]) {
 			const queryTag = String(req.query["tags"]).split(',').map(tag => tag.trim());
@@ -94,7 +90,7 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 		} else {
 			let options = {}
 			options = {order: {id : "DESC"}, take: limit, skip: (limit * (page - 1))};
-			
+
 			let query : string;
 			if(req.query["title"])
 				query = escape(`title ILIKE %L`, `%${req.query["title"]}%`);

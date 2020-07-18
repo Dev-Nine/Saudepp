@@ -10,6 +10,9 @@ import limiter from './middlewares/rateLimiter'
 
 import ErrorHandler from './utils/errorHandler';
 
+/*
+* Default class of the Application
+*/
 export default class App {
     private app: Application;
 

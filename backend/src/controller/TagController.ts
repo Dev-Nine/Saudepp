@@ -45,16 +45,11 @@ export async function processEditData(req : Request): Promise<Tag> {
 
 export async function getAll(req : Request, res : Response, next) : Promise<Response> {
 	try {
-		let options;
-
-		const limit = Number(req.query["limit"]) || 8;
-		console.log(`Limit: ${limit}`);
-
-		if (req.query["page"]) {
-			const page = Number(req.query["page"]);
-			options = {order: {id : "DESC"}, take: limit, skip: (limit * (page - 1))};
-			console.log(`Page: ${page}`);
-		}
+		let page = Number(req.query["page"]) || 1;
+		let limit = Number(req.query["limit"]) || 8;	
+			
+		let options = {}
+		options = {order: {id : "DESC"}, take: limit, skip: (limit * (page - 1))};
 
 		let query : string;
 		if(req.query["description"])
@@ -62,8 +57,10 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 		if(query)
 			options = {...options, where: query}
 
+		const count = await getRepository(Tag).count();
+		res.header('X-Total-Count', String(count));
+
 		const tags = await getRepository(Tag).find(options);
-		console.log(tags);
 
 		if(tags && tags.length > 0)
 			return res.json(tags);

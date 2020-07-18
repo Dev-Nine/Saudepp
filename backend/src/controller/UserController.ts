@@ -135,19 +135,13 @@ export async function processEditData(req : Request): Promise<User> {
 }
 
 export async function getAll(req : Request, res : Response, next) : Promise<Response> {
-	let options;
 	try{
-		let limit = 8; // default
-		if(req.query["limit"])
-			limit = Number(req.query["limit"]);
-		if(req.query["page"]){
-			const page = Number(req.query["page"]);
-			options = {order: {id : "DESC"}, take: limit, skip: (limit * page)};
-		}
+		let page = Number(req.query["page"]) || 1;
+		let limit = Number(req.query["limit"]) || 8;	
+			
+		let options = {}
+		options = {order: {id : "DESC"}, take: limit, skip: (limit * (page - 1))};
 
-		// searchable attributes:
-		// name
-		// identifier
 		let query : string;
 		if(req.query["name"])
 			query = escape(`"name" ILIKE %L`, `%${req.query["name"]}%`)
@@ -155,6 +149,9 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 			query = escape(`"identifier" ILIKE %L`, `%${req.query["identifier"]}%`)
 		if(query)
 			options = {...options, where: query}
+
+		const count = await getRepository(User).count();
+		res.header('X-Total-Count', String(count));
 
 		const users = await getRepository(User).find(options);
 		if(users && users.length > 0)

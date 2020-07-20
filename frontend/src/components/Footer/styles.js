@@ -63,6 +63,11 @@ export const Content = styled.div`
    justify-content: space-between;
    margin-bottom: 20px;
 
+   a:hover {
+      text-decoration: underline;
+      color: var(--main-contrast-color);
+   }
+
    hr {
       width: 200px;
       margin-bottom: 20px;

@@ -14,7 +14,7 @@ export const Sobre = styled.div`
       color: #161616;
       font-style: italic;
       font-family: 'Open Sans', sans-serif;
-      font-size: 26px;
+      font-size: var(--text-medium-fontsize);
       font-weight: 500;
       text-align: justify;
       padding-right: 0.1em;
@@ -23,10 +23,15 @@ export const Sobre = styled.div`
    a {
       margin-top: 8px;
       font-style: normal;
+      text-decoration: none;
       align-self: flex-end;
-      font-size: 22px;
+      font-size: var(--text-small-fontsize);
       text-align: justify;
-      color: #679cd0;
+      color: var(--main-ref-color);
+   }
+
+   a:hover {
+      text-decoration: underline;
    }
 
    @media only screen and (max-width: 1099px) {
@@ -34,7 +39,7 @@ export const Sobre = styled.div`
 
       p,
       a {
-         font-size: 20px;
+         font-size: var(--text-small-fontsize);
       }
 
       p {

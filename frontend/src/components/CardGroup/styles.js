@@ -4,9 +4,14 @@ export const Container = styled.div`
    margin-bottom: 30px;
 
    div a {
-      color: #679cd0;
+      color: var(--main-ref-color);
       font-size: 22px;
+      text-decoration: none;
       float: right;
+   }
+
+   div a:hover {
+      text-decoration: underline;
    }
 
    h1 {

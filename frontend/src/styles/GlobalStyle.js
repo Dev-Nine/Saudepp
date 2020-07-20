@@ -9,8 +9,13 @@ export default createGlobalStyle`
       --main-text-color: #303030;
       --main-contrast-color: #eaeaea;
 
-      --title-fontsize: 36px;
-      --text-fontsize: 22px;
+      --main-alert-color: #ff7777;
+      --main-success-color: #7aff77;
+
+      --text-big-fontsize: 36px;
+      --text-medium-fontsize: 26px;
+      --text-small-fontsize: 22px;
+      --text-smaller-fontsize: 16px;
    }
 
    * {
@@ -30,7 +35,7 @@ export default createGlobalStyle`
    }
    body, input, button, textarea {
       font-family: 'Roboto', serif;
-      font-size: 16px;
+      font-size: var(--text-smaller-fontsize);
    }
    
    button {

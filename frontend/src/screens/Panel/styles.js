@@ -6,11 +6,11 @@ export const Container = styled.div`
    h1 {
       font-weight: 500;
       color: var(--main-text-color);
-      font-size: var(--title-fontsize);
+      font-size: var(--text-big-fontsize);
    }
 
    .description {
-      font-size: var(--text-fontsize);
+      font-size: var(--text-small-fontsize);
       color: var(--main-text-color);
       margin-bottom: 40px;
    }

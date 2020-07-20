@@ -10,11 +10,9 @@ import {
    RegisterProfessional,
    NotFound,
    NoticeDisplay,
-   RegisterMedic,
    Faq,
    FaqCovid19,
    About,
-   Register,
    Panel,
    PanelTags,
    PanelUsers,
@@ -25,7 +23,7 @@ export default function Routes() {
    return (
       <Switch>
          <Route path="/" exact component={Home} />
-         <Route path="/signin" exact component={SignIn} />
+         <Route path="/login" exact component={SignIn} />
          <Route path="/notices" exact component={ListNotices} />
          <Route path="/about" exact component={About} />
          <Route path="/faq" exact component={Faq} />
@@ -50,14 +48,8 @@ export default function Routes() {
             path="/panel/users/register"
             isPrivate
             exact
-            component={Register}
+            component={RegisterProfessional}
          />
-         {/* <Route
-            path="/panel/register/medic"
-            exact
-            isPrivate
-            component={RegisterMedic}
-         /> */}
          <Route path="/panel/tags" isPrivate exact component={PanelTags} />
          <Route path="*" component={NotFound} />
       </Switch>

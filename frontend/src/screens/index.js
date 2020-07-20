@@ -2,10 +2,8 @@ import CreateNoticies from './CreateNoticies';
 import Home from './Home';
 import ListNotices from './ListNotices';
 import SignIn from './SignIn';
-import Register from './Register';
 import NotFound from './NotFound';
 import NoticeDisplay from './NoticeDisplay';
-import RegisterMedic from './RegisterMedic';
 import RegisterProfessional from './RegisterProfessional';
 import Faq from './Faq';
 import About from './About';
@@ -21,10 +19,8 @@ export {
    Home,
    ListNotices,
    SignIn,
-   Register,
    NotFound,
    NoticeDisplay,
-   RegisterMedic,
    RegisterProfessional,
    Faq,
    FaqCovid19,

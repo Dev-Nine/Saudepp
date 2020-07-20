@@ -1,7 +1,7 @@
 import React from 'react';
 import Return from '../../components/return';
 
-import { Container } from '../Register/styles';
+import { Container } from '../RegisterProfessional/styles';
 
 export default function Tags() {
    return (

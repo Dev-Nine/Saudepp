@@ -3,9 +3,9 @@ import React from 'react';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import { FiX, FiSearch } from 'react-icons/fi';
+import { FiX, FiSearch, FiPlus } from 'react-icons/fi';
 import useSWR from 'swr';
-import { Container, Table, TableHeader, TableLine, Button } from './styles';
+import { Container, Table, TableLine, Button } from './styles';
 
 import api from '../../services/api';
 
@@ -37,25 +37,31 @@ export default function Panel() {
             <Container>
                <h1>Painel de usuarios</h1>
                <Table>
-                  <TableHeader>
-                     <div> ID </div>
+                  <TableLine isHeader>
                      <div> Name </div>
                      <div>
-                        <Link to="register">+</Link>
+                        <Link to="register">
+                           <Button isCreate>
+                              <FiPlus />
+                           </Button>
+                        </Link>
                      </div>
-                  </TableHeader>
+                  </TableLine>
                   {users ? (
                      users.map((u) => (
                         <TableLine>
-                           <div>{u.id}</div>
                            <div>{u.name}</div>
                            <div>
-                              <Button>
-                                 <FiSearch />
-                              </Button>
-                              <Button isDelete>
-                                 <FiX />
-                              </Button>
+                              <Link to="edit">
+                                 <Button>
+                                    <FiSearch />
+                                 </Button>
+                              </Link>
+                              <a href="#">
+                                 <Button isDelete>
+                                    <FiX />
+                                 </Button>
+                              </a>
                            </div>
                         </TableLine>
                      ))

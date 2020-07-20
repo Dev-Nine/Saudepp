@@ -3,9 +3,9 @@ import React from 'react';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import { FiX, FiSearch } from 'react-icons/fi';
+import { FiX, FiSearch, FiPlus } from 'react-icons/fi';
 import useSWR from 'swr';
-import { Container, Table, TableHeader, TableLine, Button } from './styles';
+import { Container, Table, TableLine, Button } from './styles';
 
 import api from '../../services/api';
 
@@ -38,14 +38,18 @@ export default function Panel() {
             <Container>
                <h1>Painel de Noticias</h1>
                <Table>
-                  <TableHeader>
+                  <TableLine isHeader>
                      <div> Titulo </div>
                      <div> Data </div>
                      <div> Autor </div>
                      <div>
-                        <Link to="register">+</Link>
+                        <Link to="register">
+                           <Button isCreate>
+                              <FiPlus />
+                           </Button>
+                        </Link>
                      </div>
-                  </TableHeader>
+                  </TableLine>
                   {noticies ? (
                      noticies.map((n) => (
                         <TableLine>
@@ -53,12 +57,16 @@ export default function Panel() {
                            <div>{new Date(n.date).toLocaleDateString()}</div>
                            <div>{n.user.name}</div>
                            <div>
-                              <Button>
-                                 <FiSearch />
-                              </Button>
-                              <Button isDelete>
-                                 <FiX />
-                              </Button>
+                              <Link to="edit">
+                                 <Button>
+                                    <FiSearch />
+                                 </Button>
+                              </Link>
+                              <a href="#">
+                                 <Button isDelete>
+                                    <FiX />
+                                 </Button>
+                              </a>
                            </div>
                         </TableLine>
                      ))

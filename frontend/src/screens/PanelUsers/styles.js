@@ -6,26 +6,12 @@ export const Container = styled.div`
 
    h1 {
       font-weight: 400;
-      font-size: 48px;
-   }
-
-   .description {
-      font-size: 24px;
-      margin-bottom: 40px;
+      font-size: var(--text-big-fontsize);
    }
 
    a {
       text-decoration: none;
       color: inherit;
-   }
-
-   @media only screen and (max-width: 1099px) {
-      h1 {
-         font-size: 32px;
-      }
-      .description {
-         font-size: 20px;
-      }
    }
 `;
 
@@ -33,73 +19,73 @@ export const Table = styled.div`
    width: 100%;
 `;
 
-export const TableHeader = styled.div`
-   width: 100%;
-   border-width: 0 0 1px 0;
-   border-color: #989898;
-   border-style: solid;
-
-   display: flex;
-   align-items: center;
-
-   font-size: 24px;
-   font-weight: bold;
-   line-height: 28px;
-   height: 50px;
-
-   div {
-      width: 80%;
-   }
-
-   div:last-child {
-      width: 20%;
-      text-align: center;
-      font-size: 50px;
-   }
-`;
-
 export const TableLine = styled.div`
-   width: 100%;
    border-width: 0 0 1px 0;
-   border-color: #989898;
+   padding: 10px 0;
+   border-color: var(--main-light-color);
+   font-size: var(--text-small-fontsize);
    border-style: solid;
-   font-size: 22px;
 
-   display: flex;
+   display: grid;
+   grid-template-columns: 1fr 80px;
    align-items: center;
 
-   height: 60px;
+   ${(props) => {
+      if (props.isHeader) {
+         return css`
+            border-width: 1px 0 1px 0;
+            font-weight: bold;
+         `;
+      }
+   }}
 
-   div {
-      width: 80%;
+   a + a {
+      margin-left: 8px;
    }
 
    div:last-child {
-      width: 20%;
-
+      width: 80px;
       display: flex;
       justify-content: center;
+      margin-left: auto;
+   }
+
+   @media only screen and (max-width: 1099px) {
+      grid-template-columns: 1fr;
+
+      div:last-child {
+         width: auto;
+         margin: 0;
+      }
+
+      a {
+         width: 100%;
+      }
    }
 `;
 
 export const Button = styled.button`
-   width: 40px;
-   height: 40px;
+   width: 36px;
+   height: 36px;
 
-   ${(props) =>
-      props.isDelete
-         ? css`
-              background: #ff7777;
-              box-shadow: 0px 4px 1px #6fa9d3;
-              border-radius: 8px;
-           `
-         : css`
-              background: #77c6ff;
-              box-shadow: 0px 4px 1px #6fa9d3;
-              border-radius: 8px;
-           `}
+   ${(props) => {
+      if (props.isDelete) {
+         return css`
+            background: var(--main-alert-color);
+         `;
+      }
+      if (props.isCreate)
+         return css`
+            background: var(--main-success-color);
+         `;
+      return css`
+         background: #77c6ff;
+      `;
+   }}
+   box-shadow: 0px 2px 1px #6fa9d3;
+   border-radius: 8px;
 
-   & + button {
-      margin-left: 8px;
+   @media only screen and (max-width: 1099px) {
+      width: 100%;
    }
 `;

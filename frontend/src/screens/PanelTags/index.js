@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { FiSearch, FiX, FiPlus } from 'react-icons/fi';
 import useSWR from 'swr';
@@ -48,11 +48,11 @@ export default function PanelTags() {
                                     <FiSearch />
                                  </Button>
                               </Link>
-                              <a href="#">
+                              <Link to="#">
                                  <Button isDelete>
                                     <FiX />
                                  </Button>
-                              </a>
+                              </Link>
                            </div>
                         </TableLine>
                      ))

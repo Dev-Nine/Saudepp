@@ -57,11 +57,11 @@ export default function Panel() {
                                     <FiSearch />
                                  </Button>
                               </Link>
-                              <a href="#">
+                              <Link to="#">
                                  <Button isDelete>
                                     <FiX />
                                  </Button>
-                              </a>
+                              </Link>
                            </div>
                         </TableLine>
                      ))

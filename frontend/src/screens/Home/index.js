@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { Sobre } from './styles';
-import api, { useAxios } from '../../services/api';
+import { useAxios } from '../../services/api';
 
 import CardGroup from '../../components/CardGroup';
 import Header from '../../components/Header';

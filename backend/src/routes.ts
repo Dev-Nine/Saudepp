@@ -161,8 +161,8 @@ routes.post("/sessions", sessionController.auth);
 routes.get("/sessions", ensureAuthentication, sessionController.index);
 
 // REDEFINIR SENHA
-routes.get("/recover/:email", accountController.requestAccount);
-routes.post("/recover/:uuid",
+routes.post("/recover/:email", accountController.requestAccount);
+routes.put("/recover/:uuid",
 celebrate({
 	body: Joi.object().keys({ 
 		password: Joi.string().regex(/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9!@#$%&_-]{6,30})$/),

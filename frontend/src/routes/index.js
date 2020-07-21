@@ -17,6 +17,7 @@ import {
    PanelTags,
    PanelUsers,
    PanelNoticies,
+   ForgotPassword,
 } from '../screens';
 
 export default function Routes() {
@@ -51,6 +52,9 @@ export default function Routes() {
             component={RegisterProfessional}
          />
          <Route path="/panel/tags" isPrivate exact component={PanelTags} />
+
+         <Route path="/forgot-password" exact component={ForgotPassword} />
+
          <Route path="*" component={NotFound} />
       </Switch>
    );

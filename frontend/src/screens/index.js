@@ -14,6 +14,8 @@ import PanelUsers from './PanelUsers';
 import PanelNoticies from './PanelNoticies';
 import Tags from './Tags';
 
+import ForgotPassword from './ForgotPassword';
+
 export {
    CreateNoticies,
    Home,
@@ -30,4 +32,5 @@ export {
    PanelUsers,
    PanelNoticies,
    Tags,
+   ForgotPassword,
 };

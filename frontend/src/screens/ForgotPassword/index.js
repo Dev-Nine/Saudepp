@@ -5,17 +5,14 @@ import * as Yup from 'yup';
 import { Form } from '@unform/web';
 import { useHistory, Link } from 'react-router-dom';
 
-import { useAuth } from '../../hooks/AuthProvider';
 import Input from '../../components/Input';
 import getValidationErros from '../../utils/getValidationErros';
 import { Container } from './styles';
 
-export default function SignIn() {
+export default function ForgotPassword() {
    const history = useHistory();
 
    const formRef = useRef(null);
-
-   const { signIn } = useAuth();
 
    const handleSubmit = useCallback(
       async (data) => {

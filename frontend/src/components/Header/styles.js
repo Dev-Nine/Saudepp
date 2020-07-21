@@ -11,12 +11,16 @@ export const Container = styled.div`
    }
 
    nav a {
-      font-size: 18px;
+      font-size: var(--text-smaller-fontsize);
+   }
+
+   .logout {
+      color: var(--main-alert-color);
    }
 
    .menu {
       display: flex;
-      transition: padding 1s;
+      transition: padding 0.5s;
    }
 
    .menu-logo {
@@ -25,7 +29,7 @@ export const Container = styled.div`
    }
 
    .menu-logo p:first-child {
-      font-size: 28px;
+      font-size: var(--text-medium-fontsize);
       font-weight: bold;
       text-decoration: none;
       color: #0094de;
@@ -95,8 +99,7 @@ export const Container = styled.div`
 
       nav {
          position: absolute;
-         transform: scale(1, 0);
-         display: flex;
+         display: none;
          flex-direction: column;
          align-items: flex-end;
          background-color: #fff;
@@ -110,7 +113,7 @@ export const Container = styled.div`
          font-weight: bold;
          color: #0094de;
          text-decoration: none;
-         padding: 15px 30px;
+         padding: 10px 30px;
       }
 
       img {
@@ -123,31 +126,7 @@ export const Container = styled.div`
       }
 
       .show-dropdown {
-         animation: show-dropdown 0.6s forwards;
-      }
-
-      .show-dropdown-back {
-         animation: show-dropdown-back 0.6s forwards;
-      }
-
-      @keyframes show-dropdown {
-         0% {
-            transform: scale(1, 0);
-            top: -32px;
-         }
-         100% {
-            transform: scale(1, 1);
-         }
-      }
-
-      @keyframes show-dropdown-back {
-         0% {
-            transform: scale(1, 1);
-         }
-         100% {
-            transform: scale(1, 0);
-            top: -32px;
-         }
+         display: flex;
       }
    }
 `;

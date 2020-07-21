@@ -12,14 +12,9 @@ function Header() {
    const [dropdown, setDropdown] = useState('');
    const { user, signOut } = useAuth();
 
-   function handleIconClick(event) {
+   function handleIconClick() {
       setDropdown((prevState) => {
-         if (prevState === 'show-dropdown') {
-            setTimeout(() => {
-               setDropdown('');
-            }, 600);
-            return 'show-dropdown-back';
-         }
+         if (prevState === 'show-dropdown') return '';
          return 'show-dropdown';
       });
    }
@@ -39,16 +34,19 @@ function Header() {
                   <nav className={dropdown}>
                      <Link to="/notices">Notícias</Link>
                      <Link to="/faq">Dúvidas frequentes</Link>
-                     {!!user && <Link to="/panel/">Painel de controle</Link>}
+                     {!!user && <Link to="/panel">Painel de controle</Link>}
                      <Link to="/about">Sobre nós</Link>
+                     {!!user && (
+                        <Link
+                           to="/"
+                           className="logout"
+                           onClick={() => signOut()}
+                        >
+                           Sair
+                        </Link>
+                     )}
                   </nav>
-                  {user && (
-                     <img
-                        onClick={() => signOut()}
-                        src={user.imageUrl}
-                        alt="Avatar"
-                     />
-                  )}
+                  {user && <img src={user.imageUrl} alt="Avatar" />}
                </div>
             </div>
          </Container>

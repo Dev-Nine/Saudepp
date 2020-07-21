@@ -3,7 +3,7 @@ import React, { useRef, useCallback } from 'react';
 import { FiLock, FiUser } from 'react-icons/fi';
 import * as Yup from 'yup';
 import { Form } from '@unform/web';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 
 import { useAuth } from '../../hooks/AuthProvider';
 import Input from '../../components/Input';
@@ -80,8 +80,8 @@ export default function SignIn() {
             <button type="submit">Entrar</button>
 
             <div>
-               <a href="asd">Não tem uma conta ? Crie uma</a>
-               <a href="asda">Voltar ao inicio</a>
+               {/* <a href="asd">Não tem uma conta ? Crie uma</a> */}
+               <Link to="/">Voltar ao inicio</Link>
             </div>
          </Form>
       </Container>

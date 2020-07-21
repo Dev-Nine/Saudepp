@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useState } from 'react';
 
 import { FiLock, FiUser, FiMail, FiCreditCard, FiKey } from 'react-icons/fi';
 import * as Yup from 'yup';
@@ -14,18 +14,24 @@ import Footer from '../../components/Footer';
 import getValidationErros from '../../utils/getValidationErros';
 import { Container } from './styles';
 import api from '../../services/api';
+import setMap from '../../utils/registerMap';
+import { registerTypes } from '../../utils/registerTypes';
 
 export default function Reguster() {
    const history = useHistory();
+   const registerMap = setMap();
 
    const formRef = useRef(null);
+
+   const [selectedRegister, setSelectedRegister] = useState(
+      registerMap.get('crp'),
+   );
 
    const { signIn } = useAuth();
 
    const handleSubmit = useCallback(
       async (data) => {
          try {
-            console.log(data);
             formRef.current.setErrors({});
             const schema = Yup.object().shape({
                email: Yup.string()
@@ -51,11 +57,7 @@ export default function Reguster() {
                      4,
                      'Um nome de usuário deve ter ao menos 4 letras ou números',
                   ),
-               identifier: Yup.string().test(
-                  'CPF válido',
-                  'Informe um CPF válido',
-                  (value) => cpf.isValid(value),
-               ),
+               register: selectedRegister.test,
                password: Yup.string()
 
                   .matches(
@@ -100,8 +102,12 @@ export default function Reguster() {
             console.log(err.response);
          }
       },
-      [history, signIn],
+      [history, selectedRegister.test, signIn],
    );
+
+   const handleSelectChange = (event) => {
+      setSelectedRegister(registerMap.get(event.target.value));
+   };
 
    return (
       <>
@@ -119,11 +125,17 @@ export default function Reguster() {
                   placeholder="Nome de Usuário"
                />
 
+               <select onChange={handleSelectChange}>
+                  {registerTypes.map((obj) => (
+                     <option value={obj.type}>{obj.name}</option>
+                  ))}
+               </select>
+
                <Input
                   icon={FiCreditCard}
-                  name="identifier"
-                  placeholder="CPF"
-                  mask="999.999.999-99"
+                  name="register"
+                  placeholder={selectedRegister.register}
+                  mask={selectedRegister.mask}
                />
 
                <Input

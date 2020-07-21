@@ -6,6 +6,7 @@ import * as noticeController from "./controller/NoticeController";
 import * as tagController from "./controller/TagController";
 import * as sessionController from "./controller/SessionController";
 import * as imageController from "./controller/ImageController";
+import * as accountController from "./controller/AccountController";
 
 import ensureAuthentication from './middlewares/ensureAuthentication'
 import verifyAuthentication from './middlewares/verifyAuthentication'
@@ -46,7 +47,7 @@ routes.post("/users",
 			imageType: Joi.when('imageId', { is: Joi.exist().not(null), then: Joi.string().max(5).required().allow(null) }),
 			registerType: Joi.string().valid('crp', 'crf', 'crfa', 'cro', 'coren', 'crm', 'acm', 'ace', 'cpf').required(),
 			register: Joi.when('registerType', { is: "cpf", then: Joi.document().cpf()}),
-			registerState: Joi.when('registerType', { is: Joi.string().valid('crf', 'cro'), 
+			registerState: Joi.when('registerType', { is: Joi.string().valid('crp', 'crf', 'crfa', 'cro', 'coren', 'crm'), 
 				then: Joi.string().required().regex(/^[A-Z]{2}$/), 
 				otherwise: null
 			})
@@ -67,7 +68,7 @@ routes.put("/users/:id",
 			imageType: Joi.when('imageId', { is: Joi.exist().not(null), then: Joi.string().max(5).required().allow(null) }),
 			registerType: Joi.string().valid('crp', 'crf', 'crfa', 'cro', 'coren', 'crm', 'acm', 'ace', 'cpf').required(),
 			register: Joi.when('registerType', { is: "cpf", then: Joi.document().cpf()}),
-			registerState: Joi.when('registerType', { is: Joi.string().valid('crf', 'cro'), 
+			registerState: Joi.when('registerType', { is: Joi.string().valid('crp', 'crf', 'crfa', 'cro', 'coren', 'crm'), 
 				then: Joi.string().required().regex(/^[A-Z]{2}$/), 
 				otherwise: null
 			})
@@ -156,8 +157,21 @@ routes.post("/images",
 // routes.delete("/comments/:id", ensureAuthentication, commentController.remove);
 
 // SESSÕES (LOGIN)
-routes.post("/sessions", sessionController.auth.bind(sessionController));
-routes.get("/sessions", ensureAuthentication, sessionController.index.bind(sessionController));
+routes.post("/sessions", sessionController.auth);
+routes.get("/sessions", ensureAuthentication, sessionController.index);
+
+// REDEFINIR SENHA
+routes.get("/recover/:email", accountController.requestAccount);
+routes.post("/recover/:uuid",
+celebrate({
+	body: Joi.object().keys({ 
+		password: Joi.string().regex(/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9!@#$%&_-]{6,30})$/),
+		confirmPassword: Joi.string().valid(Joi.ref('password'))
+	})
+	}, {
+		abortEarly: false
+	}),
+	accountController.redefinePassword);
 
 // COVID (INFO)
 routes.get('/covid', async function getInfo (req, res) {

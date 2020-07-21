@@ -52,7 +52,7 @@ export default function ForgotPassword() {
             <button type="submit">Enviar Redefnição</button>
 
             <div>
-               <Link to="/">Voltar ao inicio</Link>
+               <Link to="/login">Voltar ao Login</Link>
             </div>
          </Form>
       </Container>

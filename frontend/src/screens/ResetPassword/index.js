@@ -1,9 +1,9 @@
 import React, { useRef, useCallback } from 'react';
 
-import { FiMail, FiLock } from 'react-icons/fi';
+import { FiLock } from 'react-icons/fi';
 import * as Yup from 'yup';
 import { Form } from '@unform/web';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import Input from '../../components/Input';
 import getValidationErros from '../../utils/getValidationErros';
@@ -12,45 +12,64 @@ import api from '../../services/api';
 
 export default function ResetPassword() {
    const history = useHistory();
+   const location = useLocation();
 
    const formRef = useRef(null);
 
-   const handleSubmit = useCallback(async (data) => {
-      try {
-         formRef.current.setErrors({});
+   const handleSubmit = useCallback(
+      async (data) => {
+         try {
+            formRef.current.setErrors({});
 
-         const schema = Yup.object().shape({
-            password: Yup.string()
-               .matches(
-                  /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9!@#$%&_-]{6,30})$/,
-                  'São permitidos somente estes caracteres especiais: !, @, #, $, &, %, _ e -',
-               )
-               .matches(
-                  /^(?=.*[0-9])(?=.*[a-zA-Z])(^.{6,30})$/,
-                  'Uma senha deve conter ao menos uma letra e um número',
-               )
-               .max(20, 'Uma senha deve ter no máximo 20 caracteres')
-               .min(6, 'Uma senha deve ter ao menos 6 caracteres'),
-            confirmPassword: Yup.string().oneOf(
-               [Yup.ref('password'), null],
-               'As senhas não coincidem',
-            ),
-         });
+            const schema = Yup.object().shape({
+               password: Yup.string()
+                  .matches(
+                     /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9!@#$%&_-]{6,30})$/,
+                     'São permitidos somente estes caracteres especiais: !, @, #, $, &, %, _ e -',
+                  )
+                  .matches(
+                     /^(?=.*[0-9])(?=.*[a-zA-Z])(^.{6,30})$/,
+                     'Uma senha deve conter ao menos uma letra e um número',
+                  )
+                  .max(20, 'Uma senha deve ter no máximo 20 caracteres')
+                  .min(6, 'Uma senha deve ter ao menos 6 caracteres'),
+               confirmPassword: Yup.string().oneOf(
+                  [Yup.ref('password'), null],
+                  'As senhas não coincidem',
+               ),
+            });
 
-         await schema.validate(data, {
-            abortEarly: false,
-         });
-      } catch (err) {
-         if (err instanceof Yup.ValidationError) {
-            const erros = getValidationErros(err);
+            await schema.validate(data, {
+               abortEarly: false,
+            });
 
-            formRef.current.setErrors(erros);
-            return;
+            const token = location.search.replace('?token=', '');
+
+            if (!token) {
+               throw new Error(
+                  'Token não localizado, verifique o link enviado pelo e-mail',
+               );
+            }
+
+            await api.put(`/recover/${token}`, data);
+
+            alert('Senha alterada');
+
+            history.push('/login');
+         } catch (err) {
+            if (err instanceof Yup.ValidationError) {
+               const erros = getValidationErros(err);
+
+               formRef.current.setErrors(erros);
+               return;
+            }
+
+            alert(err.message);
+            history.push('/login');
          }
-
-         console.log(err);
-      }
-   }, []);
+      },
+      [history, location.search],
+   );
 
    return (
       <Container>

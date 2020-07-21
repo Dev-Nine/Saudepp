@@ -48,23 +48,23 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 		let page = Number(req.query["page"]) || 1;
 		let limit = Number(req.query["limit"]) || 8;	
 			
-		let options = {}
-		options = {order: {id : "DESC"}, take: limit, skip: (limit * (page - 1))};
+		const queryBuilder = getRepository(Tag)
+		.createQueryBuilder("tag")
+		.orderBy("id", "DESC")
 
 		let query : string;
 		if(req.query["description"])
 			query = escape(`"description" ILIKE %L`, `%${req.query["description"]}%`)
-		if(query)
-			options = {...options, where: query}
+		queryBuilder.where(query);
 
-		const count = await getRepository(Tag).count();
+		const count = await queryBuilder.getCount();
 		res.header('X-Total-Count', String(count));
 
-		const tags = await getRepository(Tag).find(options);
+		queryBuilder.take(limit).skip(limit * (page - 1));
 
+		const tags = await queryBuilder.getMany();
 		if(tags && tags.length > 0)
 			return res.json(tags);
-		
 		throw new NotFound();
 	} catch(err) {
 		return next(err);

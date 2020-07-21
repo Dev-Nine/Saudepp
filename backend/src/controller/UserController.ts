@@ -99,8 +99,9 @@ export async function processCreateData(req : Request): Promise<User> {
 	user.email = body.email;
 	user.password = body.password;
 	user.username = body.username;
-	user.identifier = body.identifier;
-	user.identifierType = body.identifierType;
+	user.register = body.register;
+	user.registerType = body.registerType;
+	user.registerState = body.registerState;
 	user.type = body.type;
 
 	if(body.imageId){
@@ -119,8 +120,9 @@ export async function processEditData(req : Request): Promise<User> {
 	user.email = body.email;
 	user.password = body.password;
 	user.username = body.username;
-	user.identifier = body.identifier;
-	user.identifierType = body.identifierType;
+	user.register = body.register;
+	user.registerType = body.registerType;
+	user.registerState = body.registerState;
 	user.type = body.type;
 
 	if(body.imageId){
@@ -139,21 +141,25 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 		let page = Number(req.query["page"]) || 1;
 		let limit = Number(req.query["limit"]) || 8;	
 			
-		let options = {}
-		options = {order: {id : "DESC"}, take: limit, skip: (limit * (page - 1))};
+		const queryBuilder = getRepository(User)
+		.createQueryBuilder("user")
+		.orderBy("id", "DESC")
 
 		let query : string;
 		if(req.query["name"])
 			query = escape(`"name" ILIKE %L`, `%${req.query["name"]}%`)
-		else if(req.query["identifier"])
-			query = escape(`"identifier" ILIKE %L`, `%${req.query["identifier"]}%`)
-		if(query)
-			options = {...options, where: query}
+		else if(req.query["register"])
+			query = escape(`"register" ILIKE %L`, `%${req.query["register"]}%`)
+		else if(req.query["registerType"])
+			query = escape(`"registerType" = %L`, `%${req.query["registerType"]}%`)
+		queryBuilder.where(query);
 
-		const count = await getRepository(User).count();
+		const count = await queryBuilder.getCount();
 		res.header('X-Total-Count', String(count));
 
-		const users = await getRepository(User).find(options);
+		queryBuilder.take(limit).skip(limit * (page - 1));
+
+		const users = await queryBuilder.getMany();
 		if(users && users.length > 0)
 			return res.json(users);
 		
@@ -173,15 +179,16 @@ export async function getByPk(req : Request, res : Response, next) : Promise<Res
 			"type",
 			"imageId",
 			"imageType",
-			"identifierType",
-			"identifier"
+			"registerType",
+			"registerState",
+			"register"
 		]});
 	if(user){
 		if(!req.user || (req.user.type != 0 && parseInt(req.user.id) != user.id)){
 			delete user.email;
 			delete user.username;
-			delete user.identifier;
-			delete user.identifierType;
+			delete user.register;
+			delete user.registerType;
 		}
 		return res.json(user);
 	}
@@ -234,7 +241,6 @@ export async function edit(req : Request, res : Response, next): Promise<Respons
 				try{
 					await cloudinary.v2.uploader.destroy(foundUser.imageId)
 				} catch(err) {
-					console.log("Error deleting the image...")
 					return next(err);
 				}
 			}
@@ -265,7 +271,6 @@ export async function remove(req : Request, res : Response, next): Promise<Respo
 				try{
 					await cloudinary.v2.uploader.destroy(user.imageId)
 				} catch(err) {
-					console.log("Error deleting the image...")
 					return next(err);
 				}
 			}    

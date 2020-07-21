@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany, Unique} from "typeorm";
 import { Notice } from './Notice';
 import { Comment } from './Comment';
 
@@ -10,6 +10,7 @@ export enum UserRole {
 }
 
 @Entity()
+@Unique(["registerType", "registerState", "register"])
 export class User {
 
     @PrimaryGeneratedColumn()
@@ -51,7 +52,7 @@ export class User {
 
     // valor do identificador
     // cada cpf, crm e crf tem o seu próprio
-    @Column({ select: false, unique: true})
+    @Column({ select: false })
     register: string
 
     @OneToMany(type => Notice, notice => notice.user)

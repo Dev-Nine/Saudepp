@@ -27,7 +27,7 @@ export async function requestAccount (req: Request, res: Response, next): Promis
 				"na plataforma Saúde++. Se não foi você que solicitou, você pode ignorar" +
 				"este e-mail, sua conta não está em perigo. Caso tenha sido você, " +
 				"clique no link abaixo para redefinir a sua senha.\n\n"+
-				`${process.env.SITE_URL}/recover/${recoverInfo.id}`+
+				`${process.env.SITE_URL}/reset-password?token=${recoverInfo.id}`+
 				"\n\nPlataforma Saúde++"
 		}else{
 			mailContent.subject = "Tentativa de redefinição de senha na plataforma Saúde++"

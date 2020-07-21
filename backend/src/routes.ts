@@ -53,9 +53,7 @@ routes.post("/users",
 		})
 	}, {
 		abortEarly: false
-	}),
-	//userController.create
-	);
+	}), userController.create);
 routes.put("/users/:id", 
 	ensureAuthentication, 
 	celebrate({

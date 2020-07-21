@@ -1,6 +1,6 @@
 import React, { useRef, useCallback } from 'react';
 
-import { FiLock, FiUser } from 'react-icons/fi';
+import { FiLock, FiUser, FiMail } from 'react-icons/fi';
 import * as Yup from 'yup';
 import { Form } from '@unform/web';
 import { useHistory, Link } from 'react-router-dom';
@@ -23,7 +23,6 @@ export default function ForgotPassword() {
                user: Yup.string()
                   .required('Insira um e-mail')
                   .email('Insira um e-mail válido'),
-               password: Yup.string().required('Senha obrigatória'),
             });
 
             await schema.validate(data, {
@@ -48,9 +47,9 @@ export default function ForgotPassword() {
    return (
       <Container>
          <Form ref={formRef} onSubmit={handleSubmit}>
-            <h1>Entre</h1>
-            <Input icon={FiUser} name="user" placeholder="Usuário ou E-mail" />
-            <button type="submit">Entrar</button>
+            <h1>Redefinir Senha</h1>
+            <Input icon={FiMail} name="user" placeholder="E-Mail da conta" />
+            <button type="submit">Enviar Redefnição</button>
 
             <div>
                <Link to="/">Voltar ao inicio</Link>

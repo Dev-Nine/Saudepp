@@ -26,6 +26,7 @@ export const Container = styled.div`
          border: 0;
          color: #fff;
          transition: background-color 0.4s;
+         margin-top: 8px;
 
          &:hover {
             background-color: ${shade(0.1, '#77C6FF')};

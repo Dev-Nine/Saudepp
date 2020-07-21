@@ -18,7 +18,7 @@ export default function setMap() {
    registerMap.set('crf', {
       name: 'Farmacêutico / Bioquímico',
       register: 'CRF',
-      state: false,
+      state: true,
       mask: '99999',
       test: Yup.string().matches(
          /^[1-9]{5}$/,
@@ -29,7 +29,7 @@ export default function setMap() {
    registerMap.set('crfa', {
       name: 'Fonoaudióloga',
       register: 'CRFa',
-      state: false,
+      state: true,
       mask: '99.999',
       test: Yup.string().matches(
          /^[1-9.]{6}$/,
@@ -51,7 +51,7 @@ export default function setMap() {
    registerMap.set('coren', {
       name: 'Enfermeiro',
       register: 'Coren',
-      state: false,
+      state: true,
       mask: '999999',
       test: Yup.string().matches(
          /^[1-9]{6}$/,
@@ -62,7 +62,7 @@ export default function setMap() {
    registerMap.set('crm', {
       name: 'Médico',
       register: 'CRM',
-      state: false,
+      state: true,
       mask: '999999',
       test: Yup.string().matches(
          /^[1-9]{6}$/,

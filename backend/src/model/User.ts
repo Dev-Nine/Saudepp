@@ -44,12 +44,15 @@ export class User {
     // tipo de identificador
     // caso seja profissional, pode ser crm, crf, etc...
     @Column({ default: "cpf", select: false })
-    identifierType : string
+    registerType : string
+
+    @Column({ length: 2, nullable: true, select: false })
+    registerState : string
 
     // valor do identificador
     // cada cpf, crm e crf tem o seu próprio
-    @Column({ select: false })
-    identifier: string
+    @Column({ select: false, unique: true})
+    register: string
 
     @OneToMany(type => Notice, notice => notice.user)
     notices: Notice[];

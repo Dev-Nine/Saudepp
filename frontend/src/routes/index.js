@@ -55,7 +55,7 @@ export default function Routes() {
          <Route path="/panel/tags" isPrivate exact component={PanelTags} />
 
          <Route path="/forgot-password" exact component={ForgotPassword} />
-         <Route path="/reset-password/:id" exact component={ResetPassword} />
+         <Route path="/reset-password" exact component={ResetPassword} />
 
          <Route path="*" component={NotFound} />
       </Switch>

@@ -65,10 +65,14 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 				.createQueryBuilder("notice")
 				.select("notice.id, COUNT(notice.id) AS idCount")
 				.leftJoin("notice.tags", "tags")
+				.leftJoin("notice.user", "user")
 				.where("notice_tags.tagId IN (:...tagsId)", { tagsId })
 				.groupBy("notice.id")
 				.having('COUNT(notice.id) = :length', {length: tags.length})
 				.orderBy("id", "DESC");
+			
+			if(req.query["userid"])
+				queryBuilder.where(escape(`"user".id = %L`, `${req.query["userid"]}`));
 
 			const count = (await queryBuilder.getRawMany()).length;
 			res.header('X-Total-Count', String(count));
@@ -77,19 +81,21 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 				.getRawMany()).map(obj => obj.id);
 
 			if(data.length !== 0){
-				const notices = await getRepository(Notice)
+				const queryBuilder = getRepository(Notice)
 					.createQueryBuilder("notice")
 					.where("notice.id IN (:...id)", { id : data })
 					.leftJoinAndSelect("notice.user", "user")
 					.leftJoinAndSelect("notice.tags", "tags")
-					.getMany()
-				return res.json(notices);
+				if(req.query["userid"])
+					queryBuilder.where(escape(`"user".id = %L`, `${req.query["userid"]}`));
+				return res.json(await queryBuilder.getMany());
 			}
 			throw new NotFound;
 			
 		} else {
-			let options = {}
-			options = {order: {id : "DESC"}, take: limit, skip: (limit * (page - 1))};
+			const queryBuilder = getRepository(Notice)
+			.createQueryBuilder("notice")
+			.orderBy("id", "DESC")
 
 			let query : string;
 			if(req.query["title"])
@@ -98,14 +104,14 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 				query = escape(`abstract ILIKE %L`, `%${req.query["abstract"]}%`);
 			else if(req.query["tag"])
 				query = escape(`"Notice_tags".description ILIKE %L`, `%${req.query["tag"]}%`);
-				
-			if(query)
-				options = {...options, where: query}
+			queryBuilder.where(query);
 
-			const count = await getRepository(Notice).count();
+			const count = await queryBuilder.getCount();
 			res.header('X-Total-Count', String(count));
 
-			const notices = await getRepository(Notice).find(options);
+			queryBuilder.take(limit).skip(limit * (page - 1));
+
+			const notices = await queryBuilder.getMany();
 			if(notices && notices.length > 0)
 				return res.json(notices);
 			throw new NotFound;

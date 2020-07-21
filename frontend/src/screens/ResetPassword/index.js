@@ -68,7 +68,7 @@ export default function ResetPassword() {
                placeholder="Confirme sua nova Senha"
                type="password"
             />
-            <button type="submit">Enviar Redefnição</button>
+            <button type="submit">Redefinir Senha</button>
          </Form>
       </Container>
    );

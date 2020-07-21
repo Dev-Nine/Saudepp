@@ -44,13 +44,18 @@ routes.post("/users",
 			type: Joi.number().required().min(0).max(3),
 			imageId: Joi.string().max(25).optional().allow(null),
 			imageType: Joi.when('imageId', { is: Joi.exist().not(null), then: Joi.string().max(5).required().allow(null) }),
-			identifierType: Joi.string().default('cpf'),
-			identifier: Joi.when('identifierType', { is: Joi.string().regex(/^cpf$/), then: Joi.document().cpf()})
+			registerType: Joi.string().valid('crp', 'crf', 'crfa', 'cro', 'coren', 'crm', 'acm', 'ace', 'cpf').required(),
+			register: Joi.when('registerType', { is: "cpf", then: Joi.document().cpf()}),
+			registerState: Joi.when('registerType', { is: Joi.string().valid('crf', 'cro'), 
+				then: Joi.string().required().regex(/^[A-Z]{2}$/), 
+				otherwise: null
+			})
 		})
 	}, {
 		abortEarly: false
 	}),
-	userController.create);
+	//userController.create
+	);
 routes.put("/users/:id", 
 	ensureAuthentication, 
 	celebrate({
@@ -62,8 +67,12 @@ routes.put("/users/:id",
 			type: Joi.number().min(0).max(3),
 			imageId: Joi.string().max(25).optional().allow(null),
 			imageType: Joi.when('imageId', { is: Joi.exist().not(null), then: Joi.string().max(5).required().allow(null) }),
-			identifierType: Joi.string(),
-			identifier: Joi.when('identifierType', { is: Joi.string().regex(/^cpf$/), then: Joi.document().cpf()})
+			registerType: Joi.string().valid('crp', 'crf', 'crfa', 'cro', 'coren', 'crm', 'acm', 'ace', 'cpf').required(),
+			register: Joi.when('registerType', { is: "cpf", then: Joi.document().cpf()}),
+			registerState: Joi.when('registerType', { is: Joi.string().valid('crf', 'cro'), 
+				then: Joi.string().required().regex(/^[A-Z]{2}$/), 
+				otherwise: null
+			})
 		})
 	}, {
 		abortEarly: false

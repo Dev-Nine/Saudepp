@@ -99,7 +99,7 @@ export default function Reguster() {
                return;
             }
 
-            console.log(err.response);
+            console.log(err);
          }
       },
       [history, selectedRegister.test, signIn],
@@ -115,28 +115,31 @@ export default function Reguster() {
          <Container>
             <Form ref={formRef} onSubmit={handleSubmit}>
                <h1>Cadastrar Novo Usuário</h1>
-
                <Input icon={FiMail} name="email" placeholder="Email" />
-
                <Input icon={FiUser} name="name" placeholder="Nome Completo" />
                <Input
                   icon={FiKey}
                   name="username"
                   placeholder="Nome de Usuário"
                />
-
-               <select onChange={handleSelectChange}>
+               <select onChange={handleSelectChange} name="registerType">
                   {registerTypes.map((obj) => (
                      <option value={obj.type}>{obj.name}</option>
                   ))}
                </select>
-
                <Input
                   icon={FiCreditCard}
                   name="register"
                   placeholder={selectedRegister.register}
                   mask={selectedRegister.mask}
                />
+               {selectedRegister.state && (
+                  <Input
+                     icon={FiUser}
+                     name="state"
+                     placeholder={`Estado do ${selectedRegister.register}`}
+                  />
+               )}
 
                <Input
                   icon={FiLock}
@@ -150,9 +153,7 @@ export default function Reguster() {
                   placeholder="Confirme sua Senha"
                   type="password"
                />
-
                <button type="submit">Criar Conta</button>
-
                <div>
                   <a href="asd">Já tem uma conta? Entre.</a>
                </div>

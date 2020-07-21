@@ -95,7 +95,9 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 		} else {
 			const queryBuilder = getRepository(Notice)
 			.createQueryBuilder("notice")
-			.orderBy("id", "DESC")
+			.leftJoinAndSelect("notice.user", "user")
+			.leftJoinAndSelect("notice.tags", "tags")
+			.orderBy("notice.id", "DESC")
 
 			let query : string;
 			if(req.query["title"])

@@ -104,7 +104,7 @@ export const Container = styled.div`
          align-items: flex-end;
          background-color: #fff;
          right: 30px;
-         top: 72px;
+         top: 68px;
          z-index: 20;
          border-radius: 0 0 8px 8px;
       }

@@ -34,7 +34,7 @@ export default function Panel() {
       document.title = 'Painel de controle';
    });
 
-   function remove(u) {
+   function remove(id) {
       confirmAlert({
          title: 'Confirme a exclusão',
          message: 'Você tem certeza que deseja excluir?',
@@ -42,8 +42,7 @@ export default function Panel() {
             {
                label: 'Sim',
                onClick: async () => {
-                  const { status } = await api.delete(`/users/${u.id}`);
-                  if (status === 200) users.remove(u);
+                  await api.delete(`/users/${id}`);
                },
             },
             {
@@ -81,7 +80,7 @@ export default function Panel() {
                                  </Button>
                               </Link>
                               <Link to="#">
-                                 <Button onClick={() => remove(u)} isDelete>
+                                 <Button onClick={() => remove(u.id)} isDelete>
                                     <FiX />
                                  </Button>
                               </Link>

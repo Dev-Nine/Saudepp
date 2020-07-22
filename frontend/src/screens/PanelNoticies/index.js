@@ -6,8 +6,8 @@ import { Link } from 'react-router-dom';
 import { FiX, FiSearch, FiPlus } from 'react-icons/fi';
 import useSWR from 'swr';
 
-import { confirmAlert } from 'react-confirm-alert'; //Import element
-import 'react-confirm-alert/src/react-confirm-alert.css'; //Import css
+import { confirmAlert } from 'react-confirm-alert'; // Import element
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
 import api from '../../services/api';
 
@@ -27,11 +27,6 @@ async function getInfo(url) {
    return response.data;
 }
 
-async function apiDelete(id) {
-   const response = await api.delete(`/notices/${id}`);
-   console.log(response.status);
-}
-
 export default function Panel() {
    const { data: noticies } = useSWR('/notices', getInfo);
 
@@ -46,12 +41,14 @@ export default function Panel() {
          buttons: [
             {
                label: 'Sim',
-               onClick: () => apiDelete(id)
+               onClick: async () => {
+                  await api.delete(`/notices/${id}`);
+               },
             },
             {
                label: 'Não',
-            }
-         ]
+            },
+         ],
       });
    }
 
@@ -87,9 +84,12 @@ export default function Panel() {
                                  </Button>
                               </Link>
                               <Link to="#">
-                                 <Button onClick={() => {
-                                    remove(n.id)
-                                    }} isDelete>
+                                 <Button
+                                    onClick={() => {
+                                       remove(n.id);
+                                    }}
+                                    isDelete
+                                 >
                                     <FiX />
                                  </Button>
                               </Link>

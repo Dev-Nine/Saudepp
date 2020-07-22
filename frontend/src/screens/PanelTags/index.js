@@ -22,7 +22,7 @@ async function loadTags() {
 export default function PanelTags() {
    const { data: tags } = useSWR('/tags', loadTags);
 
-   function remove(t) {
+   function remove(id) {
       confirmAlert({
          title: 'Confirme a exclusão',
          message: 'Você tem certeza que deseja excluir?',
@@ -30,7 +30,7 @@ export default function PanelTags() {
             {
                label: 'Sim',
                onClick: async () => {
-                  const { status } = await api.delete(`/tags/${t.id}`);
+                  await api.delete(`/tags/${id}`);
                },
             },
             {
@@ -72,7 +72,7 @@ export default function PanelTags() {
                               <Link to="#">
                                  <Button
                                     onClick={() => {
-                                       remove(t);
+                                       remove(t.id);
                                     }}
                                     isDelete
                                  >

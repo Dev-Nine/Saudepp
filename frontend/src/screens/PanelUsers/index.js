@@ -5,6 +5,10 @@ import { Link } from 'react-router-dom';
 
 import { FiX, FiSearch, FiPlus } from 'react-icons/fi';
 import useSWR from 'swr';
+
+import { confirmAlert } from 'react-confirm-alert'; // Import element
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+
 import { Container, Table, TableLine, Button } from './styles';
 
 import api from '../../services/api';
@@ -29,6 +33,25 @@ export default function Panel() {
    useEffect(() => {
       document.title = 'Painel de controle';
    });
+
+   function remove(u) {
+      confirmAlert({
+         title: 'Confirme a exclusão',
+         message: 'Você tem certeza que deseja excluir?',
+         buttons: [
+            {
+               label: 'Sim',
+               onClick: async () => {
+                  const { status } = await api.delete(`/users/${u.id}`);
+                  if (status === 200) users.remove(u);
+               },
+            },
+            {
+               label: 'Não',
+            },
+         ],
+      });
+   }
 
    return (
       <>
@@ -58,7 +81,7 @@ export default function Panel() {
                                  </Button>
                               </Link>
                               <Link to="#">
-                                 <Button isDelete>
+                                 <Button onClick={() => remove(u)} isDelete>
                                     <FiX />
                                  </Button>
                               </Link>

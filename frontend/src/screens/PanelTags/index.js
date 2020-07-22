@@ -3,9 +3,12 @@ import React from 'react';
 import { FiSearch, FiX, FiPlus } from 'react-icons/fi';
 import useSWR from 'swr';
 import { Link } from 'react-router-dom';
+import { confirmAlert } from 'react-confirm-alert'; // Import element
 import { Container, Table, TableLine, Button } from './styles';
 
 import api from '../../services/api';
+
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
@@ -18,6 +21,24 @@ async function loadTags() {
 
 export default function PanelTags() {
    const { data: tags } = useSWR('/tags', loadTags);
+
+   function remove(t) {
+      confirmAlert({
+         title: 'Confirme a exclusão',
+         message: 'Você tem certeza que deseja excluir?',
+         buttons: [
+            {
+               label: 'Sim',
+               onClick: async () => {
+                  const { status } = await api.delete(`/tags/${t.id}`);
+               },
+            },
+            {
+               label: 'Não',
+            },
+         ],
+      });
+   }
 
    return (
       <>
@@ -49,7 +70,12 @@ export default function PanelTags() {
                                  </Button>
                               </Link>
                               <Link to="#">
-                                 <Button isDelete>
+                                 <Button
+                                    onClick={() => {
+                                       remove(t);
+                                    }}
+                                    isDelete
+                                 >
                                     <FiX />
                                  </Button>
                               </Link>

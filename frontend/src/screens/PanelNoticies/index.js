@@ -5,10 +5,13 @@ import { Link } from 'react-router-dom';
 
 import { FiX, FiSearch, FiPlus } from 'react-icons/fi';
 import useSWR from 'swr';
-import { Container, Table, TableLine, Button } from './styles';
+
+import { confirmAlert } from 'react-confirm-alert'; //Import element
+import 'react-confirm-alert/src/react-confirm-alert.css'; //Import css
 
 import api from '../../services/api';
 
+import { Container, Table, TableLine, Button } from './styles';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
@@ -24,12 +27,33 @@ async function getInfo(url) {
    return response.data;
 }
 
+async function apiDelete(id) {
+   const response = await api.delete(`/notices/${id}`);
+   console.log(response.status);
+}
+
 export default function Panel() {
    const { data: noticies } = useSWR('/notices', getInfo);
 
    useEffect(() => {
       document.title = 'Painel de controle';
    });
+
+   function remove(id) {
+      confirmAlert({
+         title: 'Confirme a exclusão',
+         message: 'Você tem certeza que deseja excluir?',
+         buttons: [
+            {
+               label: 'Sim',
+               onClick: () => apiDelete(id)
+            },
+            {
+               label: 'Não',
+            }
+         ]
+      });
+   }
 
    return (
       <>
@@ -63,7 +87,9 @@ export default function Panel() {
                                  </Button>
                               </Link>
                               <Link to="#">
-                                 <Button isDelete>
+                                 <Button onClick={() => {
+                                    remove(n.id)
+                                    }} isDelete>
                                     <FiX />
                                  </Button>
                               </Link>

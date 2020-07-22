@@ -59,7 +59,6 @@ export default function Reguster() {
                   ),
                register: selectedRegister.test,
                password: Yup.string()
-
                   .matches(
                      /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9!@#$%&_-]{6,30})$/,
                      'São permitidos somente estes caracteres especiais: !, @, #, $, &, %, _ e -',

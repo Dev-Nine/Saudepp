@@ -1,6 +1,6 @@
 import React, { useRef, useCallback } from 'react';
 
-import { FiLock, FiUser, FiMail } from 'react-icons/fi';
+import { FiMail } from 'react-icons/fi';
 import * as Yup from 'yup';
 import { Form } from '@unform/web';
 import { useHistory, Link } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { useHistory, Link } from 'react-router-dom';
 import Input from '../../components/Input';
 import getValidationErros from '../../utils/getValidationErros';
 import { Container } from './styles';
+import api from '../../services/api';
 
 export default function ForgotPassword() {
    const history = useHistory();
@@ -20,7 +21,7 @@ export default function ForgotPassword() {
             formRef.current.setErrors({});
 
             const schema = Yup.object().shape({
-               user: Yup.string()
+               email: Yup.string()
                   .required('Insira um e-mail')
                   .email('Insira um e-mail válido'),
             });
@@ -28,8 +29,6 @@ export default function ForgotPassword() {
             await schema.validate(data, {
                abortEarly: false,
             });
-
-            history.push('/');
          } catch (err) {
             if (err instanceof Yup.ValidationError) {
                const erros = getValidationErros(err);
@@ -37,8 +36,12 @@ export default function ForgotPassword() {
                formRef.current.setErrors(erros);
                return;
             }
+         } finally {
+            api.post(`recover/${data.email}`);
 
-            console.log(err);
+            alert('Email de recuperação enviado');
+
+            history.push('/login');
          }
       },
       [history],
@@ -48,11 +51,11 @@ export default function ForgotPassword() {
       <Container>
          <Form ref={formRef} onSubmit={handleSubmit}>
             <h1>Redefinir Senha</h1>
-            <Input icon={FiMail} name="user" placeholder="E-Mail da conta" />
+            <Input icon={FiMail} name="email" placeholder="E-Mail da conta" />
             <button type="submit">Enviar Redefnição</button>
 
             <div>
-               <Link to="/">Voltar ao inicio</Link>
+               <Link to="/login">Voltar ao Login</Link>
             </div>
          </Form>
       </Container>

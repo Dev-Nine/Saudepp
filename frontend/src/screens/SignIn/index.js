@@ -75,7 +75,7 @@ export default function SignIn() {
                placeholder="Senha"
                type="password"
             />
-            <a href="asd">Esqueceu a senha ?</a>
+            <Link to="/forgot-password">Esqueceu a senha ?</Link>
 
             <button type="submit">Entrar</button>
 

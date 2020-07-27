@@ -35,19 +35,21 @@ const AuthProvider = ({ children }) => {
 
       const response = await api.post('/sessions', signInData);
 
-      const { token, user } = response.data;
+      if (response) {
+         const { token, user } = response.data;
 
-      if (!user.imageId) {
-         user.imageUrl = `https://ui-avatars.com/api/?background=0086e6&bold=true&color=fff&uppercase=false&size=256&name=${user.name}`;
-      } else {
-         user.imageUrl = `https://res.cloudinary.com/saudepp/image/upload/${user.imageId}.${user.imageType}`;
+         if (!user.imageId) {
+            user.imageUrl = `https://ui-avatars.com/api/?background=0086e6&bold=true&color=fff&uppercase=false&size=256&name=${user.name}`;
+         } else {
+            user.imageUrl = `https://res.cloudinary.com/saudepp/image/upload/${user.imageId}.${user.imageType}`;
+         }
+
+         api.defaults.headers.authorization = `Bearer ${token}`;
+         localStorage.setItem('@Saude:token', token);
+         localStorage.setItem('@Saude:user', JSON.stringify(user));
+
+         setData({ token, user });
       }
-
-      api.defaults.headers.authorization = `Bearer ${token}`;
-      localStorage.setItem('@Saude:token', token);
-      localStorage.setItem('@Saude:user', JSON.stringify(user));
-
-      setData({ token, user });
    }, []);
 
    const signOut = useCallback(() => {

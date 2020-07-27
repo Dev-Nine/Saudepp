@@ -1,13 +1,23 @@
 import React, { useRef, useCallback, useState } from 'react';
 
-import { FiLock, FiUser, FiMail, FiCreditCard, FiKey } from 'react-icons/fi';
+import {
+   FiLock,
+   FiUser,
+   FiMail,
+   FiCreditCard,
+   FiKey,
+   FiMap,
+   FiClipboard,
+} from 'react-icons/fi';
 import * as Yup from 'yup';
 import { Form } from '@unform/web';
 import { useHistory } from 'react-router-dom';
-import { cpf } from 'cpf-cnpj-validator';
 
+import axios from 'axios';
+import { useEffect } from 'react';
 import { useAuth } from '../../hooks/AuthProvider';
 import Input from '../../components/Input';
+import Select from '../../components/Select';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
@@ -15,7 +25,6 @@ import getValidationErros from '../../utils/getValidationErros';
 import { Container } from './styles';
 import api from '../../services/api';
 import setMap from '../../utils/registerMap';
-import { registerTypes } from '../../utils/registerTypes';
 
 export default function Reguster() {
    const history = useHistory();
@@ -23,14 +32,19 @@ export default function Reguster() {
 
    const formRef = useRef(null);
 
-   const [selectedRegister, setSelectedRegister] = useState(
-      registerMap.get('crp'),
-   );
+   const [selectedRegister, setSelectedRegister] = useState({
+      index: 'default',
+   });
+
+   const [selectedState, setSelectedState] = useState();
+
+   const [states, setStates] = useState([]);
 
    const { signIn } = useAuth();
 
    const handleSubmit = useCallback(
       async (data) => {
+         console.log(data);
          try {
             formRef.current.setErrors({});
             const schema = Yup.object().shape({
@@ -57,6 +71,10 @@ export default function Reguster() {
                      4,
                      'Um nome de usuário deve ter ao menos 4 letras ou números',
                   ),
+               registerType: Yup.string().notOneOf(
+                  ['default'],
+                  'Selecione um tipo de registro',
+               ),
                register: selectedRegister.test,
                password: Yup.string()
                   .matches(
@@ -83,8 +101,7 @@ export default function Reguster() {
 
             await api.post('users', {
                ...data,
-               identifierType: 'cpf',
-               type: 0,
+               type: 2,
             });
 
             await signIn({ username: data.username, password: data.password });
@@ -95,18 +112,37 @@ export default function Reguster() {
                const erros = getValidationErros(err);
 
                formRef.current.setErrors(erros);
-               return;
             }
-
-            console.log(err);
          }
       },
       [history, selectedRegister.test, signIn],
    );
 
-   const handleSelectChange = (event) => {
-      setSelectedRegister(registerMap.get(event.target.value));
+   const handleRegisterChange = (event) => {
+      setSelectedRegister({
+         index: event.target.value,
+         ...registerMap.get(event.target.value),
+      });
    };
+
+   const handleStateChange = (event) => {
+      setSelectedState(event.target.value);
+   };
+
+   useEffect(() => {
+      axios
+         .get(
+            'https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome',
+         )
+         .then(({ data }) =>
+            setStates(
+               data.map((obj) => ({
+                  name: obj.nome,
+                  initials: obj.sigla,
+               })),
+            ),
+         );
+   }, []);
 
    return (
       <>
@@ -121,23 +157,39 @@ export default function Reguster() {
                   name="username"
                   placeholder="Nome de Usuário"
                />
-               <select onChange={handleSelectChange} name="registerType">
-                  {registerTypes.map((obj) => (
-                     <option value={obj.type}>{obj.name}</option>
+               <Select
+                  value={selectedRegister.index}
+                  onChange={handleRegisterChange}
+                  name="registerType"
+                  icon={FiClipboard}
+               >
+                  {[...registerMap.keys()].map((value) => (
+                     <option value={value} key={value}>
+                        {registerMap.get(value).name}
+                     </option>
                   ))}
-               </select>
-               <Input
-                  icon={FiCreditCard}
-                  name="register"
-                  placeholder={selectedRegister.register}
-                  mask={selectedRegister.mask}
-               />
-               {selectedRegister.state && (
+               </Select>
+               {selectedRegister.index !== 'default' && (
                   <Input
-                     icon={FiUser}
-                     name="state"
-                     placeholder={`Estado do ${selectedRegister.register}`}
+                     icon={FiCreditCard}
+                     name="register"
+                     placeholder={selectedRegister.register}
+                     mask={selectedRegister.mask}
                   />
+               )}
+               {selectedRegister.state && (
+                  <Select
+                     value={selectedState}
+                     onChange={handleStateChange}
+                     name="registerState"
+                     icon={FiMap}
+                  >
+                     {states.map(({ name, initials }) => (
+                        <option value={initials} key={initials}>
+                           {`${initials} - ${name}`}
+                        </option>
+                     ))}
+                  </Select>
                )}
 
                <Input

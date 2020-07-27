@@ -32,8 +32,13 @@ export const Container = styled.div`
          }
       }
 
-      h1 {
+      h1,
+      h3 {
          margin-bottom: 15px;
+      }
+
+      h3 {
+         color: var(--main-alert-color);
       }
 
       a {

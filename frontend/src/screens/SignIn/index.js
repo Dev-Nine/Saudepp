@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useState } from 'react';
 
 import { FiLock, FiUser } from 'react-icons/fi';
 import * as Yup from 'yup';
@@ -11,6 +11,8 @@ import getValidationErros from '../../utils/getValidationErros';
 import { Container } from './styles';
 
 export default function SignIn() {
+   const [loginErr, setLoginErr] = useState('');
+
    const history = useHistory();
 
    const formRef = useRef(null);
@@ -55,19 +57,19 @@ export default function SignIn() {
                const erros = getValidationErros(err);
 
                formRef.current.setErrors(erros);
-               return;
-            }
-
-            console.log(err);
+            } else if (err.response.status === 400)
+               setLoginErr('Credenciais incorretos');
+            else setLoginErr('Ocorreu um erro');
          }
       },
-      [history, signIn],
+      [history, setLoginErr, signIn],
    );
 
    return (
       <Container>
          <Form ref={formRef} onSubmit={handleSubmit}>
             <h1>Entre</h1>
+            <h3>{loginErr}</h3>
             <Input icon={FiUser} name="user" placeholder="Usuário ou E-mail" />
             <Input
                icon={FiLock}
@@ -75,7 +77,7 @@ export default function SignIn() {
                placeholder="Senha"
                type="password"
             />
-            <Link to="/forgot-password">Esqueceu a senha ?</Link>
+            <Link to="/forgot-password">Esqueceu a senha?</Link>
 
             <button type="submit">Entrar</button>
 

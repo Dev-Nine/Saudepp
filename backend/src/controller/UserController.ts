@@ -24,8 +24,8 @@ export async function validateCreate(req : Request): Promise<void>{
 		return;
 
 	// somente usuario adm pode criar profissionais
-	if(req.user.type != UserRole.ADMIN && req.body.type == UserRole.PROFISSIONAL)
-		throw new Forbidden;
+	if(req.user.type == UserRole.ADMIN && req.body.type == UserRole.PROFISSIONAL)
+		return;
 
 	throw new Forbidden;
 

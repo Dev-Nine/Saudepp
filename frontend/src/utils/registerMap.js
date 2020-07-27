@@ -4,13 +4,21 @@ import { cpf } from 'cpf-cnpj-validator';
 export default function setMap() {
    const registerMap = new Map();
 
+   registerMap.set('default', {
+      name: 'Selecione o tipo de registro...',
+      register: '',
+      state: false,
+      mask: '',
+      test: null,
+   });
+
    registerMap.set('crp', {
       name: 'Psicólogo',
       register: 'CRP',
       state: true,
       mask: '99/999999',
       test: Yup.string().matches(
-         /^[1-9/]{9}$/,
+         /^[1-9]{2}[/]{1}[1-9]{6}$/,
          'Um CRP deve possuir 8 digitos numéricos',
       ),
    });
@@ -32,7 +40,7 @@ export default function setMap() {
       state: true,
       mask: '99.999',
       test: Yup.string().matches(
-         /^[1-9.]{6}$/,
+         /^[1-9]{2}[.]{1}[1-9]{3}$/,
          'Um CRFa deve possuir 5 digitos numéricos',
       ),
    });
@@ -67,6 +75,28 @@ export default function setMap() {
       test: Yup.string().matches(
          /^[1-9]{6}$/,
          'Um CRM deve possuir 6 digitos numéricos',
+      ),
+   });
+
+   registerMap.set('crn', {
+      name: 'Nutricionista',
+      register: 'CRN',
+      state: true,
+      mask: '99999',
+      test: Yup.string().matches(
+         /^[1-9]{5}$/,
+         'O CRN deve possuir 5 digitos numéricos',
+      ),
+   });
+
+   registerMap.set('crefito', {
+      name: 'Fisioterapeuta',
+      register: 'CREFITO',
+      state: true,
+      mask: '999999',
+      test: Yup.string().matches(
+         /^[1-9]{5}$/,
+         'O CREFITO deve possuir 6 digitos numéricos',
       ),
    });
 

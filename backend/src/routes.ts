@@ -20,6 +20,7 @@ import validator from 'cpf-cnpj-validator'
 const Joi = require('@hapi/joi').extend(validator)
 import multer from 'multer';
 import multerConfig from './config/multerConfig'
+import registerValidations from './utils/registerValidations'
 
 const routes = Router();
 const upload = multer(multerConfig);
@@ -45,10 +46,14 @@ routes.post("/users",
 			type: Joi.number().required().min(0).max(3),
 			imageId: Joi.string().max(25).optional().allow(null),
 			imageType: Joi.when('imageId', { is: Joi.exist().not(null), then: Joi.string().max(5).required().allow(null) }),
-			registerType: Joi.string().valid('crp', 'crf', 'crfa', 'cro', 'coren', 'crm', 'acm', 'ace', 'cpf').required(),
-			register: Joi.when('registerType', { is: "cpf", then: Joi.document().required().cpf()}),
-			registerState: Joi.when('registerType', { is: Joi.string().valid('crp', 'crf', 'crfa', 'cro', 'coren', 'crm'), 
-				then: Joi.string().required().regex(/^[A-Z]{2}$/), 
+			registerType: Joi.string().valid(
+				'crp', 'crf', 'crfa', 'cro', 
+				'coren', 'crm', 'crn', 'crefito', 
+				'acm', 'ace', 'cpf'
+			).required(),
+			register: registerValidations,
+			registerState: Joi.when('registerType', { is: Joi.string().valid('crp', 'crf', 'crfa', 'cro', 'coren', 'crm', 'crn', 'crefito'), 
+				then: Joi.string().regex(/^[A-Z]{2}$/), 
 				otherwise: null
 			})
 		})
@@ -66,10 +71,10 @@ routes.put("/users/:id",
 			type: Joi.number().min(0).max(3),
 			imageId: Joi.string().max(25).optional().allow(null),
 			imageType: Joi.when('imageId', { is: Joi.exist().not(null), then: Joi.string().max(5).required().allow(null) }),
-			registerType: Joi.string().valid('crp', 'crf', 'crfa', 'cro', 'coren', 'crm', 'acm', 'ace', 'cpf').required(),
-			register: Joi.when('registerType', { is: "cpf", then: Joi.document().cpf()}),
+			registerType: Joi.string().valid('crp', 'crf', 'crfa', 'cro', 'coren', 'crm', 'acm', 'ace', 'cpf'),
+			register: registerValidations,
 			registerState: Joi.when('registerType', { is: Joi.string().valid('crp', 'crf', 'crfa', 'cro', 'coren', 'crm'), 
-				then: Joi.string().required().regex(/^[A-Z]{2}$/), 
+				then: Joi.string().required().regex(/^[A-Z]{2}$/),
 				otherwise: null
 			})
 		})

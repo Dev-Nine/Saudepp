@@ -44,7 +44,6 @@ export default function Reguster() {
 
    const handleSubmit = useCallback(
       async (data) => {
-         console.log(data);
          try {
             formRef.current.setErrors({});
             const schema = Yup.object().shape({
@@ -205,9 +204,9 @@ export default function Reguster() {
                   type="password"
                />
                <button type="submit">Criar Conta</button>
-               <div>
+               {/* <div>
                   <a href="asd">Já tem uma conta? Entre.</a>
-               </div>
+               </div> */}
             </Form>
          </Container>
          <Footer />

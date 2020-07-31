@@ -27,15 +27,14 @@ export default class AuthenticateUserService {
       // console.log(teste);
 
       const userRepository = getRepository(User);
-      var user;
+      var user : User;
       if(email){
-         user = await userRepository.findOne({select: ["id", "name", "email", "username", "password", "imageId", "imageType"], 
-            where: {email}});
+         user = await userRepository.findOne({select: ["id", "name", "email", "username", "type",
+         "registerType", "register", "registerState", "password", "imageId", "imageType"], where: {email}});
       }else{
-         user = await userRepository.findOne({select: ["id", "name", "email", "username", "password", "imageId", "imageType"], 
-            where: {username}});
+         user = await userRepository.findOne({select: ["id", "name", "email", "username", "type",
+         "registerType", "register", "registerState", "password", "imageId", "imageType"], where: {username}});
       }
-      
 
       if (!user) {
          throw new Error('Incorrect combination.')

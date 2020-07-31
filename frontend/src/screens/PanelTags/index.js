@@ -15,7 +15,6 @@ import Footer from '../../components/Footer';
 
 async function loadTags() {
    const { data } = await api.get('/tags');
-
    return data;
 }
 
@@ -69,16 +68,14 @@ export default function PanelTags() {
                                     <FiSearch />
                                  </Button>
                               </Link>
-                              <Link to="#">
-                                 <Button
-                                    onClick={() => {
-                                       remove(t.id);
-                                    }}
-                                    isDelete
-                                 >
-                                    <FiX />
-                                 </Button>
-                              </Link>
+                              <Button
+                                 onClick={() => {
+                                    remove(t.id);
+                                 }}
+                                 isDelete
+                              >
+                                 <FiX />
+                              </Button>
                            </div>
                         </TableLine>
                      ))

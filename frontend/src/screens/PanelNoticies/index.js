@@ -14,21 +14,19 @@ import api from '../../services/api';
 import { Container, Table, TableLine, Button } from './styles';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import { useAuth } from '../../hooks/AuthProvider';
 
 async function getInfo(url) {
-   console.log(url);
-   const bearer = localStorage.getItem('@Saude:token');
-   const response = await api.get(url, {
-      headers: {
-         Audivorization: `Bearer ${bearer}`,
-      },
-   });
-   console.log(response.data);
+   const response = await api.get(url);
    return response.data;
 }
 
 export default function Panel() {
-   const { data: noticies } = useSWR('/notices', getInfo);
+   const { user } = useAuth();
+   const { data: noticies } = useSWR(
+      user.type === 0 ? '/notices' : `/notices/?userid=${user.id}`,
+      getInfo,
+   );
 
    useEffect(() => {
       document.title = 'Painel de controle';
@@ -73,7 +71,7 @@ export default function Panel() {
                   </TableLine>
                   {noticies ? (
                      noticies.map((n) => (
-                        <TableLine>
+                        <TableLine key={n.id}>
                            <div id="noOverflow">{n.title}</div>
                            <div>{new Date(n.date).toLocaleDateString()}</div>
                            <div>{n.user.name}</div>
@@ -83,24 +81,19 @@ export default function Panel() {
                                     <FiSearch />
                                  </Button>
                               </Link>
-                              <Link to="#">
-                                 <Button
-                                    onClick={() => {
-                                       remove(n.id);
-                                    }}
-                                    isDelete
-                                 >
-                                    <FiX />
-                                 </Button>
-                              </Link>
+                              <Button
+                                 onClick={() => {
+                                    remove(n.id);
+                                 }}
+                                 isDelete
+                              >
+                                 <FiX />
+                              </Button>
                            </div>
                         </TableLine>
                      ))
                   ) : (
-                     <tr>
-                        <div> </div>
-                        <div> </div>
-                     </tr>
+                     <div> Não há notícias... </div>
                   )}
                </Table>
             </Container>

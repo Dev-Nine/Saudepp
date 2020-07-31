@@ -17,13 +17,7 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
 async function getInfo() {
-   const bearer = localStorage.getItem('@Saude:token');
-   const response = await api.get('/users', {
-      headers: {
-         Audivorization: `Bearer ${bearer}`,
-      },
-   });
-   console.log(response.data);
+   const response = await api.get('/users');
    return response.data;
 }
 
@@ -71,7 +65,7 @@ export default function Panel() {
                   </TableLine>
                   {users ? (
                      users.map((u) => (
-                        <TableLine>
+                        <TableLine key={u.id}>
                            <div>{u.name}</div>
                            <div>
                               <Link to="edit">
@@ -79,19 +73,14 @@ export default function Panel() {
                                     <FiSearch />
                                  </Button>
                               </Link>
-                              <Link to="#">
-                                 <Button onClick={() => remove(u.id)} isDelete>
-                                    <FiX />
-                                 </Button>
-                              </Link>
+                              <Button onClick={() => remove(u.id)} isDelete>
+                                 <FiX />
+                              </Button>
                            </div>
                         </TableLine>
                      ))
                   ) : (
-                     <tr>
-                        <div> </div>
-                        <div> </div>
-                     </tr>
+                     <div />
                   )}
                </Table>
             </Container>

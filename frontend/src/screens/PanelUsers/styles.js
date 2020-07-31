@@ -38,7 +38,7 @@ export const TableLine = styled.div`
       }
    }}
 
-   a + a {
+   a + a, a + button, button + a {
       margin-left: 8px;
    }
 

@@ -11,7 +11,7 @@ export default function CardGroup({ title, data }) {
          return (
             <ul>
                {data.map((d) => (
-                  <Card data={d} />
+                  <Card key={d.id} data={d} />
                ))}
             </ul>
          );

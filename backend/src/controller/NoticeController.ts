@@ -3,7 +3,6 @@ import { Notice } from '../model/Notice';
 import { Request, Response } from 'express';
 import { User, UserRole } from '../model/User';
 import { Tag } from '../model/Tag';
-import imgurApi, { config } from '../utils/imgurApi'
 import escape from 'pg-escape';
 import cloudinary from 'cloudinary'
 import cloudConfig from '../config/cloudinaryConfig'
@@ -70,9 +69,6 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 				.groupBy("notice.id")
 				.having('COUNT(notice.id) = :length', {length: tags.length})
 				.orderBy("id", "DESC");
-			
-			if(req.query["userid"])
-				queryBuilder.where(escape(`"user".id = %L`, `${req.query["userid"]}`));
 
 			const count = (await queryBuilder.getRawMany()).length;
 			res.header('X-Total-Count', String(count));
@@ -107,6 +103,9 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 			else if(req.query["tag"])
 				query = escape(`"Notice_tags".description ILIKE %L`, `%${req.query["tag"]}%`);
 			queryBuilder.where(query);
+
+			if(req.query["userid"])
+				queryBuilder.andWhere(escape(`"user".id = %L`, `${req.query["userid"]}`));
 
 			const count = await queryBuilder.getCount();
 			res.header('X-Total-Count', String(count));

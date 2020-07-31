@@ -26,10 +26,10 @@ export default function Home() {
             <Sobre>
                <p>
                   &emsp;A plataforma digital denominada Saúde++, visa atualizar
-                  e orientar os cidadãos da cidade de Presidente Epitácio,
+                  e orientar os cidadões do município de Presidente Epitácio,
                   trazendo dados e fatos verídicos em relação a pandemia do
-                  Coronavírus e entre outras doenças que continuam presentes na
-                  nossa sociedade, como a Dengue.
+                  Coronavírus e entre outras doenças que continuam presentes em
+                  nossa sociedade, como a Dengue, Sarampo, entre outras.
                </p>
                <Link to="/about">Saiba mais</Link>
             </Sobre>

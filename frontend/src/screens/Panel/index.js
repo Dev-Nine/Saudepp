@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import { MdPeopleOutline } from 'react-icons/md';
 import { RiPagesLine } from 'react-icons/ri';
@@ -12,11 +12,20 @@ import { Container } from './styles';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import PanelButton from '../../components/PanelButton';
+import { useAuth } from '../../hooks/AuthProvider';
 
 export default function Panel() {
+   const { user } = useAuth();
+
    useEffect(() => {
-      document.title = 'Painel de controle';
+      if (user && user.type === 0) {
+         document.title = 'Painel de controle';
+      }
    });
+
+   if (user && user.type !== 0) {
+      return <Redirect to="/panel/notices" />;
+   }
 
    return (
       <>

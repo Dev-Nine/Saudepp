@@ -84,15 +84,13 @@ export default function ListNotices() {
                      className="select-form"
                   >
                      <option value="">Selecione as categorias</option>
-                     {tags ? (
-                        tags.map((item) => (
-                           <option key={item.id} value={item.id}>
-                              {item.description}
-                           </option>
-                        ))
-                     ) : (
-                        <p>Carregando</p>
-                     )}
+                     {tags
+                        ? tags.map((item) => (
+                             <option key={item.id} value={item.id}>
+                                {item.description}
+                             </option>
+                          ))
+                        : 'Carregando'}
                   </select>
                </Search>
 

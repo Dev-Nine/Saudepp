@@ -13,7 +13,7 @@ const Route = ({ isPrivate = false, component: Component, ...rest }) => {
             ) : (
                <Redirect
                   to={{
-                     pathname: isPrivate ? '/signin' : '/',
+                     pathname: isPrivate ? '/login' : '/',
                      state: { from: location },
                   }}
                />

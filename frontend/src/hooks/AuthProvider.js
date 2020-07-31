@@ -44,6 +44,9 @@ const AuthProvider = ({ children }) => {
             user.imageUrl = `https://res.cloudinary.com/saudepp/image/upload/${user.imageId}.${user.imageType}`;
          }
 
+         delete user.imageId;
+         delete user.imageType;
+
          api.defaults.headers.authorization = `Bearer ${token}`;
          localStorage.setItem('@Saude:token', token);
          localStorage.setItem('@Saude:user', JSON.stringify(user));

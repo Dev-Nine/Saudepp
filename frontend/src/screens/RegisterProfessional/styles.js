@@ -57,9 +57,7 @@ export const Container = styled.div`
         }
 
         .avatar-selection img {
-            object-fit: cover;
-            width: 160px;
-            height: 160px;
+            max-height: 200px;
         }
     }
 `;

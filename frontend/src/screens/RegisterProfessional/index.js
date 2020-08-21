@@ -12,6 +12,7 @@ import {
 import * as Yup from 'yup';
 import { Form } from '@unform/web';
 import { useHistory } from 'react-router-dom';
+import ReactCrop from 'react-image-crop';
 
 import axios from 'axios';
 import { useEffect } from 'react';
@@ -25,6 +26,8 @@ import getValidationErros from '../../utils/getValidationErros';
 import { Container } from './styles';
 import api from '../../services/api';
 import setMap from '../../utils/registerMap';
+import getCroppedImage from '../../utils/getCroppedImage';
+import 'react-image-crop/dist/ReactCrop.css';
 
 export default function Reguster() {
     const history = useHistory();
@@ -37,7 +40,23 @@ export default function Reguster() {
     });
     const [selectedState, setSelectedState] = useState();
     const [states, setStates] = useState([]);
+
     const [file, setFile] = useState();
+    const [fileUrl, setFileUrl] = useState('');
+    const imgRef = useRef(null);
+
+    const [crop, setCrop] = useState({ aspect: 1, width: 50 });
+    const [finalCrop, setFinalCrop] = useState(null);
+
+    const [finalImage, setFinalImage] = useState(null);
+
+    const onImageCropLoad = (img) => {
+        imgRef.current = img;
+    };
+
+    useEffect(() => {
+        if (file) setFileUrl(URL.createObjectURL(file));
+    }, [file]);
 
     const handleSubmit = useCallback(
         async (data) => {
@@ -95,9 +114,9 @@ export default function Reguster() {
 
                 delete data.confirmPassword;
 
-                if (file) {
+                if (finalImage) {
                     const formData = new FormData();
-                    formData.append('image', file);
+                    formData.append('image', finalImage);
                     const res = await api.post('/images', formData);
                     const { imageId, imageType } = res.data;
                     data = {
@@ -121,7 +140,7 @@ export default function Reguster() {
                 }
             }
         },
-        [file, history, selectedRegister.test],
+        [finalImage, history, selectedRegister.test],
     );
 
     const handleRegisterChange = (event) => {
@@ -134,6 +153,14 @@ export default function Reguster() {
     const handleStateChange = (event) => {
         setSelectedState(event.target.value);
     };
+
+    useEffect(() => {
+        if (finalCrop && imgRef.current) {
+            getCroppedImage(imgRef.current, finalCrop, 'avatar').then((img) => {
+                setFinalImage(img);
+            });
+        }
+    }, [finalCrop]);
 
     useEffect(() => {
         axios
@@ -190,6 +217,7 @@ export default function Reguster() {
                     {selectedRegister.state && (
                         <Select
                             value={selectedState}
+                            onImageLoaded={onImageCropLoad}
                             onChange={handleStateChange}
                             name="registerState"
                             icon={FiMap}
@@ -216,12 +244,21 @@ export default function Reguster() {
                     />
                     <div className="avatar-selection">
                         <Dropzone setFile={setFile} />
-                        {file && (
-                            <img
-                                src={URL.createObjectURL(file)}
-                                alt="Avatar preview"
-                            />
-                        )}
+                        <ReactCrop
+                            src={fileUrl}
+                            crop={crop}
+                            onImageLoaded={onImageCropLoad}
+                            onChange={(c) => setCrop(c)}
+                            onComplete={(c) => setFinalCrop(c)}
+                        />
+                        <img
+                            src={
+                                finalImage
+                                    ? URL.createObjectURL(finalImage)
+                                    : null
+                            }
+                            alt="Preview"
+                        />
                     </div>
 
                     <button type="submit">Criar Conta</button>

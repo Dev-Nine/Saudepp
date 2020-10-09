@@ -27,6 +27,7 @@ import { Container } from './styles';
 import api from '../../services/api';
 import setMap from '../../utils/registerMap';
 import getCroppedImage from '../../utils/getCroppedImage';
+import resizeImage from '../../utils/resizeImage';
 import 'react-image-crop/dist/ReactCrop.css';
 
 export default function Reguster() {
@@ -44,14 +45,18 @@ export default function Reguster() {
     const [file, setFile] = useState();
     const [fileUrl, setFileUrl] = useState('');
     const imgRef = useRef(null);
+    const originalImgRef = useRef(null);
 
-    const [crop, setCrop] = useState({ aspect: 1, width: 50 });
+    const [crop, setCrop] = useState({ aspect: 1, width: 50, unit: '%' });
     const [finalCrop, setFinalCrop] = useState(null);
 
     const [finalImage, setFinalImage] = useState(null);
 
     const onImageCropLoad = (img) => {
+        const originalImage = new Image();
+        originalImage.src = fileUrl;
         imgRef.current = img;
+        originalImgRef.current = originalImage;
     };
 
     useEffect(() => {
@@ -156,8 +161,25 @@ export default function Reguster() {
 
     useEffect(() => {
         if (finalCrop && imgRef.current) {
-            getCroppedImage(imgRef.current, finalCrop, 'avatar').then((img) => {
-                setFinalImage(img);
+            getCroppedImage(
+                imgRef.current,
+                originalImgRef.current,
+                finalCrop,
+                'avatar',
+            ).then((img) => {
+                const resizedImage = new Image();
+                resizedImage.src = URL.createObjectURL(img);
+                resizedImage.onload = () => {
+                    if (resizedImage.height > 600) {
+                        resizeImage(resizedImage, 600, 'avatar_preview').then(
+                            (resized) => {
+                                setFinalImage(resized);
+                            },
+                        );
+                    } else {
+                        setFinalImage(img);
+                    }
+                };
             });
         }
     }, [finalCrop]);
@@ -217,7 +239,6 @@ export default function Reguster() {
                     {selectedRegister.state && (
                         <Select
                             value={selectedState}
-                            onImageLoaded={onImageCropLoad}
                             onChange={handleStateChange}
                             name="registerState"
                             icon={FiMap}
@@ -251,14 +272,13 @@ export default function Reguster() {
                             onChange={(c) => setCrop(c)}
                             onComplete={(c) => setFinalCrop(c)}
                         />
-                        <img
-                            src={
-                                finalImage
-                                    ? URL.createObjectURL(finalImage)
-                                    : null
-                            }
-                            alt="Preview"
-                        />
+                        {finalImage ? (
+                            <img
+                                src={URL.createObjectURL(finalImage)}
+                                alt="Preview"
+                                style={{ height: 200 }}
+                            />
+                        ) : null}
                     </div>
 
                     <button type="submit">Criar Conta</button>

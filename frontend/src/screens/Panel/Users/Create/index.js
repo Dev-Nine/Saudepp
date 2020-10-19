@@ -263,23 +263,29 @@ export default function Create() {
                         placeholder="Confirme sua Senha"
                         type="password"
                     />
-                    <div className="avatar-selection">
-                        <Dropzone setFile={setFile} />
-                        <ReactCrop
-                            src={fileUrl}
-                            crop={crop}
-                            onImageLoaded={onImageCropLoad}
-                            onChange={(c) => setCrop(c)}
-                            onComplete={(c) => setFinalCrop(c)}
-                        />
-                        {finalImage ? (
-                            <img
-                                src={URL.createObjectURL(finalImage)}
-                                alt="Preview"
-                                style={{ height: 200 }}
+                    {file ? (
+                        <div className="avatar-selection">
+                            <ReactCrop
+                                src={fileUrl}
+                                crop={crop}
+                                onImageLoaded={onImageCropLoad}
+                                onChange={(c) => setCrop(c)}
+                                onComplete={(c) => setFinalCrop(c)}
                             />
-                        ) : null}
-                    </div>
+                            {finalImage ? (
+                                <div className="preview">
+                                    <h3>Prévia</h3>
+                                    <img
+                                        src={URL.createObjectURL(finalImage)}
+                                        alt="Preview"
+                                        style={{ height: 150 }}
+                                    />
+                                </div>
+                            ) : null}
+                        </div>
+                    ) : null}
+
+                    <Dropzone setFile={setFile} />
 
                     <button type="submit">Criar Conta</button>
                     {/* <div>

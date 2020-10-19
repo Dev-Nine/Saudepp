@@ -8,6 +8,10 @@ export const Container = styled.div`
     align-items: center;
     padding: 10px;
 
+    h3 {
+        color: var(--main-text-color);
+    }
+
     form {
         border-radius: 20px;
         background: #f4f4f4;
@@ -56,8 +60,19 @@ export const Container = styled.div`
             color: ${shade(0.1, '#77C6FF')};
         }
 
+        .avatar-selection {
+            display: flex;
+            margin-bottom: 16px;
+            justify-content: space-around;
+        }
+
+        .avatar-selection::first-child {
+            margin-right: 8px;
+        }
+
         .avatar-selection img {
             max-height: 200px;
+            border: 2px solid var(--main-light-color);
         }
     }
 `;

@@ -169,6 +169,25 @@ export async function getAll(req : Request, res : Response, next) : Promise<Resp
 	}
 }
 
+export async function getProfessionals(req : Request, res : Response, next) : Promise<Response> {
+	try {
+		const queryBuilder = getRepository(User)
+		.createQueryBuilder("user")
+		.where("type = '2'");
+
+		const count = await queryBuilder.getCount();
+		res.header('X-Total-Count', String(count));
+
+		const users = await queryBuilder.getMany();
+
+		if(users && users.length > 0)
+			return res.json(users);
+		return next(new NotFound);
+	} catch(err) {
+		return next(err);
+	}
+}
+
 export async function getByPk(req : Request, res : Response, next) : Promise<Response> {
 	const user = await getRepository(User).findOne(req.params["id"], {
 		select: [
@@ -255,7 +274,7 @@ export async function edit(req : Request, res : Response, next): Promise<Respons
 		throw new NotFound;
 	}catch(err){
 		return next(err);
-}
+	}
 }
 
 export async function remove(req : Request, res : Response, next): Promise<Response> {

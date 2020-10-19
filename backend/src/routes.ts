@@ -35,6 +35,7 @@ routes.get("/users",
 routes.get("/users/:id",
 	verifyAuthentication,
 	userController.getByPk);
+routes.get("/professionals", userController.getProfessionals);
 routes.post("/users",
 	verifyAuthentication, 
 	celebrate({

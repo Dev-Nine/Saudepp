@@ -16,13 +16,13 @@ import api from '../../../services/api';
 import Header from '../../../components/Header';
 import Footer from '../../../components/Footer';
 
-async function getInfo() {
-    const response = await api.get('/users');
+async function getInfo(url) {
+    const response = await api.get(url);
     return response.data;
 }
 
 export default function Panel() {
-    const { data: users, mutate } = useSWR('/users', getInfo);
+    const { data: users, mutate } = useSWR('/professionals', getInfo);
 
     useEffect(() => {
         document.title = 'Painel de controle';

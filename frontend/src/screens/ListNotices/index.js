@@ -27,7 +27,7 @@ const fetchNoticesByTags = async (url, selTags) => {
 };
 
 export default function ListNotices() {
-    const { data: tags } = useAxios('/tags');
+    const { data: tags, mutate } = useAxios('/tags');
     const [selectedTags, setSelectedTags] = useState([]);
     const { data: notices, error } = useSWR(
         [
@@ -44,7 +44,7 @@ export default function ListNotices() {
     });
 
     let message = <p>Carregando</p>;
-    if (error) message = <p>Noticias não encontradas</p>;
+    if (error) message = <p>Notícias não encontradas</p>;
 
     const handleSelectCategory = useCallback(
         (id) => {
@@ -58,17 +58,28 @@ export default function ListNotices() {
             });
 
             setSelectedTags([...selectedTags, selectedTag]);
+
+            const updatedTags = tags.filter((tag) => tag.id !== id);
+            mutate(updatedTags, false);
         },
-        [selectedTags, tags],
+        [mutate, selectedTags, tags],
     );
 
     const handleDeleteCategory = useCallback(
         (id) => {
             id = Number(id);
-            const newTags = selectedTags.filter((t) => t.id !== id);
+            const updatedTags = tags;
+            const newTags = selectedTags.filter((t) => {
+                if (t.id === id) {
+                    updatedTags.push(t);
+                    return false;
+                }
+                return true;
+            });
             setSelectedTags(newTags);
+            mutate(updatedTags, false);
         },
-        [selectedTags],
+        [mutate, selectedTags, tags],
     );
 
     return (

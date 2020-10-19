@@ -16,21 +16,21 @@ import ReactCrop from 'react-image-crop';
 
 import axios from 'axios';
 import { useEffect } from 'react';
-import Input from '../../components/Input';
-import Select from '../../components/Select';
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
-import Dropzone from '../../components/Dropzone';
+import Input from '../../../../components/Input';
+import Select from '../../../../components/Select';
+import Header from '../../../../components/Header';
+import Footer from '../../../../components/Footer';
+import Dropzone from '../../../../components/Dropzone';
 
-import getValidationErros from '../../utils/getValidationErros';
+import getValidationErros from '../../../../utils/getValidationErros';
 import { Container } from './styles';
-import api from '../../services/api';
-import setMap from '../../utils/registerMap';
-import getCroppedImage from '../../utils/getCroppedImage';
-import resizeImage from '../../utils/resizeImage';
+import api from '../../../../services/api';
+import setMap from '../../../../utils/registerMap';
+import getCroppedImage from '../../../../utils/getCroppedImage';
+import resizeImage from '../../../../utils/resizeImage';
 import 'react-image-crop/dist/ReactCrop.css';
 
-export default function Reguster() {
+export default function Create() {
     const history = useHistory();
     const registerMap = setMap();
 

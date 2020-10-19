@@ -11,10 +11,10 @@ import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
 import { Container, Table, TableLine, Button } from './styles';
 
-import api from '../../services/api';
+import api from '../../../services/api';
 
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
+import Header from '../../../components/Header';
+import Footer from '../../../components/Footer';
 
 async function getInfo() {
     const response = await api.get('/users');

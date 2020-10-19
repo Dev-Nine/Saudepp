@@ -1,38 +1,38 @@
-import CreateNoticies from './CreateNoticies';
 import Home from './Home';
-import ListNotices from './ListNotices';
-import SignIn from './SignIn';
-import NotFound from './NotFound';
-import NoticeDisplay from './NoticeDisplay';
-import RegisterProfessional from './RegisterProfessional';
 import Faq from './Faq';
-import About from './About';
 import FaqCovid19 from './Faq/Subpages/Covid19';
-import Panel from './Panel';
-import PanelTags from './PanelTags';
-import PanelUsers from './PanelUsers';
-import PanelNoticies from './PanelNoticies';
-import Tags from './Tags';
+import About from './About';
+import NotFound from './NotFound';
 
-import ForgotPassword from './ForgotPassword';
+import ListNotices from './ListNotices';
+import NoticeDisplay from './ListNotices/NoticeDisplay';
+
+import SignIn from './Login';
+import ForgotPassword from './Login/ForgotPassword';
 import ResetPassword from './ResetPassword';
 
+import Panel from './Panel';
+import PanelTags from './Panel/Tags';
+import PanelUsers from './Panel/Users';
+import CreateUser from './Panel/Users/Create';
+import PanelNotices from './Panel/Notices';
+import CreateNotice from './Panel/Notices/Create';
+
 export {
-   CreateNoticies,
-   Home,
-   ListNotices,
-   SignIn,
-   NotFound,
-   NoticeDisplay,
-   RegisterProfessional,
-   Faq,
-   FaqCovid19,
-   About,
-   Panel,
-   PanelTags,
-   PanelUsers,
-   PanelNoticies,
-   Tags,
-   ForgotPassword,
-   ResetPassword,
+    Home,
+    ListNotices,
+    SignIn,
+    NotFound,
+    NoticeDisplay,
+    CreateUser,
+    Faq,
+    FaqCovid19,
+    About,
+    Panel,
+    PanelTags,
+    PanelUsers,
+    PanelNotices,
+    CreateNotice,
+    ForgotPassword,
+    ResetPassword,
 };

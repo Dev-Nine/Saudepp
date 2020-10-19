@@ -136,7 +136,7 @@ export default function Reguster() {
                     type: 2,
                 });
 
-                history.push('/panel/users');
+                history.push('/panel/users/');
             } catch (err) {
                 if (err instanceof Yup.ValidationError) {
                     const erros = getValidationErros(err);

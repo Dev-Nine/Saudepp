@@ -19,7 +19,7 @@ async function loadTags() {
 }
 
 export default function PanelTags() {
-    const { data: tags } = useSWR('/tags', loadTags);
+    const { data: tags, mutate } = useSWR('/tags', loadTags);
 
     function remove(id) {
         confirmAlert({
@@ -29,7 +29,12 @@ export default function PanelTags() {
                 {
                     label: 'Sim',
                     onClick: async () => {
-                        await api.delete(`/tags/${id}`);
+                        api.delete(`/tags/${id}`);
+                        const updatedTags = tags.filter((tag) => {
+                            if (tag.id !== id) return true;
+                            return false;
+                        });
+                        mutate(updatedTags, false);
                     },
                 },
                 {

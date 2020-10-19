@@ -23,7 +23,7 @@ async function getInfo(url) {
 
 export default function Panel() {
     const { user } = useAuth();
-    const { data: noticies } = useSWR(
+    const { data: notices, mutate } = useSWR(
         user.type === 0 ? '/notices' : `/notices/?userid=${user.id}`,
         getInfo,
     );
@@ -40,7 +40,12 @@ export default function Panel() {
                 {
                     label: 'Sim',
                     onClick: async () => {
-                        await api.delete(`/notices/${id}`);
+                        api.delete(`/notices/${id}`);
+                        const updatedNotices = notices.filter((notice) => {
+                            if (notice.id !== id) return true;
+                            return false;
+                        });
+                        mutate(updatedNotices, false);
                     },
                 },
                 {
@@ -69,8 +74,8 @@ export default function Panel() {
                                 </Link>
                             </div>
                         </TableLine>
-                        {noticies ? (
-                            noticies.map((n) => (
+                        {notices ? (
+                            notices.map((n) => (
                                 <TableLine key={n.id}>
                                     <div id="noOverflow">{n.title}</div>
                                     <div>

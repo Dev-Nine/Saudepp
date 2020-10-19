@@ -17,76 +17,85 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
 async function getInfo() {
-   const response = await api.get('/users');
-   return response.data;
+    const response = await api.get('/users');
+    return response.data;
 }
 
 export default function Panel() {
-   const { data: users } = useSWR('/users', getInfo);
+    const { data: users, mutate } = useSWR('/users', getInfo);
 
-   useEffect(() => {
-      document.title = 'Painel de controle';
-   });
+    useEffect(() => {
+        document.title = 'Painel de controle';
+    });
 
-   function remove(id) {
-      confirmAlert({
-         title: 'Confirme a exclusão',
-         message: 'Você tem certeza que deseja excluir?',
-         buttons: [
-            {
-               label: 'Sim',
-               onClick: async () => {
-                  await api.delete(`/users/${id}`);
-               },
-            },
-            {
-               label: 'Não',
-            },
-         ],
-      });
-   }
+    function remove(id) {
+        confirmAlert({
+            title: 'Confirme a exclusão',
+            message: 'Você tem certeza que deseja excluir?',
+            buttons: [
+                {
+                    label: 'Sim',
+                    onClick: async () => {
+                        // sem await, delete otimista
+                        api.delete(`/users/${id}`);
+                        const updatedUsers = users.filter((user) => {
+                            if (user.id !== id) return true;
+                            return false;
+                        });
+                        mutate(updatedUsers, false);
+                    },
+                },
+                {
+                    label: 'Não',
+                },
+            ],
+        });
+    }
 
-   return (
-      <>
-         <Header />
-         <div className="main">
-            <Container>
-               <h1>Painel de usuarios</h1>
-               <Table>
-                  <TableLine isHeader>
-                     <div> Name </div>
-                     <div>
-                        <Link to="register">
-                           <Button isCreate>
-                              <FiPlus />
-                           </Button>
-                        </Link>
-                     </div>
-                  </TableLine>
-                  {users ? (
-                     users.map((u) => (
-                        <TableLine key={u.id}>
-                           <div>{u.name}</div>
-                           <div>
-                              <Link to="edit">
-                                 <Button>
-                                    <FiSearch />
-                                 </Button>
-                              </Link>
-                              <Button onClick={() => remove(u.id)} isDelete>
-                                 <FiX />
-                              </Button>
-                           </div>
+    return (
+        <>
+            <Header />
+            <div className="main">
+                <Container>
+                    <h1>Painel de usuarios</h1>
+                    <Table>
+                        <TableLine isHeader>
+                            <div> Name </div>
+                            <div>
+                                <Link to="register">
+                                    <Button isCreate>
+                                        <FiPlus />
+                                    </Button>
+                                </Link>
+                            </div>
                         </TableLine>
-                     ))
-                  ) : (
-                     <div />
-                  )}
-               </Table>
-            </Container>
-         </div>
+                        {users ? (
+                            users.map((u) => (
+                                <TableLine key={u.id}>
+                                    <div>{u.name}</div>
+                                    <div>
+                                        <Link to="edit">
+                                            <Button>
+                                                <FiSearch />
+                                            </Button>
+                                        </Link>
+                                        <Button
+                                            onClick={() => remove(u.id)}
+                                            isDelete
+                                        >
+                                            <FiX />
+                                        </Button>
+                                    </div>
+                                </TableLine>
+                            ))
+                        ) : (
+                            <div />
+                        )}
+                    </Table>
+                </Container>
+            </div>
 
-         <Footer />
-      </>
-   );
+            <Footer />
+        </>
+    );
 }

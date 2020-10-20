@@ -1,4 +1,5 @@
 /* eslint-disable consistent-return */
+import { shade } from 'polished';
 import styled, { css } from 'styled-components';
 
 export const Container = styled.div`
@@ -13,6 +14,34 @@ export const Container = styled.div`
         text-decoration: none;
         color: inherit;
     }
+`;
+
+export const ModalContent = styled.div`
+    width: 100%;
+
+    form {
+        border-radius: 20px;
+        background: #f4f4f4;
+        width: 500px;
+        max-width: 650px;
+        padding: 25px;
+        text-align: center;
+
+        button {
+            flex: 1;
+            width: 100%;
+            padding: 16px;
+            border-radius: 5px;
+            background: #77c6ff;
+            font-weight: bold;
+            margin-top: 16px;
+            border: 0;
+            color: #fff;
+            transition: background-color 0.4s;
+            &:hover {
+                background-color: ${shade(0.1, '#77C6FF')};
+            }
+        }
 `;
 
 export const Table = styled.div`

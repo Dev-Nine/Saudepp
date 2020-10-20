@@ -266,6 +266,7 @@ export default function Create() {
                     {file ? (
                         <div className="avatar-selection">
                             <ReactCrop
+                                className="crop"
                                 src={fileUrl}
                                 crop={crop}
                                 onImageLoaded={onImageCropLoad}

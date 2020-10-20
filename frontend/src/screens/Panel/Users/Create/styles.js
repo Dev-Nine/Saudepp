@@ -62,17 +62,22 @@ export const Container = styled.div`
 
         .avatar-selection {
             display: flex;
-            margin-bottom: 16px;
+            gap: 8px;
+            margin-bottom: 8px;
             justify-content: space-around;
-        }
-
-        .avatar-selection::first-child {
-            margin-right: 8px;
         }
 
         .avatar-selection img {
             max-height: 200px;
+        }
+
+        .crop,
+        .preview img {
             border: 2px solid var(--main-light-color);
+        }
+
+        .preview img {
+            border-radius: 50%;
         }
     }
 `;

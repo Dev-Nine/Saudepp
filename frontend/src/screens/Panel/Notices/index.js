@@ -67,7 +67,7 @@ export default function Panel() {
                             <div> Data </div>
                             <div> Autor </div>
                             <div>
-                                <Link to="register">
+                                <Link to="create">
                                     <Button isCreate>
                                         <FiPlus />
                                     </Button>

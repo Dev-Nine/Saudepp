@@ -3,10 +3,10 @@ import { useField } from '@unform/core';
 import { FiAlertCircle } from 'react-icons/fi';
 import { Container, Error } from './styles';
 
-const Select = ({ name, onChange, icon: Icon, ...rest }) => {
+const Select = ({ name, onChange, icon: Icon, defaultValue, ...rest }) => {
     const selectRef = useRef(null);
     const [isFocused, setIsFocused] = useState(false);
-    const { fieldName, defaultValue, registerField, error } = useField(name);
+    const { fieldName, registerField, error } = useField(name);
 
     const handleInputBlur = useCallback(() => {
         setIsFocused(false);
@@ -22,7 +22,7 @@ const Select = ({ name, onChange, icon: Icon, ...rest }) => {
                 return ref.value;
             },
         });
-    }, [fieldName, registerField, rest.isMulti]);
+    }, [defaultValue, fieldName, registerField, rest.isMulti]);
 
     return (
         <Container isErrored={!!error} isFocused={isFocused}>
@@ -31,7 +31,7 @@ const Select = ({ name, onChange, icon: Icon, ...rest }) => {
                 onFocus={handleInputFocus}
                 onBlur={handleInputBlur}
                 name={name}
-                value={defaultValue}
+                defaultValue={defaultValue}
                 ref={selectRef}
                 onChange={onChange}
             >

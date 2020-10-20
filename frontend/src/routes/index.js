@@ -19,6 +19,7 @@ import {
     CreateNotice,
     ForgotPassword,
     ResetPassword,
+    EditUser,
 } from '../screens';
 
 export default function Routes() {
@@ -38,7 +39,7 @@ export default function Routes() {
                 component={PanelNotices}
             />
             <Route
-                path="/panel/notices/register"
+                path="/panel/notices/create"
                 isPrivate
                 exact
                 component={CreateNotice}
@@ -47,10 +48,16 @@ export default function Routes() {
             <Route path="/panel/tags" isPrivate exact component={PanelTags} />
             <Route path="/panel/users" isPrivate exact component={PanelUsers} />
             <Route
-                path="/panel/users/register"
+                path="/panel/users/create"
                 isPrivate
                 exact
                 component={CreateUser}
+            />
+            <Route
+                path="/panel/users/edit/:userId"
+                isPrivate
+                exact
+                component={EditUser}
             />
 
             <Route path="/forgot-password" exact component={ForgotPassword} />

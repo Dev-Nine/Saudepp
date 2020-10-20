@@ -15,6 +15,7 @@ import Panel from './Panel';
 import PanelTags from './Panel/Tags';
 import PanelUsers from './Panel/Users';
 import CreateUser from './Panel/Users/Create';
+import EditUser from './Panel/Users/Edit';
 import PanelNotices from './Panel/Notices';
 import CreateNotice from './Panel/Notices/Create';
 
@@ -35,4 +36,5 @@ export {
     CreateNotice,
     ForgotPassword,
     ResetPassword,
+    EditUser,
 };

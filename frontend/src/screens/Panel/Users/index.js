@@ -62,7 +62,7 @@ export default function Panel() {
                         <TableLine isHeader>
                             <div> Name </div>
                             <div>
-                                <Link to="register">
+                                <Link to="create">
                                     <Button isCreate>
                                         <FiPlus />
                                     </Button>
@@ -74,7 +74,7 @@ export default function Panel() {
                                 <TableLine key={u.id}>
                                     <div>{u.name}</div>
                                     <div>
-                                        <Link to="edit">
+                                        <Link to={`edit/${u.id}`}>
                                             <Button>
                                                 <FiSearch />
                                             </Button>

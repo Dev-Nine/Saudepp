@@ -1,9 +1,9 @@
 const modalStyle = {
     content: {
         right: 'auto',
-        width: '70%',
+        width: '60%',
         height: '80vh',
-        left: '15%',
+        left: '20%',
         top: '10%',
         padding: '8px',
         position: 'absolute',

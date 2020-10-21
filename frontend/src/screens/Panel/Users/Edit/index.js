@@ -8,12 +8,13 @@ import {
     FiKey,
     FiMap,
     FiClipboard,
+    FiX,
 } from 'react-icons/fi';
 import * as Yup from 'yup';
 import { Form } from '@unform/web';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 import ReactCrop from 'react-image-crop';
-import { Redirect } from 'react-router-dom';
+// import { Redirect } from 'react-router-dom';
 
 import axios from 'axios';
 import { useEffect } from 'react';
@@ -29,19 +30,18 @@ import modalStyle from '../../../../styles/ModalStyle';
 
 import getValidationErros from '../../../../utils/getValidationErros';
 import { Container } from './styles';
+import { ModalForm } from '../../../../styles/ModalContainerStyles';
 import api from '../../../../services/api';
 import setMap from '../../../../utils/registerMap';
 import getCroppedImage from '../../../../utils/getCroppedImage';
 import resizeImage from '../../../../utils/resizeImage';
 import 'react-image-crop/dist/ReactCrop.css';
-import { useAuth } from '../../../../hooks/AuthProvider';
-
-Modal.setAppElement(document.getElementById('root'));
+// import { useAuth } from '../../../../hooks/AuthProvider';
 
 export default function Edit(props) {
-    const history = useHistory();
+    // const history = useHistory();
     const registerMap = setMap();
-    const { user: authUser } = useAuth();
+    // const { user: authUser } = useAuth();
 
     // modal
     const [passwordModal, setPasswordModal] = useState(false);
@@ -123,11 +123,11 @@ export default function Edit(props) {
 
                 delete data.confirmPassword;
 
-                console.log(user);
-                console.log(data);
+                // console.log(user);
+                // console.log(data);
 
                 try {
-                    const res = await api.put(
+                    await api.put(
                         `/users/${user.id}`,
                         { ...data },
                         {
@@ -137,7 +137,7 @@ export default function Edit(props) {
                         },
                     );
                 } catch (err) {
-                    console.log({ err });
+                    // console.log({ err });
                 }
 
                 // history.push('/panel/users/');
@@ -192,7 +192,7 @@ export default function Edit(props) {
 
                 delete data.confirmPassword;
 
-                console.log(data);
+                // console.log(data);
 
                 if (finalImage) {
                     const formData = new FormData();
@@ -284,33 +284,34 @@ export default function Edit(props) {
                     contentLabel="Example Modal"
                     style={modalStyle}
                 >
-                    <Container>
+                    <ModalForm>
+                        <button
+                            type="button"
+                            onClick={() => setPasswordModal(false)}
+                            className="close"
+                        >
+                            <FiX size="32px" />
+                        </button>
                         <Form
                             ref={passwordFormRef}
                             onSubmit={handlePasswordChange}
                         >
+                            <h1>Alterar senha</h1>
                             <Input
                                 icon={FiLock}
                                 name="password"
-                                placeholder="Sua Senha"
+                                placeholder="Senha"
                                 type="password"
                             />
                             <Input
                                 icon={FiLock}
                                 name="confirmPassword"
-                                placeholder="Confirme sua Senha"
+                                placeholder="Confirme a Senha"
                                 type="password"
                             />
                             <button type="submit">Alterar senha</button>
-
-                            <button
-                                type="button"
-                                onClick={() => setPasswordModal(false)}
-                            >
-                                close
-                            </button>
                         </Form>
-                    </Container>
+                    </ModalForm>
                 </Modal>
 
                 <Form ref={formRef} onSubmit={handleSubmit}>
@@ -408,7 +409,7 @@ export default function Edit(props) {
 
                             <Dropzone setFile={setFile} />
 
-                            <button type="submit">Criar Conta</button>
+                            <button type="submit">Salvar mudanças</button>
                         </>
                     )}
                 </Form>

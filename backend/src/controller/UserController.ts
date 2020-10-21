@@ -50,7 +50,7 @@ export async function validateCreate(req : Request): Promise<void>{
 export async function validateEdit(req : Request): Promise<void>{
 	const editedUser : User = await getRepository(User).findOne(req.params.id);
 
-	// o proprio usuario pode alterar sua conta, entrentanto:
+	// o proprio usuario pode alterar sua conta, entretanto:
 	// nao pode alterar o seu tipo
 	if(req.user.id == req.params.id){
 		if(req.body.type && req.body.type != req.user.type)
@@ -63,17 +63,13 @@ export async function validateEdit(req : Request): Promise<void>{
 		throw new Forbidden;
 
 	// se for um usuario adm logado
-	if(req.body.type) {
-		if(req.user.type == UserRole.ADMIN){
-			// profissional nao é editado, mas sim criado
-			if(req.body.type == UserRole.PROFISSIONAL || editedUser.type == UserRole.PROFISSIONAL)
-				throw new Forbidden;
-			// else if(editedUser.type == UserRole.MODERADOR || editedUser.type == UserRole.COMUM)
-			//     return 200;
-		}
+	if(req.user.type == UserRole.ADMIN){
+		// profissional nao é editado, mas sim criado
+		if(req.body.type == UserRole.PROFISSIONAL)
+			throw new Forbidden;
+		// else if(editedUser.type == UserRole.MODERADOR || editedUser.type == UserRole.COMUM)
+		//     return 200;
 	}
-		
-	throw new Forbidden;
 }
 
 export async function validateDelete(req : Request): Promise<void>{

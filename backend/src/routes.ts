@@ -74,7 +74,8 @@ routes.put("/users/:id",
 			imageType: Joi.when('imageId', { is: Joi.exist().not(null), then: Joi.string().max(5).required().allow(null) }),
 			registerType: Joi.string().valid('crp', 'crf', 'crfa', 'cro', 'coren', 'crm', 'acm', 'ace', 'cpf'),
 			register: registerValidations,
-			registerState: Joi.when('registerType', { is: Joi.string().valid('crp', 'crf', 'crfa', 'cro', 'coren', 'crm'), 
+			registerState: Joi.when('registerType', { 
+				is: ['crp', 'crf', 'crfa', 'cro', 'coren', 'crm'], 
 				then: Joi.string().required().regex(/^[A-Z]{2}$/),
 				otherwise: null
 			})

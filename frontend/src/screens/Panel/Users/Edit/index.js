@@ -25,6 +25,8 @@ import Header from '../../../../components/Header';
 import Footer from '../../../../components/Footer';
 import Dropzone from '../../../../components/Dropzone';
 
+import modalStyle from '../../../../styles/ModalStyle';
+
 import getValidationErros from '../../../../utils/getValidationErros';
 import { Container } from './styles';
 import api from '../../../../services/api';
@@ -56,8 +58,9 @@ export default function Edit(props) {
     const [selectedState, setSelectedState] = useState();
     const [states, setStates] = useState([]);
 
+    const token = localStorage.getItem('@Saude:token');
+
     useEffect(() => {
-        const token = localStorage.getItem('@Saude:token');
         api.get(`/users/${userId}`, {
             headers: {
                 authorization: `Bearer ${token}`,
@@ -66,9 +69,10 @@ export default function Edit(props) {
             setUser(response.data);
             setIsLoading(false);
         });
-    }, [setIsLoading, userId]);
+    }, [setIsLoading, token, userId]);
 
     const formRef = useRef(null);
+    const passwordFormRef = useRef(null);
 
     const [file, setFile] = useState();
     const [fileUrl, setFileUrl] = useState('');
@@ -90,6 +94,62 @@ export default function Edit(props) {
     useEffect(() => {
         if (file) setFileUrl(URL.createObjectURL(file));
     }, [file]);
+
+    const handlePasswordChange = useCallback(
+        async (data) => {
+            try {
+                passwordFormRef.current.setErrors({});
+                const schema = Yup.object().shape({
+                    password: Yup.string()
+                        .matches(
+                            /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9!@#$%&_-]{6,30})$/,
+                            'São permitidos somente estes caracteres especiais: !, @, #, $, &, %, _ e -',
+                        )
+                        .matches(
+                            /^(?=.*[0-9])(?=.*[a-zA-Z])(^.{6,30})$/,
+                            'Uma senha deve conter ao menos uma letra e um número',
+                        )
+                        .max(20, 'Uma senha deve ter no máximo 20 caracteres')
+                        .min(6, 'Uma senha deve ter ao menos 6 caracteres'),
+                    confirmPassword: Yup.string().oneOf(
+                        [Yup.ref('password'), null],
+                        'As senhas não coincidem',
+                    ),
+                });
+
+                await schema.validate(data, {
+                    abortEarly: false,
+                });
+
+                delete data.confirmPassword;
+
+                console.log(user);
+                console.log(data);
+
+                try {
+                    const res = await api.put(
+                        `/users/${user.id}`,
+                        { ...data },
+                        {
+                            headers: {
+                                authorization: `Bearer ${token}`,
+                            },
+                        },
+                    );
+                } catch (err) {
+                    console.log({ err });
+                }
+
+                // history.push('/panel/users/');
+            } catch (err) {
+                if (err instanceof Yup.ValidationError) {
+                    const erros = getValidationErros(err);
+                    passwordFormRef.current.setErrors(erros);
+                }
+            }
+        },
+        [token, user],
+    );
 
     const handleSubmit = useCallback(
         async (data) => {
@@ -218,17 +278,42 @@ export default function Edit(props) {
         <>
             <Header />
             <Container>
+                <Modal
+                    isOpen={passwordModal}
+                    onRequestClose={() => setPasswordModal(false)}
+                    contentLabel="Example Modal"
+                    style={modalStyle}
+                >
+                    <Container>
+                        <Form
+                            ref={passwordFormRef}
+                            onSubmit={handlePasswordChange}
+                        >
+                            <Input
+                                icon={FiLock}
+                                name="password"
+                                placeholder="Sua Senha"
+                                type="password"
+                            />
+                            <Input
+                                icon={FiLock}
+                                name="confirmPassword"
+                                placeholder="Confirme sua Senha"
+                                type="password"
+                            />
+                            <button type="submit">Alterar senha</button>
+
+                            <button
+                                type="button"
+                                onClick={() => setPasswordModal(false)}
+                            >
+                                close
+                            </button>
+                        </Form>
+                    </Container>
+                </Modal>
+
                 <Form ref={formRef} onSubmit={handleSubmit}>
-                    <Modal
-                        isOpen={passwordModal}
-                        onRequestClose={() => setPasswordModal(false)}
-                        contentLabel="Example Modal"
-                    >
-                        <button onClick={() => setPasswordModal(false)}>
-                            close
-                        </button>
-                        <form />
-                    </Modal>
                     <h1>Alterar usuário</h1>
                     {isLoading ? (
                         <p>Carregando usuário...</p>
@@ -318,7 +403,7 @@ export default function Edit(props) {
                                     setPasswordModal(true);
                                 }}
                             >
-                                Open Modal
+                                Alterar senha
                             </button>
 
                             <Dropzone setFile={setFile} />

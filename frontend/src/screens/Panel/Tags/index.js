@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useRef, useCallback, useState } from 'react';
 
 import Modal from 'react-modal';
 
@@ -9,8 +9,10 @@ import { Link } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert'; // Import element
 
 import { Form } from '@unform/core';
-import { Container, Table, TableLine, Button, ModalContent } from './styles';
+import { Container, Table, TableLine, Button } from './styles';
+import ModalStyle from '../../../styles/ModalStyle';
 
+import getValidationErros from '../../../utils/getValidationErros';
 import api from '../../../services/api';
 
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
@@ -25,17 +27,6 @@ async function loadTags() {
 }
 
 Modal.setAppElement('#root');
-
-const customStyles = {
-    content: {
-        top: '50%',
-        left: '50%',
-        right: 'auto',
-        bottom: 'auto',
-        marginRight: '-50%',
-        transform: 'translate(-50%, -50%)',
-    },
-};
 
 export default function PanelTags() {
     const { data: tags, mutate } = useSWR('/tags', loadTags);
@@ -73,21 +64,31 @@ export default function PanelTags() {
         setIsOpen(false);
     }
 
-    async function handleSubmit(data) {
+    const handleSubmit = useCallback(async (data) => {
         console.log('aaa');
-        formRef.current.setErrors({});
-        const schema = Yup.object().shape({
-            description: Yup.string().required('Informe uma descrição válida'),
-        });
+        try {
+            formRef.current.setErrors({});
+            const schema = Yup.object().shape({
+                description: Yup.string().required(
+                    'Informe uma descrição válida',
+                ),
+            });
 
-        await schema.validate(data, {
-            abortEarly: false,
-        });
+            await schema.validate(data, {
+                abortEarly: false,
+            });
 
-        const res = await api.post('tags', data);
-        console.log(res);
-        closeModal();
-    }
+            const res = await api.post('tags', data);
+            console.log(res);
+            closeModal();
+        } catch (err) {
+            if (err instanceof Yup.ValidationError) {
+                const erros = getValidationErros(err);
+                formRef.current.setErrors(erros);
+            }
+            console.log(err);
+        }
+    }, []);
 
     return (
         <>
@@ -130,26 +131,23 @@ export default function PanelTags() {
                             <TableLine />
                         )}
                     </Table>
-                </Container>
-                <Modal
-                    isOpen={modalIsOpen}
-                    onRequestClose={closeModal}
-                    style={customStyles}
-                    contentLabel="Exemplo"
-                >
-                    <h2>Cadastrar Tags</h2>
-                    <button type="button" onClick={closeModal}>
-                        X
-                    </button>
-                    <ModalContent>
+                    <Modal
+                        isOpen={modalIsOpen}
+                        onRequestClose={() => closeModal()}
+                        style={ModalStyle}
+                        contentLabel="AAAAAAAAAAAAAAAAAAAAAAAAAA"
+                    >
+                        <h2>Cadastrar Tags</h2>
+                        <button type="button" onClick={() => closeModal()}>
+                            X
+                        </button>
                         <Form ref={formRef} onSubmit={handleSubmit}>
                             <Input name="description" placeholder="Descrição" />
                             <button type="submit">Cadastrar</button>
                         </Form>
-                    </ModalContent>
-                </Modal>
+                    </Modal>
+                </Container>
             </div>
-
             <Footer />
         </>
     );

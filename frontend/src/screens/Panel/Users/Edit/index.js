@@ -288,26 +288,29 @@ export default function Edit(props) {
                     >
                         <FiX size="32px" />
                     </button>
+
                     <Form ref={passwordFormRef} onSubmit={handlePasswordChange}>
-                        <h1>Alterar senha</h1>
-                        <Input
-                            icon={FiLock}
-                            name="password"
-                            placeholder="Senha"
-                            type="password"
-                        />
-                        <Input
-                            icon={FiLock}
-                            name="confirmPassword"
-                            placeholder="Confirme a Senha"
-                            type="password"
-                        />
-                        <div>
-                            <button type="submit">Alterar senha</button>
-                            <button type="button" className="alert">
-                                Cancelar
-                            </button>
-                        </div>
+                        <FormStyle>
+                            <h1>Alterar senha</h1>
+                            <Input
+                                icon={FiLock}
+                                name="password"
+                                placeholder="Senha"
+                                type="password"
+                            />
+                            <Input
+                                icon={FiLock}
+                                name="confirmPassword"
+                                placeholder="Confirme a Senha"
+                                type="password"
+                            />
+                            <div>
+                                <button type="submit">Alterar senha</button>
+                                <button type="button" className="alert">
+                                    Cancelar
+                                </button>
+                            </div>
+                        </FormStyle>
                     </Form>
                 </Modal>
 

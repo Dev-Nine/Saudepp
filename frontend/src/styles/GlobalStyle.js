@@ -74,6 +74,15 @@ export default createGlobalStyle`
       background: white;
       border: 2px solid var(--main-contrast-color);
       overflow-y: auto;
+
+      button.close {
+         display: flex;
+         align-items: center;
+         position: absolute;
+         background: none;
+         top: 24px;
+         right: 24px;
+      }
    }
 
    @media only screen and (max-width: 1099px){

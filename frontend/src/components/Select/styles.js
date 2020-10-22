@@ -6,6 +6,7 @@ export const Container = styled.div`
    position: relative;
    border-radius: 6px;
    width: 100%;
+   overflow-x: hidden;
    border: 2px solid #FFF;
    color: #939393;
    display: flex;

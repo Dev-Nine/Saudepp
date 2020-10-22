@@ -2,13 +2,14 @@ import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Container } from './styles';
 
-const Dropzone = ({ setFile }) => {
+const Dropzone = ({ setFile, callback }) => {
     const onDrop = useCallback(
         (files) => {
             const file = files[0];
             setFile(file);
+            if (callback) callback();
         },
-        [setFile],
+        [callback, setFile],
     );
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,

@@ -26,16 +26,14 @@ import Header from '../../../../components/Header';
 import Footer from '../../../../components/Footer';
 import Dropzone from '../../../../components/Dropzone';
 
-import modalStyle from '../../../../styles/ModalStyle';
-
 import getValidationErros from '../../../../utils/getValidationErros';
 import { Container } from './styles';
-import { ModalForm } from '../../../../styles/ModalContainerStyles';
 import api from '../../../../services/api';
 import setMap from '../../../../utils/registerMap';
 import getCroppedImage from '../../../../utils/getCroppedImage';
 import resizeImage from '../../../../utils/resizeImage';
 import 'react-image-crop/dist/ReactCrop.css';
+import { FormStyle } from '../../../../styles/FormStyle';
 // import { useAuth } from '../../../../hooks/AuthProvider';
 
 export default function Edit(props) {
@@ -281,137 +279,141 @@ export default function Edit(props) {
                 <Modal
                     isOpen={passwordModal}
                     onRequestClose={() => setPasswordModal(false)}
-                    contentLabel="Example Modal"
-                    style={modalStyle}
+                    className="modal"
                 >
-                    <ModalForm>
-                        <button
-                            type="button"
-                            onClick={() => setPasswordModal(false)}
-                            className="close"
-                        >
-                            <FiX size="32px" />
-                        </button>
-                        <Form
-                            ref={passwordFormRef}
-                            onSubmit={handlePasswordChange}
-                        >
-                            <h1>Alterar senha</h1>
-                            <Input
-                                icon={FiLock}
-                                name="password"
-                                placeholder="Senha"
-                                type="password"
-                            />
-                            <Input
-                                icon={FiLock}
-                                name="confirmPassword"
-                                placeholder="Confirme a Senha"
-                                type="password"
-                            />
+                    <button
+                        type="button"
+                        onClick={() => setPasswordModal(false)}
+                        className="close"
+                    >
+                        <FiX size="32px" />
+                    </button>
+                    <Form ref={passwordFormRef} onSubmit={handlePasswordChange}>
+                        <h1>Alterar senha</h1>
+                        <Input
+                            icon={FiLock}
+                            name="password"
+                            placeholder="Senha"
+                            type="password"
+                        />
+                        <Input
+                            icon={FiLock}
+                            name="confirmPassword"
+                            placeholder="Confirme a Senha"
+                            type="password"
+                        />
+                        <div>
                             <button type="submit">Alterar senha</button>
-                        </Form>
-                    </ModalForm>
+                            <button type="button" className="alert">
+                                Cancelar
+                            </button>
+                        </div>
+                    </Form>
                 </Modal>
 
                 <Form ref={formRef} onSubmit={handleSubmit}>
-                    <h1>Alterar usuário</h1>
-                    {isLoading ? (
-                        <p>Carregando usuário...</p>
-                    ) : (
-                        <>
-                            <Input
-                                icon={FiMail}
-                                name="email"
-                                placeholder="Email"
-                                defaultValue={`${user.email}`}
-                            />
-                            <Input
-                                icon={FiUser}
-                                name="name"
-                                placeholder="Nome Completo"
-                                defaultValue={`${user.name}`}
-                            />
-                            <Input
-                                icon={FiKey}
-                                name="username"
-                                placeholder="Nome de Usuário"
-                                defaultValue={`${user.username}`}
-                            />
-                            <Select
-                                defaultValue={user.registerType}
-                                onChange={handleRegisterChange}
-                                name="registerType"
-                                icon={FiClipboard}
-                            >
-                                {[...registerMap.keys()].map((value) => (
-                                    <option value={value} key={value}>
-                                        {registerMap.get(value).name}
-                                    </option>
-                                ))}
-                            </Select>
-                            {selectedRegister.index !== 'default' && (
+                    <FormStyle>
+                        <h1>Alterar usuário</h1>
+                        {isLoading ? (
+                            <p>Carregando usuário...</p>
+                        ) : (
+                            <>
                                 <Input
-                                    icon={FiCreditCard}
-                                    name="register"
-                                    defaultValue={`${user.register}`}
-                                    placeholder={selectedRegister.register}
-                                    mask={selectedRegister.mask}
+                                    icon={FiMail}
+                                    name="email"
+                                    placeholder="Email"
+                                    defaultValue={`${user.email}`}
                                 />
-                            )}
-                            {selectedRegister.state && (
+                                <Input
+                                    icon={FiUser}
+                                    name="name"
+                                    placeholder="Nome Completo"
+                                    defaultValue={`${user.name}`}
+                                />
+                                <Input
+                                    icon={FiKey}
+                                    name="username"
+                                    placeholder="Nome de Usuário"
+                                    defaultValue={`${user.username}`}
+                                />
                                 <Select
-                                    value={selectedState}
-                                    onChange={handleStateChange}
-                                    name="registerState"
-                                    icon={FiMap}
+                                    defaultValue={user.registerType}
+                                    onChange={handleRegisterChange}
+                                    name="registerType"
+                                    icon={FiClipboard}
                                 >
-                                    {states.map(({ name, initials }) => (
-                                        <option value={initials} key={initials}>
-                                            {`${initials} - ${name}`}
+                                    {[...registerMap.keys()].map((value) => (
+                                        <option value={value} key={value}>
+                                            {registerMap.get(value).name}
                                         </option>
                                     ))}
                                 </Select>
-                            )}
-
-                            {file ? (
-                                <div className="avatar-selection">
-                                    <ReactCrop
-                                        className="crop"
-                                        src={fileUrl}
-                                        crop={crop}
-                                        onImageLoaded={onImageCropLoad}
-                                        onChange={(c) => setCrop(c)}
-                                        onComplete={(c) => setFinalCrop(c)}
+                                {selectedRegister.index !== 'default' && (
+                                    <Input
+                                        icon={FiCreditCard}
+                                        name="register"
+                                        defaultValue={`${user.register}`}
+                                        placeholder={selectedRegister.register}
+                                        mask={selectedRegister.mask}
                                     />
-                                    {finalImage ? (
-                                        <div className="preview">
-                                            <h3>Prévia</h3>
-                                            <img
-                                                src={URL.createObjectURL(
-                                                    finalImage,
-                                                )}
-                                                alt="Preview"
-                                                style={{ height: 150 }}
-                                            />
-                                        </div>
-                                    ) : null}
-                                </div>
-                            ) : null}
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setPasswordModal(true);
-                                }}
-                            >
-                                Alterar senha
-                            </button>
+                                )}
+                                {selectedRegister.state && (
+                                    <Select
+                                        value={selectedState}
+                                        onChange={handleStateChange}
+                                        name="registerState"
+                                        icon={FiMap}
+                                    >
+                                        {states.map(({ name, initials }) => (
+                                            <option
+                                                value={initials}
+                                                key={initials}
+                                            >
+                                                {`${initials} - ${name}`}
+                                            </option>
+                                        ))}
+                                    </Select>
+                                )}
 
-                            <Dropzone setFile={setFile} />
+                                {file ? (
+                                    <div className="avatar-selection">
+                                        <ReactCrop
+                                            className="crop"
+                                            src={fileUrl}
+                                            crop={crop}
+                                            onImageLoaded={onImageCropLoad}
+                                            onChange={(c) => setCrop(c)}
+                                            onComplete={(c) => setFinalCrop(c)}
+                                        />
+                                        {finalImage ? (
+                                            <div className="preview">
+                                                <h3>Prévia</h3>
+                                                <img
+                                                    src={URL.createObjectURL(
+                                                        finalImage,
+                                                    )}
+                                                    alt="Preview"
+                                                    style={{ height: 150 }}
+                                                />
+                                            </div>
+                                        ) : null}
+                                    </div>
+                                ) : null}
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setPasswordModal(true);
+                                    }}
+                                >
+                                    Alterar senha
+                                </button>
 
-                            <button type="submit">Salvar mudanças</button>
-                        </>
-                    )}
+                                <Dropzone setFile={setFile} />
+
+                                <button type="submit">Salvar mudanças</button>
+                            </>
+                        )}
+                    </FormStyle>
                 </Form>
             </Container>
             <Footer />

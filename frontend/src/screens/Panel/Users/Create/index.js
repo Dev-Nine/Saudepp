@@ -25,12 +25,12 @@ import Dropzone from '../../../../components/Dropzone';
 
 import getValidationErros from '../../../../utils/getValidationErros';
 import { Container } from './styles';
+import { FormStyle } from '../../../../styles/FormStyle';
 import api from '../../../../services/api';
 import setMap from '../../../../utils/registerMap';
 import getCroppedImage from '../../../../utils/getCroppedImage';
 import resizeImage from '../../../../utils/resizeImage';
 import 'react-image-crop/dist/ReactCrop.css';
-import { ModalChangeAvatar } from '../../../../styles/ModalContainerStyles';
 
 export default function Create() {
     const history = useHistory();
@@ -54,6 +54,7 @@ export default function Create() {
     const [crop, setCrop] = useState();
     const [finalCrop, setFinalCrop] = useState(null);
 
+    const [previewImage, setPreviewImage] = useState(null);
     const [finalImage, setFinalImage] = useState(null);
 
     const onImageCropLoad = (img) => {
@@ -172,8 +173,17 @@ export default function Create() {
     };
 
     const cancelImage = () => {
-        setFinalImage(null);
+        setPreviewImage(null);
         setImageModal(false);
+    };
+
+    const saveImage = () => {
+        setFinalImage(previewImage);
+        cancelImage();
+    };
+
+    const deleteImage = () => {
+        setFinalImage(null);
     };
 
     useEffect(() => {
@@ -190,11 +200,11 @@ export default function Create() {
                     if (resizedImage.height > 600) {
                         resizeImage(resizedImage, 600, 'avatar_preview').then(
                             (resized) => {
-                                setFinalImage(resized);
+                                setPreviewImage(resized);
                             },
                         );
                     } else {
-                        setFinalImage(img);
+                        setPreviewImage(img);
                     }
                 };
             });
@@ -225,8 +235,8 @@ export default function Create() {
                     className="modal"
                     onRequestClose={cancelImage}
                 >
-                    <ModalChangeAvatar>
-                        <Form>
+                    <Form>
+                        <FormStyle>
                             <div className="avatar-selection">
                                 <div>
                                     <ReactCrop
@@ -239,22 +249,19 @@ export default function Create() {
                                     />
                                 </div>
 
-                                {finalImage ? (
+                                {previewImage ? (
                                     <div className="preview">
                                         <h3>Prévia</h3>
                                         <img
                                             src={URL.createObjectURL(
-                                                finalImage,
+                                                previewImage,
                                             )}
                                             alt="Preview"
                                         />
                                     </div>
                                 ) : null}
                             </div>
-                            <button
-                                type="button"
-                                onClick={() => setImageModal(false)}
-                            >
+                            <button type="button" onClick={saveImage}>
                                 Salvar
                             </button>
                             <button
@@ -264,87 +271,97 @@ export default function Create() {
                             >
                                 Cancelar
                             </button>
-                        </Form>
-                    </ModalChangeAvatar>
+                        </FormStyle>
+                    </Form>
                 </Modal>
                 <Form ref={formRef} onSubmit={handleSubmit}>
-                    <h1>Cadastrar Novo Usuário</h1>
-                    <Input icon={FiMail} name="email" placeholder="Email" />
-                    <Input
-                        icon={FiUser}
-                        name="name"
-                        placeholder="Nome Completo"
-                    />
-                    <Input
-                        icon={FiKey}
-                        name="username"
-                        placeholder="Nome de Usuário"
-                    />
-                    <Select
-                        value={selectedRegister.index}
-                        onChange={handleRegisterChange}
-                        name="registerType"
-                        icon={FiClipboard}
-                    >
-                        {[...registerMap.keys()].map((value) => (
-                            <option value={value} key={value}>
-                                {registerMap.get(value).name}
-                            </option>
-                        ))}
-                    </Select>
-                    {selectedRegister.index !== 'default' && (
+                    <FormStyle>
+                        <h1>Cadastrar Novo Usuário</h1>
+                        <Input icon={FiMail} name="email" placeholder="Email" />
                         <Input
-                            icon={FiCreditCard}
-                            name="register"
-                            placeholder={selectedRegister.register}
-                            mask={selectedRegister.mask}
+                            icon={FiUser}
+                            name="name"
+                            placeholder="Nome Completo"
                         />
-                    )}
-                    {selectedRegister.state && (
+                        <Input
+                            icon={FiKey}
+                            name="username"
+                            placeholder="Nome de Usuário"
+                        />
                         <Select
-                            value={selectedState}
-                            onChange={handleStateChange}
-                            name="registerState"
-                            icon={FiMap}
+                            value={selectedRegister.index}
+                            onChange={handleRegisterChange}
+                            name="registerType"
+                            icon={FiClipboard}
                         >
-                            {states.map(({ name, initials }) => (
-                                <option value={initials} key={initials}>
-                                    {`${initials} - ${name}`}
+                            {[...registerMap.keys()].map((value) => (
+                                <option value={value} key={value}>
+                                    {registerMap.get(value).name}
                                 </option>
                             ))}
                         </Select>
-                    )}
+                        {selectedRegister.index !== 'default' && (
+                            <Input
+                                icon={FiCreditCard}
+                                name="register"
+                                placeholder={selectedRegister.register}
+                                mask={selectedRegister.mask}
+                            />
+                        )}
+                        {selectedRegister.state && (
+                            <Select
+                                value={selectedState}
+                                onChange={handleStateChange}
+                                name="registerState"
+                                icon={FiMap}
+                            >
+                                {states.map(({ name, initials }) => (
+                                    <option value={initials} key={initials}>
+                                        {`${initials} - ${name}`}
+                                    </option>
+                                ))}
+                            </Select>
+                        )}
 
-                    <Input
-                        icon={FiLock}
-                        name="password"
-                        placeholder="Sua Senha"
-                        type="password"
-                    />
-                    <Input
-                        icon={FiLock}
-                        name="confirmPassword"
-                        placeholder="Confirme sua Senha"
-                        type="password"
-                    />
-
-                    <div className="avatar-change">
-                        {finalImage ? (
-                            <div className="avatar">
-                                <h3>Foto de perfil</h3>
-                                <img
-                                    src={URL.createObjectURL(finalImage)}
-                                    alt="Avatar"
-                                />
-                            </div>
-                        ) : null}
-                        <Dropzone
-                            setFile={setFile}
-                            callback={() => setImageModal(true)}
+                        <Input
+                            icon={FiLock}
+                            name="password"
+                            placeholder="Sua Senha"
+                            type="password"
                         />
-                    </div>
+                        <Input
+                            icon={FiLock}
+                            name="confirmPassword"
+                            placeholder="Confirme sua Senha"
+                            type="password"
+                        />
 
-                    <button type="submit">Criar Conta</button>
+                        <div className="avatar-change">
+                            {finalImage ? (
+                                <div className="avatar">
+                                    <h3>Foto de perfil</h3>
+                                    <img
+                                        src={URL.createObjectURL(finalImage)}
+                                        alt="Avatar"
+                                    />
+                                    <button
+                                        type="button"
+                                        className="noborder"
+                                        onClick={deleteImage}
+                                    >
+                                        Remover foto
+                                    </button>
+                                </div>
+                            ) : null}
+                            <Dropzone
+                                setFile={setFile}
+                                callback={() => setImageModal(true)}
+                            />
+                        </div>
+
+                        <button type="submit">Criar Conta</button>
+                    </FormStyle>
+
                     {/* <div>
                   <a href="asd">Já tem uma conta? Entre.</a>
                </div> */}

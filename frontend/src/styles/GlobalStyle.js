@@ -62,6 +62,8 @@ export default createGlobalStyle`
    }
 
    .modal {
+      display: flex;
+      justify-content: center;
       right: auto;
       width: 60%;
       height: 80vh;

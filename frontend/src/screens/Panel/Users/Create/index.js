@@ -13,6 +13,7 @@ import * as Yup from 'yup';
 import { Form } from '@unform/web';
 import { useHistory } from 'react-router-dom';
 import ReactCrop from 'react-image-crop';
+import Modal from 'react-modal';
 
 import axios from 'axios';
 import { useEffect } from 'react';
@@ -29,12 +30,15 @@ import setMap from '../../../../utils/registerMap';
 import getCroppedImage from '../../../../utils/getCroppedImage';
 import resizeImage from '../../../../utils/resizeImage';
 import 'react-image-crop/dist/ReactCrop.css';
+import { ModalChangeAvatar } from '../../../../styles/ModalContainerStyles';
 
 export default function Create() {
     const history = useHistory();
     const registerMap = setMap();
 
     const formRef = useRef(null);
+
+    const [imageModal, setImageModal] = useState(false);
 
     const [selectedRegister, setSelectedRegister] = useState({
         index: 'default',
@@ -47,16 +51,24 @@ export default function Create() {
     const imgRef = useRef(null);
     const originalImgRef = useRef(null);
 
-    const [crop, setCrop] = useState({ aspect: 1, width: 50, unit: '%' });
+    const [crop, setCrop] = useState();
     const [finalCrop, setFinalCrop] = useState(null);
 
     const [finalImage, setFinalImage] = useState(null);
 
     const onImageCropLoad = (img) => {
+        setCrop({
+            aspect: 1,
+            width: 30,
+            unit: '%',
+            x: 0,
+            y: 0,
+        });
         const originalImage = new Image();
         originalImage.src = fileUrl;
         imgRef.current = img;
         originalImgRef.current = originalImage;
+        return false;
     };
 
     useEffect(() => {
@@ -159,6 +171,11 @@ export default function Create() {
         setSelectedState(event.target.value);
     };
 
+    const cancelImage = () => {
+        setFinalImage(null);
+        setImageModal(false);
+    };
+
     useEffect(() => {
         if (finalCrop && imgRef.current) {
             getCroppedImage(
@@ -203,6 +220,53 @@ export default function Create() {
         <>
             <Header />
             <Container>
+                <Modal
+                    isOpen={imageModal}
+                    className="modal"
+                    onRequestClose={cancelImage}
+                >
+                    <ModalChangeAvatar>
+                        <Form>
+                            <div className="avatar-selection">
+                                <div>
+                                    <ReactCrop
+                                        className="crop"
+                                        src={fileUrl}
+                                        crop={crop}
+                                        onImageLoaded={onImageCropLoad}
+                                        onChange={(c) => setCrop(c)}
+                                        onComplete={(c) => setFinalCrop(c)}
+                                    />
+                                </div>
+
+                                {finalImage ? (
+                                    <div className="preview">
+                                        <h3>Prévia</h3>
+                                        <img
+                                            src={URL.createObjectURL(
+                                                finalImage,
+                                            )}
+                                            alt="Preview"
+                                        />
+                                    </div>
+                                ) : null}
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setImageModal(false)}
+                            >
+                                Salvar
+                            </button>
+                            <button
+                                type="button"
+                                className="alert"
+                                onClick={cancelImage}
+                            >
+                                Cancelar
+                            </button>
+                        </Form>
+                    </ModalChangeAvatar>
+                </Modal>
                 <Form ref={formRef} onSubmit={handleSubmit}>
                     <h1>Cadastrar Novo Usuário</h1>
                     <Input icon={FiMail} name="email" placeholder="Email" />
@@ -263,30 +327,22 @@ export default function Create() {
                         placeholder="Confirme sua Senha"
                         type="password"
                     />
-                    {file ? (
-                        <div className="avatar-selection">
-                            <ReactCrop
-                                className="crop"
-                                src={fileUrl}
-                                crop={crop}
-                                onImageLoaded={onImageCropLoad}
-                                onChange={(c) => setCrop(c)}
-                                onComplete={(c) => setFinalCrop(c)}
-                            />
-                            {finalImage ? (
-                                <div className="preview">
-                                    <h3>Prévia</h3>
-                                    <img
-                                        src={URL.createObjectURL(finalImage)}
-                                        alt="Preview"
-                                        style={{ height: 150 }}
-                                    />
-                                </div>
-                            ) : null}
-                        </div>
-                    ) : null}
 
-                    <Dropzone setFile={setFile} />
+                    <div className="avatar-change">
+                        {finalImage ? (
+                            <div className="avatar">
+                                <h3>Foto de perfil</h3>
+                                <img
+                                    src={URL.createObjectURL(finalImage)}
+                                    alt="Avatar"
+                                />
+                            </div>
+                        ) : null}
+                        <Dropzone
+                            setFile={setFile}
+                            callback={() => setImageModal(true)}
+                        />
+                    </div>
 
                     <button type="submit">Criar Conta</button>
                     {/* <div>

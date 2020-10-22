@@ -4,7 +4,7 @@ export const FormStyle = styled.div`
     border-radius: 20px;
     background: #f4f4f4;
     max-width: 480px;
-    width: 90vw;
+    width: 80vw;
     padding: 25px;
     text-align: center;
 

@@ -25,16 +25,20 @@ export const Container = styled.div`
             width: 100%;
             padding: 16px;
             border-radius: 5px;
-            background: #77c6ff;
+            background: var(--main-basic-color);
             font-weight: bold;
             margin-top: 16px;
             border: 0;
             color: #fff;
-            transition: background-color 0.4s;
+            transition: filter 0.4s;
 
             &:hover {
-                background-color: ${shade(0.1, '#77C6FF')};
+                filter: brightness(90%);
             }
+        }
+
+        button.alert {
+            background: var(--main-alert-color);
         }
 
         h1 {
@@ -60,24 +64,16 @@ export const Container = styled.div`
             color: ${shade(0.1, '#77C6FF')};
         }
 
-        .avatar-selection {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 8px;
-            justify-content: space-around;
-        }
-
-        .avatar-selection img {
-            max-height: 200px;
-        }
-
-        .crop,
-        .preview img {
+        .avatar img {
             border: 2px solid var(--main-light-color);
+            border-radius: 50%;
+            height: 160px;
         }
 
-        .preview img {
-            border-radius: 50%;
+        .avatar-change {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
         }
     }
 `;

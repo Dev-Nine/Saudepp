@@ -10,7 +10,6 @@ import { confirmAlert } from 'react-confirm-alert'; // Import element
 
 import { Form } from '@unform/core';
 import { Container, Table, TableLine, Button } from './styles';
-import ModalStyle from '../../../styles/ModalStyle';
 
 import getValidationErros from '../../../utils/getValidationErros';
 import api from '../../../services/api';
@@ -134,8 +133,8 @@ export default function PanelTags() {
                     <Modal
                         isOpen={modalIsOpen}
                         onRequestClose={() => closeModal()}
-                        style={ModalStyle}
                         contentLabel="AAAAAAAAAAAAAAAAAAAAAAAAAA"
+                        className="modal"
                     >
                         <h2>Cadastrar Tags</h2>
                         <button type="button" onClick={() => closeModal()}>

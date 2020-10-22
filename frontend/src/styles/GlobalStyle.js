@@ -9,6 +9,7 @@ export default createGlobalStyle`
       --main-text-color: #303030;
       --main-contrast-color: #eaeaea;
 
+      --main-basic-color: #77c6ff;
       --main-alert-color: #ff7777;
       --main-success-color: #7aff77;
 
@@ -60,9 +61,29 @@ export default createGlobalStyle`
       padding: 32px 40px;
    }
 
+   .modal {
+      right: auto;
+      width: 60%;
+      height: 80vh;
+      left: 20%;
+      top: 10%;
+      padding: 8px;
+      position: absolute;
+      background: white;
+      border: 2px solid var(--main-contrast-color);
+      overflow-y: auto;
+   }
+
    @media only screen and (max-width: 1099px){
       .main {
          padding: 16px;
+      }
+
+      .modal {
+         width: 90%;
+         top: 5%;
+         height: 90vh;
+         left: 5%;
       }
    }
 `;

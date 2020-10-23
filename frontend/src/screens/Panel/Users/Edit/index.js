@@ -19,6 +19,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import Modal from 'react-modal';
 
+import { Redirect } from 'react-router-dom';
 import Input from '../../../../components/Input';
 import Select from '../../../../components/Select';
 import Header from '../../../../components/Header';
@@ -32,11 +33,12 @@ import registerMap from '../../../../utils/registerMap';
 import 'react-image-crop/dist/ReactCrop.css';
 import { FormStyle } from '../../../../styles/FormStyle';
 import AvatarChangeModal from '../../../../components/AvatarChangeModal';
+import { useAuth } from '../../../../hooks/AuthProvider';
 // import { useAuth } from '../../../../hooks/AuthProvider';
 
 export default function Edit(props) {
     // const history = useHistory();
-    // const { user: authUser } = useAuth();
+    const { user: authUser } = useAuth();
 
     // modal
     const [passwordModal, setPasswordModal] = useState(false);
@@ -72,7 +74,7 @@ export default function Edit(props) {
             if (response.data.registerState)
                 setSelectedState(response.data.registerState);
         });
-    }, [selectedState, setIsLoading, token, userId]);
+    }, [authUser.id, selectedState, setIsLoading, token, userId]);
 
     const formRef = useRef(null);
     const passwordFormRef = useRef(null);
@@ -254,7 +256,7 @@ export default function Edit(props) {
             );
     }, []);
 
-    return (
+    return Number(userId) === authUser.id || authUser.type === 0 ? (
         <>
             <Header />
             <Container>
@@ -423,5 +425,7 @@ export default function Edit(props) {
             </Container>
             <Footer />
         </>
+    ) : (
+        <Redirect to="/" />
     );
 }

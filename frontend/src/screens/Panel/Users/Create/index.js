@@ -25,13 +25,12 @@ import getValidationErros from '../../../../utils/getValidationErros';
 import { Container } from './styles';
 import { FormStyle } from '../../../../styles/FormStyle';
 import api from '../../../../services/api';
-import setMap from '../../../../utils/registerMap';
+import registerMap from '../../../../utils/registerMap';
 import 'react-image-crop/dist/ReactCrop.css';
 import AvatarChangeModal from '../../../../components/AvatarChangeModal';
 
 export default function Create() {
     const history = useHistory();
-    const registerMap = setMap();
 
     const formRef = useRef(null);
 

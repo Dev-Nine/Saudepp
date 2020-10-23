@@ -35,6 +35,7 @@ export default function Create() {
     const formRef = useRef(null);
 
     const [imageModal, setImageModal] = useState(false);
+    const [redirectMessage, setRedirectMessage] = useState('');
 
     const [selectedRegister, setSelectedRegister] = useState({
         index: 'default',
@@ -128,7 +129,12 @@ export default function Create() {
                     type: 2,
                 });
 
-                history.push('/panel/users/');
+                setRedirectMessage(
+                    'Profissional criado com sucesso! Redirecionando...',
+                );
+                setTimeout(() => {
+                    history.push('/panel/users/');
+                }, 3000);
             } catch (err) {
                 if (err instanceof Yup.ValidationError) {
                     const erros = getValidationErros(err);
@@ -260,7 +266,7 @@ export default function Create() {
                                 callback={() => setImageModal(true)}
                             />
                         </div>
-
+                        <p>{redirectMessage}</p>
                         <button type="submit">Criar Conta</button>
                     </FormStyle>
 

@@ -12,8 +12,6 @@ import {
 import * as Yup from 'yup';
 import { Form } from '@unform/web';
 import { useHistory } from 'react-router-dom';
-import ReactCrop from 'react-image-crop';
-import Modal from 'react-modal';
 
 import axios from 'axios';
 import { useEffect } from 'react';
@@ -28,9 +26,8 @@ import { Container } from './styles';
 import { FormStyle } from '../../../../styles/FormStyle';
 import api from '../../../../services/api';
 import setMap from '../../../../utils/registerMap';
-import getCroppedImage from '../../../../utils/getCroppedImage';
-import resizeImage from '../../../../utils/resizeImage';
 import 'react-image-crop/dist/ReactCrop.css';
+import AvatarChangeModal from '../../../../components/AvatarChangeModal';
 
 export default function Create() {
     const history = useHistory();
@@ -48,28 +45,11 @@ export default function Create() {
 
     const [file, setFile] = useState();
     const [fileUrl, setFileUrl] = useState('');
-    const imgRef = useRef(null);
-    const originalImgRef = useRef(null);
 
-    const [crop, setCrop] = useState();
-    const [finalCrop, setFinalCrop] = useState(null);
-
-    const [previewImage, setPreviewImage] = useState(null);
     const [finalImage, setFinalImage] = useState(null);
 
-    const onImageCropLoad = (img) => {
-        setCrop({
-            aspect: 1,
-            width: 30,
-            unit: '%',
-            x: 0,
-            y: 0,
-        });
-        const originalImage = new Image();
-        originalImage.src = fileUrl;
-        imgRef.current = img;
-        originalImgRef.current = originalImage;
-        return false;
+    const deleteImage = () => {
+        setFinalImage(null);
     };
 
     useEffect(() => {
@@ -172,45 +152,6 @@ export default function Create() {
         setSelectedState(event.target.value);
     };
 
-    const cancelImage = () => {
-        setPreviewImage(null);
-        setImageModal(false);
-    };
-
-    const saveImage = () => {
-        setFinalImage(previewImage);
-        cancelImage();
-    };
-
-    const deleteImage = () => {
-        setFinalImage(null);
-    };
-
-    useEffect(() => {
-        if (finalCrop && imgRef.current) {
-            getCroppedImage(
-                imgRef.current,
-                originalImgRef.current,
-                finalCrop,
-                'avatar',
-            ).then((img) => {
-                const resizedImage = new Image();
-                resizedImage.src = URL.createObjectURL(img);
-                resizedImage.onload = () => {
-                    if (resizedImage.height > 600) {
-                        resizeImage(resizedImage, 600, 'avatar_preview').then(
-                            (resized) => {
-                                setPreviewImage(resized);
-                            },
-                        );
-                    } else {
-                        setPreviewImage(img);
-                    }
-                };
-            });
-        }
-    }, [finalCrop]);
-
     useEffect(() => {
         axios
             .get(
@@ -230,50 +171,12 @@ export default function Create() {
         <>
             <Header />
             <Container>
-                <Modal
-                    isOpen={imageModal}
-                    className="modal"
-                    onRequestClose={cancelImage}
-                >
-                    <Form>
-                        <FormStyle>
-                            <div className="avatar-selection">
-                                <div>
-                                    <ReactCrop
-                                        className="crop"
-                                        src={fileUrl}
-                                        crop={crop}
-                                        onImageLoaded={onImageCropLoad}
-                                        onChange={(c) => setCrop(c)}
-                                        onComplete={(c) => setFinalCrop(c)}
-                                    />
-                                </div>
-
-                                {previewImage ? (
-                                    <div className="preview">
-                                        <h3>Prévia</h3>
-                                        <img
-                                            src={URL.createObjectURL(
-                                                previewImage,
-                                            )}
-                                            alt="Preview"
-                                        />
-                                    </div>
-                                ) : null}
-                            </div>
-                            <button type="button" onClick={saveImage}>
-                                Salvar
-                            </button>
-                            <button
-                                type="button"
-                                className="alert"
-                                onClick={cancelImage}
-                            >
-                                Cancelar
-                            </button>
-                        </FormStyle>
-                    </Form>
-                </Modal>
+                <AvatarChangeModal
+                    setFinalImage={setFinalImage}
+                    isModalOpen={imageModal}
+                    setIsModalOpen={setImageModal}
+                    imageUrl={fileUrl}
+                />
                 <Form ref={formRef} onSubmit={handleSubmit}>
                     <FormStyle>
                         <h1>Cadastrar Novo Usuário</h1>

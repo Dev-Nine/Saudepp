@@ -13,7 +13,6 @@ import {
 import * as Yup from 'yup';
 import { Form } from '@unform/web';
 // import { useHistory } from 'react-router-dom';
-import ReactCrop from 'react-image-crop';
 // import { Redirect } from 'react-router-dom';
 
 import axios from 'axios';
@@ -29,20 +28,19 @@ import Dropzone from '../../../../components/Dropzone';
 import getValidationErros from '../../../../utils/getValidationErros';
 import { Container } from './styles';
 import api from '../../../../services/api';
-import setMap from '../../../../utils/registerMap';
-import getCroppedImage from '../../../../utils/getCroppedImage';
-import resizeImage from '../../../../utils/resizeImage';
+import registerMap from '../../../../utils/registerMap';
 import 'react-image-crop/dist/ReactCrop.css';
 import { FormStyle } from '../../../../styles/FormStyle';
+import AvatarChangeModal from '../../../../components/AvatarChangeModal';
 // import { useAuth } from '../../../../hooks/AuthProvider';
 
 export default function Edit(props) {
     // const history = useHistory();
-    const registerMap = setMap();
     // const { user: authUser } = useAuth();
 
     // modal
     const [passwordModal, setPasswordModal] = useState(false);
+    const [imageModal, setImageModal] = useState(false);
 
     const { computedMatch } = props;
     const { params } = computedMatch;
@@ -64,29 +62,30 @@ export default function Edit(props) {
                 authorization: `Bearer ${token}`,
             },
         }).then((response) => {
+            const registerDetails = registerMap.get(response.data.registerType);
             setUser(response.data);
             setIsLoading(false);
+            setSelectedRegister({
+                index: response.data.registerType,
+                ...registerDetails,
+            });
+            if (response.data.registerState)
+                setSelectedState(response.data.registerState);
         });
-    }, [setIsLoading, token, userId]);
+    }, [selectedState, setIsLoading, token, userId]);
 
     const formRef = useRef(null);
     const passwordFormRef = useRef(null);
 
     const [file, setFile] = useState();
     const [fileUrl, setFileUrl] = useState('');
-    const imgRef = useRef(null);
-    const originalImgRef = useRef(null);
-
-    const [crop, setCrop] = useState({ aspect: 1, width: 50, unit: '%' });
-    const [finalCrop, setFinalCrop] = useState(null);
 
     const [finalImage, setFinalImage] = useState(null);
+    const [removeAvatar, setRemoveAvatar] = useState(false);
 
-    const onImageCropLoad = (img) => {
-        const originalImage = new Image();
-        originalImage.src = fileUrl;
-        imgRef.current = img;
-        originalImgRef.current = originalImage;
+    const deleteImage = () => {
+        setFinalImage(null);
+        setRemoveAvatar(true);
     };
 
     useEffect(() => {
@@ -202,12 +201,20 @@ export default function Edit(props) {
                         imageId,
                         imageType,
                     };
+                } else if (removeAvatar) {
+                    data = {
+                        ...data,
+                        imageId: null,
+                    };
                 }
-
-                // await api.post('users', {
-                //     ...data,
-                //     type: 2,
-                // });
+                try {
+                    await api.put(`users/${userId}`, {
+                        ...data,
+                    });
+                } catch (err) {
+                    console.log(err.response.data);
+                    console.log(data);
+                }
 
                 // history.push('/panel/users/');
             } catch (err) {
@@ -218,7 +225,7 @@ export default function Edit(props) {
                 }
             }
         },
-        [finalImage, selectedRegister.test],
+        [finalImage, removeAvatar, selectedRegister.test, userId],
     );
 
     const handleRegisterChange = (event) => {
@@ -231,31 +238,6 @@ export default function Edit(props) {
     const handleStateChange = (event) => {
         setSelectedState(event.target.value);
     };
-
-    useEffect(() => {
-        if (finalCrop && imgRef.current) {
-            getCroppedImage(
-                imgRef.current,
-                originalImgRef.current,
-                finalCrop,
-                'avatar',
-            ).then((img) => {
-                const resizedImage = new Image();
-                resizedImage.src = URL.createObjectURL(img);
-                resizedImage.onload = () => {
-                    if (resizedImage.height > 600) {
-                        resizeImage(resizedImage, 600, 'avatar_preview').then(
-                            (resized) => {
-                                setFinalImage(resized);
-                            },
-                        );
-                    } else {
-                        setFinalImage(img);
-                    }
-                };
-            });
-        }
-    }, [finalCrop]);
 
     useEffect(() => {
         axios
@@ -313,7 +295,15 @@ export default function Edit(props) {
                         </FormStyle>
                     </Form>
                 </Modal>
-
+                <AvatarChangeModal
+                    setFinalImage={(image) => {
+                        setFinalImage(image);
+                        setRemoveAvatar(false);
+                    }}
+                    isModalOpen={imageModal}
+                    setIsModalOpen={setImageModal}
+                    imageUrl={fileUrl}
+                />
                 <Form ref={formRef} onSubmit={handleSubmit}>
                     <FormStyle>
                         <h1>Alterar usuário</h1>
@@ -355,14 +345,14 @@ export default function Edit(props) {
                                     <Input
                                         icon={FiCreditCard}
                                         name="register"
-                                        defaultValue={`${user.register}`}
+                                        defaultValue={user.register}
                                         placeholder={selectedRegister.register}
                                         mask={selectedRegister.mask}
                                     />
                                 )}
                                 {selectedRegister.state && (
                                     <Select
-                                        value={selectedState}
+                                        defaultValue={user.registerState}
                                         onChange={handleStateChange}
                                         name="registerState"
                                         icon={FiMap}
@@ -378,30 +368,44 @@ export default function Edit(props) {
                                     </Select>
                                 )}
 
-                                {file ? (
-                                    <div className="avatar-selection">
-                                        <ReactCrop
-                                            className="crop"
-                                            src={fileUrl}
-                                            crop={crop}
-                                            onImageLoaded={onImageCropLoad}
-                                            onChange={(c) => setCrop(c)}
-                                            onComplete={(c) => setFinalCrop(c)}
-                                        />
-                                        {finalImage ? (
-                                            <div className="preview">
-                                                <h3>Prévia</h3>
-                                                <img
-                                                    src={URL.createObjectURL(
-                                                        finalImage,
-                                                    )}
-                                                    alt="Preview"
-                                                    style={{ height: 150 }}
-                                                />
-                                            </div>
-                                        ) : null}
-                                    </div>
-                                ) : null}
+                                <div className="avatar-change">
+                                    {!removeAvatar ? (
+                                        <div className="avatar">
+                                            <h3>Foto de perfil</h3>
+                                            <img
+                                                src={
+                                                    finalImage
+                                                        ? URL.createObjectURL(
+                                                              finalImage,
+                                                          )
+                                                        : `https://res.cloudinary.com/saudepp/image/upload/${user.imageId}.${user.imageType}`
+                                                }
+                                                alt="Avatar"
+                                            />
+                                            <button
+                                                type="button"
+                                                className="noborder"
+                                                onClick={deleteImage}
+                                            >
+                                                Remover foto
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <button
+                                            type="button"
+                                            className="noborder"
+                                            onClick={() =>
+                                                setRemoveAvatar(false)
+                                            }
+                                        >
+                                            Restaurar foto
+                                        </button>
+                                    )}
+                                    <Dropzone
+                                        setFile={setFile}
+                                        callback={() => setImageModal(true)}
+                                    />
+                                </div>
                                 <button
                                     type="button"
                                     onClick={() => {
@@ -410,8 +414,6 @@ export default function Edit(props) {
                                 >
                                     Alterar senha
                                 </button>
-
-                                <Dropzone setFile={setFile} />
 
                                 <button type="submit">Salvar mudanças</button>
                             </>

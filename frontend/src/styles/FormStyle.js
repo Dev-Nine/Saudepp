@@ -30,7 +30,7 @@ export const FormStyle = styled.div`
     }
 
     button.noborder {
-        margin-top: 8px;
+        margin-top: 0;
         background: none;
         padding: 8px;
         color: var(--main-ref-color);

@@ -1,7 +1,7 @@
 import React from 'react';
-
 import { Container } from './styles';
 import Header from '../../../../components/Header';
+import TextEditor from '../../../../components/TextEditor';
 
 export default function Comments() {
     return (
@@ -21,12 +21,7 @@ export default function Comments() {
                             />
 
                             <p>Conteúdo</p>
-                            <textarea
-                                type="text"
-                                placeholder="Conteúdo"
-                                cols="30"
-                                rows="5"
-                            />
+                            <TextEditor />
 
                             <div className="button-container">
                                 <div className="button1">

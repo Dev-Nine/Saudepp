@@ -1,63 +1,41 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-    max-width: 100%;
-    height: 100vh;
     display: flex;
+    margin: 24px;
     justify-content: center;
     align-items: center;
+    padding: 8px;
 
     .content {
         width: 100%;
-        max-width: 880px;
-        height: 600px;
-        margin-top: 60px;
-        border-radius: 8px;
-        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-        background: #f9f7f7;
+        max-width: 720px;
         display: flex;
         justify-content: center;
         align-items: center;
     }
 
-    .form {
+    .content form {
+        background: #f4f4f4;
         width: 100%;
-        max-width: 800px;
-        height: 550px;
-        background: #ffffff;
-        display: flex;
-        padding: 0 40px;
+        padding: 16px;
         align-items: center;
         border-radius: 8px;
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     }
 
-    .form form p {
+    .content form p {
         font-size: 20px;
-        margin-bottom: 10px;
-        color: black;
+        color: var(--main-text-color);
     }
 
-    .form form input {
+    .content form input {
         display: block;
-        width: 700px;
         height: 47px;
         margin-bottom: 20px;
         border-radius: 8px;
         border: 1px;
         padding: 0 10px;
-        box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
-    }
-
-    .form form textarea {
-        display: block;
-        width: 700px;
-        height: 200px;
-        padding: 0 10px;
-        margin: 0 auto;
-        border-radius: 8px;
-        resize: none;
-        border: 1px;
         box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
     }
 
@@ -105,26 +83,21 @@ export const Container = styled.div`
         filter: brightness(90%);
     }
 
-    @media (max-width: 700px) {
+    @media only screen and (max-width: 1099px) {
         .content {
             width: 100%;
             max-width: 1000px;
-            height: 600px;
         }
 
-        .form {
+        .content form {
             width: 100%;
             max-width: 800px;
-            height: 700px;
         }
 
-        .form form input {
+        .content form input {
             width: 280px;
         }
 
-        .form form textarea {
-            width: 280px;
-        }
         .button-container {
             display: flex;
             align-items: center;

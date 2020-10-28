@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { createEditor, Transforms, Text, Editor } from 'slate';
 import { Editable, Slate, withReact } from 'slate-react';
 import { NoticeContainer } from '../../styles/NoticeStyle';
+import { EditorContainer } from './style';
 
 const CustomEditor = {
     isMarkActive(editor, format) {
@@ -20,6 +21,39 @@ const CustomEditor = {
             Editor.addMark(editor, format, true);
         }
     },
+
+    isBlockActive(editor, format) {
+        const [match] = Editor.nodes(editor, {
+            match: (n) => n.type === format,
+        });
+        return !!match;
+    },
+
+    toggleBlock(editor, format) {
+        const isActive = CustomEditor.isBlockActive(editor, format);
+        const isList = !!(format === 'number-list' || format === 'bullet-list');
+
+        Transforms.unwrapNodes(editor, {
+            match: (n) =>
+                !!(n.type === 'number-list' || n.type === 'bullet-list'),
+            split: true,
+        });
+
+        let type = 'paragraph';
+        if (!isActive) {
+            if (isList) type = 'li';
+            else type = format;
+        }
+
+        Transforms.setNodes(editor, {
+            type,
+        });
+
+        if (!isActive && isList) {
+            const block = { type: format, children: [] };
+            Transforms.wrapNodes(editor, block);
+        }
+    },
 };
 
 const TextEditor = () => {
@@ -27,13 +61,9 @@ const TextEditor = () => {
     const [value, setValue] = useState([
         {
             type: 'paragraph',
-            children: [{ text: 'A line of text in a paragraph.' }],
+            children: [{ text: '' }],
         },
     ]);
-
-    const DefaultElement = ({ attributes, children }) => {
-        return <p {...attributes}>{children}</p>;
-    };
 
     const Leaf = ({ attributes, children, leaf }) => {
         if (leaf.bold) {
@@ -43,8 +73,22 @@ const TextEditor = () => {
         return <span {...attributes}>{children}</span>;
     };
 
+    const DefaultElement = ({ attributes, children }) => {
+        return <p {...attributes}>{children}</p>;
+    };
+
+    const H1Element = ({ attributes, children }) => {
+        return <h1 {...attributes}>{children}</h1>;
+    };
+
     const renderElement = useCallback((props) => {
         switch (props.element.type) {
+            case 'h1':
+                return <H1Element {...props} />;
+                break;
+            case 'li':
+                return <H1Element {...props} />;
+                break;
             default:
                 return <DefaultElement {...props} />;
         }
@@ -55,35 +99,49 @@ const TextEditor = () => {
     }, []);
 
     return (
-        <NoticeContainer>
-            <Slate
-                editor={editor}
-                value={value}
-                onChange={(newValue) => setValue(newValue)}
-            >
-                <div>
-                    <button
-                        type="button"
-                        onMouseDown={(event) => {
-                            event.preventDefault();
-                            CustomEditor.toggleMark(editor, 'bold');
-                        }}
-                    >
-                        Bold
-                    </button>
-                </div>
-                <Editable
-                    renderElement={renderElement}
-                    renderLeaf={renderLeaf}
-                    onKeyDown={(e) => {
-                        if (e.ctrlKey && e.key === 'b') {
-                            e.preventDefault();
-                            CustomEditor.toggleBoldMark(editor, 'bold');
-                        }
+        <Slate
+            editor={editor}
+            value={value}
+            onChange={(newValue) => setValue(newValue)}
+        >
+            <div>
+                <button
+                    type="button"
+                    onMouseDown={(event) => {
+                        event.preventDefault();
+                        CustomEditor.toggleMark(editor, 'bold');
                     }}
-                />
-            </Slate>
-        </NoticeContainer>
+                >
+                    Bold
+                </button>
+                <button
+                    type="button"
+                    onMouseDown={(event) => {
+                        event.preventDefault();
+                        CustomEditor.toggleBlock(editor, 'h1');
+                    }}
+                >
+                    H1
+                </button>
+            </div>
+            <EditorContainer>
+                <NoticeContainer style={{ padding: 8 }}>
+                    <Editable
+                        style={{
+                            minHeight: 160,
+                        }}
+                        renderElement={renderElement}
+                        renderLeaf={renderLeaf}
+                        onKeyDown={(e) => {
+                            if (e.ctrlKey && e.key === 'b') {
+                                e.preventDefault();
+                                CustomEditor.toggleMark(editor, 'bold');
+                            }
+                        }}
+                    />
+                </NoticeContainer>
+            </EditorContainer>
+        </Slate>
     );
 };
 

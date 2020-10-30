@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { createEditor, Transforms, Editor } from 'slate';
 import { Editable, Slate, withReact } from 'slate-react';
 import { NoticeContainer } from '../../styles/NoticeStyle';
-import { EditorContainer } from './style';
+import { EditorContainer, ButtonStyle } from './style';
 
 const CustomEditor = {
     isMarkActive(editor, format) {
@@ -66,7 +66,7 @@ const TextEditor = () => {
 
     const ToggleButton = ({ tooltip, type, format, children }) => {
         return (
-            <button
+            <ButtonStyle
                 type="button"
                 title={tooltip}
                 onMouseDown={(event) => {
@@ -77,7 +77,7 @@ const TextEditor = () => {
                 }}
             >
                 {children}
-            </button>
+            </ButtonStyle>
         );
     };
 

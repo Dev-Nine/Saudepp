@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { createEditor, Transforms, Text, Editor } from 'slate';
+import { createEditor, Transforms, Editor } from 'slate';
 import { Editable, Slate, withReact } from 'slate-react';
 import { NoticeContainer } from '../../styles/NoticeStyle';
 import { EditorContainer } from './style';
@@ -31,15 +31,14 @@ const CustomEditor = {
 
     toggleBlock(editor, format) {
         const isActive = CustomEditor.isBlockActive(editor, format);
-        const isList = !!(format === 'number-list' || format === 'bullet-list');
+        const isList = !!(format === 'ol' || format === 'ul');
 
         Transforms.unwrapNodes(editor, {
-            match: (n) =>
-                !!(n.type === 'number-list' || n.type === 'bullet-list'),
+            match: (n) => !!(n.type === 'ol' || n.type === 'ul'),
             split: true,
         });
 
-        let type = 'paragraph';
+        let type = 'p';
         if (!isActive) {
             if (isList) type = 'li';
             else type = format;
@@ -60,37 +59,46 @@ const TextEditor = () => {
     const editor = useMemo(() => withReact(createEditor()), []);
     const [value, setValue] = useState([
         {
-            type: 'paragraph',
+            type: 'p',
             children: [{ text: '' }],
         },
     ]);
 
+    const ToggleButton = ({ tooltip, type, format, children }) => {
+        return (
+            <button
+                type="button"
+                title={tooltip}
+                onMouseDown={(event) => {
+                    event.preventDefault();
+                    type === 'mark'
+                        ? CustomEditor.toggleMark(editor, format)
+                        : CustomEditor.toggleBlock(editor, format);
+                }}
+            >
+                {children}
+            </button>
+        );
+    };
+
     const Leaf = ({ attributes, children, leaf }) => {
-        if (leaf.bold) {
+        if (leaf.b) {
             children = <strong>{children}</strong>;
         }
 
         return <span {...attributes}>{children}</span>;
     };
 
-    const DefaultElement = ({ attributes, children }) => {
-        return <p {...attributes}>{children}</p>;
-    };
-
-    const H1Element = ({ attributes, children }) => {
-        return <h1 {...attributes}>{children}</h1>;
-    };
-
-    const renderElement = useCallback((props) => {
-        switch (props.element.type) {
+    const renderElement = useCallback(({ attributes, children, element }) => {
+        switch (element.type) {
             case 'h1':
-                return <H1Element {...props} />;
-                break;
+                return <h1 {...attributes}>{children}</h1>;
+            case 'ul':
+                return <ul {...attributes}>{children}</ul>;
             case 'li':
-                return <H1Element {...props} />;
-                break;
+                return <li {...attributes}>{children}</li>;
             default:
-                return <DefaultElement {...props} />;
+                return <p {...attributes}>{children}</p>;
         }
     }, []);
 
@@ -105,24 +113,15 @@ const TextEditor = () => {
             onChange={(newValue) => setValue(newValue)}
         >
             <div>
-                <button
-                    type="button"
-                    onMouseDown={(event) => {
-                        event.preventDefault();
-                        CustomEditor.toggleMark(editor, 'bold');
-                    }}
-                >
-                    Bold
-                </button>
-                <button
-                    type="button"
-                    onMouseDown={(event) => {
-                        event.preventDefault();
-                        CustomEditor.toggleBlock(editor, 'h1');
-                    }}
-                >
+                <ToggleButton tooltip="Negrito" type="mark" format="b">
+                    B
+                </ToggleButton>
+                <ToggleButton tooltip="Header 1" type="block" format="h1">
                     H1
-                </button>
+                </ToggleButton>
+                <ToggleButton tooltip="Lista" type="block" format="ul">
+                    UL
+                </ToggleButton>
             </div>
             <EditorContainer>
                 <NoticeContainer style={{ padding: 8 }}>
@@ -133,9 +132,10 @@ const TextEditor = () => {
                         renderElement={renderElement}
                         renderLeaf={renderLeaf}
                         onKeyDown={(e) => {
+                            // unfinished, vou arrumar dps
                             if (e.ctrlKey && e.key === 'b') {
                                 e.preventDefault();
-                                CustomEditor.toggleMark(editor, 'bold');
+                                CustomEditor.toggleMark(editor, 'b');
                             }
                         }}
                     />

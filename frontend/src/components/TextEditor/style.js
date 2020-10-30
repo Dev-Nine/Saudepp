@@ -6,3 +6,11 @@ export const EditorContainer = styled.div`
     background-color: white;
     border-radius: 8px;
 `;
+
+export const ButtonStyle = styled.button`
+    height: 32px;
+    width: 32px;
+    background: var(--main-contrast-color);
+    border-radius: 16%;
+    border: 1px solid var(--main-light-color);
+`;

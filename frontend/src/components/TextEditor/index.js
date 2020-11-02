@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { createEditor, Transforms, Editor } from 'slate';
 import { Editable, Slate, withReact } from 'slate-react';
+import { withHistory } from 'slate-history';
 import { NoticeContainer } from '../../styles/NoticeStyle';
 import { EditorContainer, ButtonStyle } from './style';
 
@@ -55,8 +56,60 @@ const CustomEditor = {
     },
 };
 
+const insertImage = (editor, url) => {
+    const text = { text: '' };
+    const image = [
+        {
+            type: 'image',
+            url,
+            children: [text],
+        },
+        {
+            type: 'p',
+            children: [text],
+        },
+    ];
+
+    Transforms.insertNodes(editor, image);
+};
+
+const withImages = (editor) => {
+    const { insertData, isVoid } = editor;
+
+    editor.isVoid = (element) => {
+        return element.type === 'image' ? true : isVoid(element);
+    };
+
+    editor.insertData = (data) => {
+        const { files } = data;
+
+        if (files && files.length > 0) {
+            for (const file of files) {
+                const reader = new FileReader();
+                const [mime] = file.type.split('/');
+
+                if (mime === 'image') {
+                    reader.addEventListener('load', () => {
+                        const url = reader.result;
+                        insertImage(editor, url);
+                    });
+
+                    reader.readAsDataURL(file);
+                }
+            }
+        } else {
+            insertData(data);
+        }
+    };
+
+    return editor;
+};
+
 const TextEditor = () => {
-    const editor = useMemo(() => withReact(createEditor()), []);
+    const editor = useMemo(
+        () => withImages(withHistory(withReact(createEditor()))),
+        [],
+    );
     const [value, setValue] = useState([
         {
             type: 'p',
@@ -97,6 +150,16 @@ const TextEditor = () => {
                 return <ul {...attributes}>{children}</ul>;
             case 'li':
                 return <li {...attributes}>{children}</li>;
+            case 'image':
+                return (
+                    <div
+                        style={{ display: 'flex', justifyContent: 'center' }}
+                        {...attributes}
+                    >
+                        <img src={element.url} />
+                        {children}
+                    </div>
+                );
             default:
                 return <p {...attributes}>{children}</p>;
         }

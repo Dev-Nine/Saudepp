@@ -6,6 +6,7 @@ export default createGlobalStyle`
       --main-color: #0094de;
       --main-ref-color: #4893dd;
       --main-light-color: #505050;
+      --main-lighter-color: #919191;
       --main-text-color: #303030;
       --main-contrast-color: #eaeaea;
 

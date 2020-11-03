@@ -23,13 +23,19 @@ export const NoticeContainer = styled.div`
     }
 
     li {
-        margin-bottom: 10px;
+        margin-bottom: 6px;
     }
 
     p,
     li {
         font-size: 18px;
         color: #303030;
+    }
+
+    p,
+    ol,
+    ul {
+        margin-bottom: 16px;
     }
 
     @media only screen and (max-width: 1099px) {

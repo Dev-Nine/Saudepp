@@ -19,12 +19,7 @@ export default function Comments() {
 
                         <div className="button-container">
                             <div className="button1">
-                                <button type="submit">Anexar Imagem</button>
                                 <button type="submit">Enviar</button>
-                            </div>
-
-                            <div className="button2">
-                                <button type="submit">Limpar</button>
                             </div>
                         </div>
                     </form>

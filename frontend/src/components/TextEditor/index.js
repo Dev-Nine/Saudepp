@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { createEditor, Transforms, Editor } from 'slate';
 import { Editable, Slate, useSelected, useSlate, withReact } from 'slate-react';
 import { withHistory } from 'slate-history';
@@ -68,6 +68,12 @@ const insertImage = (editor, url) => {
             children: [{ text: '' }],
         },
     ];
+    Transforms.unwrapNodes(editor, {
+        match: (n) => !!(n.type === 'ol' || n.type === 'ul'),
+        split: true,
+    });
+
+    Transforms.setNodes(editor, { type: 'p' });
 
     Transforms.insertNodes(editor, image);
 };
@@ -104,18 +110,12 @@ const withImages = (editor) => {
     return editor;
 };
 
-const TextEditor = () => {
+const TextEditor = ({ value, setValue }) => {
     const imageInputRef = useRef();
     const editor = useMemo(
         () => withImages(withHistory(withReact(createEditor()))),
         [],
     );
-    const [value, setValue] = useState([
-        {
-            type: 'p',
-            children: [{ text: '' }],
-        },
-    ]);
 
     const ToggleButton = ({ tooltip, type, format, children }) => {
         const editorTest = useSlate();

@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { shade } from 'polished';
 
 export const Container = styled.div`
     display: flex;
@@ -32,7 +31,8 @@ export const Container = styled.div`
 
     .content form input {
         display: block;
-        height: 47px;
+        height: 40px;
+        width: 100%;
         margin-bottom: 20px;
         border-radius: 8px;
         border: 1px;
@@ -104,10 +104,6 @@ export const Container = styled.div`
             max-width: 800px;
         }
 
-        .content form input {
-            width: 280px;
-        }
-
         .button-container {
             display: flex;
             align-items: center;
@@ -120,59 +116,5 @@ export const Container = styled.div`
         .button2 button {
             display: block;
         }
-    }
-`;
-
-export const Search = styled.div`
-    font-family: Roboto;
-    font-style: normal;
-
-    select {
-        display: block;
-        width: 30%;
-        height: 40px;
-        border-style: hidden;
-        border-radius: 10px;
-        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-
-        font-size: 15px;
-        line-height: 28px;
-        background-color: #ffffff;
-    }
-
-    option {
-        font-size: 15px;
-        line-height: 28px;
-        background-color: #ffffff;
-    }
-
-    @media (max-width: 1099px) {
-        select {
-            width: 100%;
-        }
-    }
-`;
-
-export const TagContainer = styled.div`
-    display: flex;
-`;
-
-export const TagButton = styled.button`
-    margin: 8px 8px 0 0;
-    padding: 8px 14px;
-    background: #0094de;
-    border-radius: 8px;
-    display: flex;
-    transition: 1s;
-
-    &:hover {
-        background: ${shade(0.1, '#0094de')};
-    }
-
-    span {
-        color: #fff;
-        padding-right: 4px;
-        font-size: 16px;
-        font-weight: 500;
     }
 `;

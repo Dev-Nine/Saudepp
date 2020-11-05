@@ -1,17 +1,16 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import sanitizeHtml from 'sanitize-html';
-import { FiXCircle } from 'react-icons/fi';
 import { useHistory } from 'react-router-dom';
-import { Container, Search, TagContainer, TagButton } from './styles';
+import { Container } from './styles';
 import Header from '../../../../components/Header';
 import Footer from '../../../../components/Footer';
 import TextEditor from '../../../../components/TextEditor';
 import getEditorTextAsHTML from '../../../../utils/getEditorTextAsHTML';
-import api, { useAxios } from '../../../../services/api';
+import api from '../../../../services/api';
+import TagSelector from '../../../../components/TagSelector';
 
 export default function Notice() {
     const history = useHistory();
-    const { data: tags, mutate } = useAxios('/tags');
     const [redirectMessage, setRedirectMessage] = useState('');
     const [selectedTags, setSelectedTags] = useState([]);
     const [isDisabled, setIsDisabled] = useState(false);
@@ -23,42 +22,6 @@ export default function Notice() {
     ]);
     const [title, setTitle] = useState('');
     const [abstract, setAbstract] = useState('');
-
-    const handleSelectCategory = useCallback(
-        (id) => {
-            id = Number(id);
-            if (!id || selectedTags.some((tag) => tag.id === id)) {
-                return;
-            }
-
-            const selectedTag = tags.find((t) => {
-                return t.id === id;
-            });
-
-            setSelectedTags([...selectedTags, selectedTag]);
-
-            const updatedTags = tags.filter((tag) => tag.id !== id);
-            mutate(updatedTags, false);
-        },
-        [mutate, selectedTags, tags],
-    );
-
-    const handleDeleteCategory = useCallback(
-        (id) => {
-            id = Number(id);
-            const updatedTags = tags;
-            const newTags = selectedTags.filter((t) => {
-                if (t.id === id) {
-                    updatedTags.push(t);
-                    return false;
-                }
-                return true;
-            });
-            setSelectedTags(newTags);
-            mutate(updatedTags, false);
-        },
-        [mutate, selectedTags, tags],
-    );
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -94,7 +57,6 @@ export default function Notice() {
         };
         api.post('/notices', data)
             .then((res) => {
-                console.log(res);
                 setRedirectMessage(
                     'Notícia criada com sucesso! Redirecionando...',
                 );
@@ -132,42 +94,10 @@ export default function Notice() {
                             }}
                             placeholder="Resumo..."
                         />
-
-                        <Search>
-                            <select
-                                onChange={(e) =>
-                                    handleSelectCategory(e.target.value)
-                                }
-                                name="tags"
-                                id="tags"
-                                className="select-form"
-                            >
-                                <option value="">
-                                    Selecione as categorias
-                                </option>
-                                {tags
-                                    ? tags.map((item) => (
-                                          <option key={item.id} value={item.id}>
-                                              {item.description}
-                                          </option>
-                                      ))
-                                    : 'Carregando'}
-                            </select>
-                        </Search>
-                        <TagContainer>
-                            {selectedTags.map((item) => (
-                                <TagButton
-                                    onClick={() => {
-                                        handleDeleteCategory(item.id);
-                                    }}
-                                    key={item.id}
-                                >
-                                    <span>{item.description}</span>
-                                    <FiXCircle size={18} color="#fff" />
-                                </TagButton>
-                            ))}
-                        </TagContainer>
-                        <br />
+                        <TagSelector
+                            selectedTags={selectedTags}
+                            setSelectedTags={setSelectedTags}
+                        />
 
                         <p>Conteúdo</p>
                         <TextEditor value={value} setValue={setValue} />

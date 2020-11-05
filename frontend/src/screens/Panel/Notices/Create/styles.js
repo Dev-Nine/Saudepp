@@ -93,6 +93,30 @@ export const Container = styled.div`
         }
     }
 
+    form {
+        .banner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .banner button {
+            margin-bottom: 8px;
+        }
+
+        .banner img {
+            border: 2px solid var(--main-light-color);
+            max-height: 200px;
+            max-width: 100%;
+        }
+
+        .banner-change {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+
     @media only screen and (max-width: 1099px) {
         .content {
             width: 100%;

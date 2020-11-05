@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import sanitizeHtml from 'sanitize-html';
 import { useHistory } from 'react-router-dom';
+import Dropzone from '../../../../components/Dropzone';
 import { Container } from './styles';
 import Header from '../../../../components/Header';
 import Footer from '../../../../components/Footer';
@@ -8,6 +9,7 @@ import TextEditor from '../../../../components/TextEditor';
 import getEditorTextAsHTML from '../../../../utils/getEditorTextAsHTML';
 import api from '../../../../services/api';
 import TagSelector from '../../../../components/TagSelector';
+import NoticeBannerChangeModal from '../../../../components/NoticeBannerChangeModal';
 
 export default function Notice() {
     const history = useHistory();
@@ -22,6 +24,20 @@ export default function Notice() {
     ]);
     const [title, setTitle] = useState('');
     const [abstract, setAbstract] = useState('');
+
+    const [imageModal, setImageModal] = useState(false);
+
+    const [file, setFile] = useState();
+    const [fileUrl, setFileUrl] = useState('');
+    const [finalImage, setFinalImage] = useState(null);
+
+    const deleteImage = () => {
+        setFinalImage(null);
+    };
+
+    useEffect(() => {
+        if (file) setFileUrl(URL.createObjectURL(file));
+    }, [file]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -56,7 +72,7 @@ export default function Notice() {
             tags: serializedTags,
         };
         api.post('/notices', data)
-            .then((res) => {
+            .then(() => {
                 setRedirectMessage(
                     'Notícia criada com sucesso! Redirecionando...',
                 );
@@ -75,6 +91,12 @@ export default function Notice() {
             <Container>
                 <div className="content">
                     <form>
+                        <NoticeBannerChangeModal
+                            setFinalImage={setFinalImage}
+                            isModalOpen={imageModal}
+                            setIsModalOpen={setImageModal}
+                            imageUrl={fileUrl}
+                        />
                         <p>Título</p>
                         <input
                             type="text"
@@ -98,6 +120,29 @@ export default function Notice() {
                             selectedTags={selectedTags}
                             setSelectedTags={setSelectedTags}
                         />
+
+                        <div className="banner-change">
+                            {finalImage ? (
+                                <div className="banner">
+                                    <h3>Banner da notícia</h3>
+                                    <img
+                                        src={URL.createObjectURL(finalImage)}
+                                        alt="Banner"
+                                    />
+                                    <button
+                                        type="button"
+                                        className="noborder"
+                                        onClick={deleteImage}
+                                    >
+                                        Remover foto
+                                    </button>
+                                </div>
+                            ) : null}
+                            <Dropzone
+                                setFile={setFile}
+                                callback={() => setImageModal(true)}
+                            />
+                        </div>
 
                         <p>Conteúdo</p>
                         <TextEditor value={value} setValue={setValue} />

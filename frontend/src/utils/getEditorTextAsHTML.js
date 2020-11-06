@@ -1,27 +1,14 @@
-import api from '../services/api';
-
-async function getEditorTextAsHTML(value) {
-    if (value) {
+function getEditorTextAsHTML(slateObject) {
+    if (slateObject) {
         let text = '';
-        for (const item of value) {
+        slateObject.forEach((item) => {
             if (item.type) {
                 if (item.type === 'image') {
-                    try {
-                        const formData = new FormData();
-                        const blob = await fetch(item.url);
-                        formData.append('image', await blob.blob());
-                        const res = await api.post('/images', formData);
-                        const { imageId, imageType } = res.data;
-                        text += `<img src='https://res.cloudinary.com/saudepp/image/upload/${imageId}.${imageType}' />`;
-                    } catch (err) {
-                        console.log('lmao yeet');
-                        console.log(err);
-                    }
+                    text += `<img src='${item.url}' />`;
                 } else {
                     let child = '';
-                    if (item.children) {
-                        child = await getEditorTextAsHTML(item.children);
-                    }
+                    if (item.children)
+                        child = getEditorTextAsHTML(item.children);
                     text += `<${item.type}>${child}</${item.type}>`;
                 }
             } else {
@@ -45,7 +32,7 @@ async function getEditorTextAsHTML(value) {
                     text += '</strong>';
                 }
             }
-        }
+        });
         return text;
     }
     return '';

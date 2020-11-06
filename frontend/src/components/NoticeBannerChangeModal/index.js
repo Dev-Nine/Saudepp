@@ -22,7 +22,7 @@ const NoticeBannerChangeModal = ({
 
     const onImageCropLoad = (cropImage) => {
         setCrop({
-            aspect: 12 / 5,
+            aspect: 16 / 5,
             width: 30,
             unit: '%',
             x: 0,

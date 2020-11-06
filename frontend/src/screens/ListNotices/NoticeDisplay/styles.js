@@ -79,6 +79,7 @@ export const TextContainer = styled.div`
     padding: 16px 40px;
     display: flex;
     flex-direction: column;
+    list-style-position: inside;
 
     img {
         max-height: 400px;

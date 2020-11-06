@@ -55,15 +55,8 @@ export default function Edit(props) {
     const [selectedRegister, setSelectedRegister] = useState({});
     const [selectedState, setSelectedState] = useState();
     const [states, setStates] = useState([]);
-
-    const token = localStorage.getItem('@Saude:token');
-
     useEffect(() => {
-        api.get(`/users/${userId}`, {
-            headers: {
-                authorization: `Bearer ${token}`,
-            },
-        }).then((response) => {
+        api.get(`/users/${userId}`).then((response) => {
             const registerDetails = registerMap.get(response.data.registerType);
             setUser(response.data);
             setIsLoading(false);
@@ -74,7 +67,7 @@ export default function Edit(props) {
             if (response.data.registerState)
                 setSelectedState(response.data.registerState);
         });
-    }, [authUser.id, selectedState, setIsLoading, token, userId]);
+    }, [authUser.id, selectedState, setIsLoading, userId]);
 
     const formRef = useRef(null);
     const passwordFormRef = useRef(null);
@@ -126,15 +119,7 @@ export default function Edit(props) {
                 // console.log(data);
 
                 try {
-                    await api.put(
-                        `/users/${user.id}`,
-                        { ...data },
-                        {
-                            headers: {
-                                authorization: `Bearer ${token}`,
-                            },
-                        },
-                    );
+                    await api.put(`/users/${user.id}`, { ...data });
                 } catch (err) {
                     // console.log({ err });
                 }
@@ -147,7 +132,7 @@ export default function Edit(props) {
                 }
             }
         },
-        [token, user],
+        [user],
     );
 
     const handleSubmit = useCallback(

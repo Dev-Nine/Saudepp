@@ -14,6 +14,7 @@ import Footer from '../../../components/Footer';
 import api from '../../../services/api';
 
 import { ContainerNoticia, TextContainer } from './styles';
+import getEditorTextAsHTML from '../../../utils/getEditorTextAsHTML';
 
 export default function NoticeDisplay(props) {
     const { computedMatch } = props;
@@ -163,7 +164,13 @@ export default function NoticeDisplay(props) {
                                 </p>
                             </div>
 
-                            <TextContainer>{parse(content.text)}</TextContainer>
+                            <TextContainer>
+                                {parse(
+                                    getEditorTextAsHTML(
+                                        JSON.parse(content.text),
+                                    ),
+                                )}
+                            </TextContainer>
                         </div>
                     )}
                 </ContainerNoticia>

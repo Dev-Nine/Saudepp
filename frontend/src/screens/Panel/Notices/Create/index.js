@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import sanitizeHtml from 'sanitize-html';
 import { useHistory } from 'react-router-dom';
 import Dropzone from '../../../../components/Dropzone';
 import { Container } from './styles';
 import Header from '../../../../components/Header';
 import Footer from '../../../../components/Footer';
 import TextEditor from '../../../../components/TextEditor';
-import getEditorTextAsHTML from '../../../../utils/getEditorTextAsHTML';
 import api from '../../../../services/api';
 import TagSelector from '../../../../components/TagSelector';
 import NoticeBannerChangeModal from '../../../../components/NoticeBannerChangeModal';
+import serializeSlateToJson from '../../../../utils/serializeSlateToJson';
 
 export default function Notice() {
     const history = useHistory();
@@ -41,36 +40,34 @@ export default function Notice() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        let data;
         setIsDisabled(true);
-        const notice = await getEditorTextAsHTML(value);
-        const clean = sanitizeHtml(notice, {
-            allowedTags: [
-                'strong',
-                'em',
-                'h1',
-                'h2',
-                'h3',
-                'ul',
-                'ol',
-                'li',
-                'img',
-                'a',
-                'p',
-            ],
-            allowedAttributes: {
-                img: ['src'],
-                a: ['href'],
-            },
-        });
+        let object;
+        // eslint-disable-next-line prefer-const
+        object = JSON.parse(JSON.stringify(value));
+        const notice = await serializeSlateToJson(object);
         const serializedTags = selectedTags.map((tag) => {
             return { id: tag.id };
         });
-        const data = {
+        data = {
             title,
             abstract,
-            text: clean,
+            text: notice,
             tags: serializedTags,
         };
+
+        if (finalImage) {
+            const formData = new FormData();
+            formData.append('image', finalImage);
+            const res = await api.post('/images', formData);
+            const { imageId, imageType } = res.data;
+            data = {
+                ...data,
+                imageId,
+                imageType,
+            };
+        }
+
         api.post('/notices', data)
             .then(() => {
                 setRedirectMessage(
@@ -82,6 +79,7 @@ export default function Notice() {
             })
             .catch((err) => {
                 console.log({ err });
+                setIsDisabled(false);
             });
     };
 

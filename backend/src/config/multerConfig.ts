@@ -13,7 +13,7 @@ export default {
         }
     }),
     limits:{
-        fileSize: 1048576
+        fileSize: 5242880
     }
         
 }

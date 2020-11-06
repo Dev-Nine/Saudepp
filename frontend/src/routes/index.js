@@ -20,6 +20,7 @@ import {
     ForgotPassword,
     ResetPassword,
     EditUser,
+    EditNotice,
 } from '../screens';
 
 export default function Routes() {
@@ -43,6 +44,12 @@ export default function Routes() {
                 isPrivate
                 exact
                 component={CreateNotice}
+            />
+            <Route
+                path="/panel/notices/edit/:noticeId"
+                isPrivate
+                exact
+                component={EditNotice}
             />
             <Route path="/panel" isPrivate exact component={Panel} />
             <Route path="/panel/tags" isPrivate exact component={PanelTags} />

@@ -18,6 +18,7 @@ import CreateUser from './Panel/Users/Create';
 import EditUser from './Panel/Users/Edit';
 import PanelNotices from './Panel/Notices';
 import CreateNotice from './Panel/Notices/Create';
+import EditNotice from './Panel/Notices/Edit';
 
 export {
     Home,
@@ -25,16 +26,17 @@ export {
     SignIn,
     NotFound,
     NoticeDisplay,
-    CreateUser,
     Faq,
     FaqCovid19,
     About,
     Panel,
     PanelTags,
     PanelUsers,
+    CreateUser,
+    EditUser,
     PanelNotices,
     CreateNotice,
+    EditNotice,
     ForgotPassword,
     ResetPassword,
-    EditUser,
 };

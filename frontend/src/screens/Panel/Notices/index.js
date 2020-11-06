@@ -83,7 +83,7 @@ export default function Panel() {
                                     </div>
                                     <div>{n.user.name}</div>
                                     <div>
-                                        <Link to="edit">
+                                        <Link to={`edit/${n.id}`}>
                                             <Button>
                                                 <FiSearch />
                                             </Button>

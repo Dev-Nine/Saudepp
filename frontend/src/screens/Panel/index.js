@@ -24,7 +24,7 @@ export default function Panel() {
     });
 
     if (user && user.type !== 0) {
-        return <Redirect to="/panel/notices" />;
+        return <Redirect to="/panel/notices/" />;
     }
 
     return (

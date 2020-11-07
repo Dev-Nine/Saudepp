@@ -60,7 +60,7 @@ export default function SignIn() {
                     const erros = getValidationErros(err);
 
                     formRef.current.setErrors(erros);
-                } else if (err.response.status === 400)
+                } else if (err.response && err.response.status === 400)
                     setLoginErr('Credenciais incorretos');
                 else setLoginErr('Ocorreu um erro');
             }

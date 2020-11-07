@@ -203,7 +203,8 @@ export async function processEditData(req : Request): Promise<Notice> {
 	if(body.imageId){
 		notice.imageId = body.imageId;
 		notice.imageType = body.imageType;
-	}else if(body.imageId == null){
+	}else if(body.imageId === null){
+		notice.imageId = null;
 		notice.imageType = null;
 	}
 

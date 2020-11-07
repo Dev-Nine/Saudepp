@@ -1,10 +1,28 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
+import { useEffect } from 'react';
 import { FiXCircle } from 'react-icons/fi';
 import { useAxios } from '../../services/api';
 import { Search, TagContainer, TagButton } from './style';
 
 const TagSelector = ({ selectedTags, setSelectedTags }) => {
     const { data: tags, mutate } = useAxios('/tags');
+    const [unchosenTags, setUnchosenTags] = useState();
+
+    useEffect(() => {
+        if (selectedTags && tags) {
+            const res = tags.filter((tag) => {
+                selectedTags.some((selected) => {
+                    return selected.id === tag.id;
+                });
+                return !selectedTags.some((selected) => {
+                    return selected.id === tag.id;
+                });
+            });
+            setUnchosenTags(res);
+        } else {
+            setUnchosenTags(tags);
+        }
+    }, [selectedTags, tags]);
 
     const handleSelectCategory = useCallback(
         (id) => {
@@ -28,7 +46,7 @@ const TagSelector = ({ selectedTags, setSelectedTags }) => {
     const handleDeleteCategory = useCallback(
         (id) => {
             id = Number(id);
-            const updatedTags = tags;
+            const updatedTags = unchosenTags;
             const newTags = selectedTags.filter((t) => {
                 if (t.id === id) {
                     updatedTags.push(t);
@@ -39,7 +57,7 @@ const TagSelector = ({ selectedTags, setSelectedTags }) => {
             setSelectedTags(newTags);
             mutate(updatedTags, false);
         },
-        [mutate, selectedTags, setSelectedTags, tags],
+        [mutate, selectedTags, setSelectedTags, unchosenTags],
     );
 
     return (
@@ -52,8 +70,8 @@ const TagSelector = ({ selectedTags, setSelectedTags }) => {
                     className="select-form"
                 >
                     <option value="">Selecione as categorias</option>
-                    {tags
-                        ? tags.map((item) => (
+                    {unchosenTags
+                        ? unchosenTags.map((item) => (
                               <option key={item.id} value={item.id}>
                                   {item.description}
                               </option>

@@ -93,6 +93,11 @@ export const Container = styled.div`
         }
     }
 
+    button.noborder {
+        margin-top: 8px;
+        margin-bottom: 16px;
+    }
+
     form {
         .banner {
             display: flex;

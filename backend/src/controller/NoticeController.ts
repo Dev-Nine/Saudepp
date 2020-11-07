@@ -254,8 +254,7 @@ export async function edit(req : Request, res : Response, next): Promise<Respons
 				try{
 					await cloudinary.v2.uploader.destroy(foundNotice.imageId)
 				} catch(err) {
-					console.log("Error deleting the image...")
-					return next(err);
+					console.log("Error deleting the image...");
 				}
 			}
 

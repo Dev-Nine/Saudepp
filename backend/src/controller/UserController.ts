@@ -252,18 +252,11 @@ export async function edit(req : Request, res : Response, next): Promise<Respons
 		]});
 		
 		if (foundUser) {
-			console.log(foundUser.imageId);
-			console.log(user.imageId);
-			console.log("!!!!!!!!!!!");
-			console.log("!!!!!!!!!!!");
-			console.log("!!!!!!!!!!!");
-			console.log("!!!!!!!!!!!");
 			if (foundUser.imageId && user.imageId !== undefined && (foundUser.imageId !== user.imageId || user.imageId === null)){
 				try{
-					console.log("Removing image!");
 					await cloudinary.v2.uploader.destroy(foundUser.imageId)
 				} catch(err) {
-					return next(err);
+					console.log("Error deleting the image...");
 				}
 			}
 			getRepository(User).merge(foundUser, user);

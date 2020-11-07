@@ -250,7 +250,7 @@ export async function edit(req : Request, res : Response, next): Promise<Respons
 			]});
 
 		if (foundNotice) {
-			if (foundNotice.imageId && (foundNotice.imageId !== notice.imageId || notice.imageId === null)){
+			if (foundNotice.imageId && notice.imageId !== undefined && (foundNotice.imageId !== notice.imageId || notice.imageId === null)){
 				try{
 					await cloudinary.v2.uploader.destroy(foundNotice.imageId)
 				} catch(err) {

@@ -78,7 +78,6 @@ export default function Notice() {
                 }, 3000);
             })
             .catch((err) => {
-                console.log({ err });
                 setIsDisabled(false);
             });
     };
@@ -154,7 +153,7 @@ export default function Notice() {
                                     disabled={isDisabled}
                                     className={isDisabled ? 'disabled' : null}
                                 >
-                                    Enviar
+                                    Criar notícia
                                 </button>
                             </div>
                         </div>

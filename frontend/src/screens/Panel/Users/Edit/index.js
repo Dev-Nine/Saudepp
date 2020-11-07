@@ -19,7 +19,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import Modal from 'react-modal';
 
-import { Redirect } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import Input from '../../../../components/Input';
 import Select from '../../../../components/Select';
 import Header from '../../../../components/Header';
@@ -34,10 +34,9 @@ import 'react-image-crop/dist/ReactCrop.css';
 import { FormStyle } from '../../../../styles/FormStyle';
 import AvatarChangeModal from '../../../../components/AvatarChangeModal';
 import { useAuth } from '../../../../hooks/AuthProvider';
-// import { useAuth } from '../../../../hooks/AuthProvider';
 
 export default function Edit(props) {
-    // const history = useHistory();
+    const history = useHistory();
     const { user: authUser } = useAuth();
 
     // modal
@@ -77,6 +76,8 @@ export default function Edit(props) {
 
     const [finalImage, setFinalImage] = useState(null);
     const [removeAvatar, setRemoveAvatar] = useState(false);
+
+    const [redirectMessage, setRedirectMessage] = useState('');
 
     const deleteImage = () => {
         setFinalImage(null);
@@ -132,7 +133,7 @@ export default function Edit(props) {
                 }
             }
         },
-        [user],
+        [user.id],
     );
 
     const handleSubmit = useCallback(
@@ -176,7 +177,9 @@ export default function Edit(props) {
 
                 delete data.confirmPassword;
 
-                // console.log(data);
+                console.log(data);
+                console.log(finalImage);
+                console.log(removeAvatar);
 
                 if (finalImage) {
                     const formData = new FormData();
@@ -198,9 +201,14 @@ export default function Edit(props) {
                     await api.put(`users/${userId}`, {
                         ...data,
                     });
+                    setRedirectMessage(
+                        'Profissional alterado com sucesso! Redirecionando...',
+                    );
+                    setTimeout(() => {
+                        history.push('/panel/users/');
+                    }, 3000);
                 } catch (err) {
-                    console.log(err.response.data);
-                    console.log(data);
+                    // console.log(err.response.data);
                 }
 
                 // history.push('/panel/users/');
@@ -212,7 +220,7 @@ export default function Edit(props) {
                 }
             }
         },
-        [finalImage, removeAvatar, selectedRegister.test, userId],
+        [finalImage, history, removeAvatar, selectedRegister.test, userId],
     );
 
     const handleRegisterChange = (event) => {
@@ -356,7 +364,8 @@ export default function Edit(props) {
                                 )}
 
                                 <div className="avatar-change">
-                                    {!removeAvatar ? (
+                                    {(!removeAvatar && user.imageId) ||
+                                    finalImage ? (
                                         <div className="avatar">
                                             <h3>Foto de perfil</h3>
                                             <img
@@ -378,21 +387,24 @@ export default function Edit(props) {
                                             </button>
                                         </div>
                                     ) : (
-                                        <button
-                                            type="button"
-                                            className="noborder"
-                                            onClick={() =>
-                                                setRemoveAvatar(false)
-                                            }
-                                        >
-                                            Restaurar foto
-                                        </button>
+                                        user.imageId && (
+                                            <button
+                                                type="button"
+                                                className="noborder"
+                                                onClick={() =>
+                                                    setRemoveAvatar(false)
+                                                }
+                                            >
+                                                Restaurar foto
+                                            </button>
+                                        )
                                     )}
                                     <Dropzone
                                         setFile={setFile}
                                         callback={() => setImageModal(true)}
                                     />
                                 </div>
+                                <p>{redirectMessage}</p>
                                 <button
                                     type="button"
                                     onClick={() => {
@@ -401,7 +413,6 @@ export default function Edit(props) {
                                 >
                                     Alterar senha
                                 </button>
-
                                 <button type="submit">Salvar mudanças</button>
                             </>
                         )}

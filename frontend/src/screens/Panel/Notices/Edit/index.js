@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Redirect, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import Dropzone from '../../../../components/Dropzone';
 import { Container } from './styles';
 import Header from '../../../../components/Header';
@@ -22,19 +22,6 @@ export default function Notice(props) {
     const [notice, setNotice] = useState({});
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        api.get(`/notices/${noticeId}`).then((response) => {
-            if (
-                Number(response.data.user.id) === authUser.id ||
-                authUser.type === 0
-            ) {
-                setNotice(response.data);
-                setIsLoading(false);
-            } else {
-                history.push('..');
-            }
-        });
-    }, [authUser.id, authUser.type, history, noticeId]);
     const [redirectMessage, setRedirectMessage] = useState('');
     const [selectedTags, setSelectedTags] = useState([]);
     const [isDisabled, setIsDisabled] = useState(false);
@@ -44,8 +31,6 @@ export default function Notice(props) {
             children: [{ text: '' }],
         },
     ]);
-    const [title, setTitle] = useState('');
-    const [abstract, setAbstract] = useState('');
 
     const [imageModal, setImageModal] = useState(false);
 
@@ -53,17 +38,33 @@ export default function Notice(props) {
     const [fileUrl, setFileUrl] = useState('');
     const [finalImage, setFinalImage] = useState(null);
 
+    const [removeBanner, setRemoveBanner] = useState(false);
+
+    useEffect(() => {
+        api.get(`/notices/${noticeId}`).then((response) => {
+            if (
+                Number(response.data.user.id) === authUser.id ||
+                authUser.type === 0
+            ) {
+                const { data } = response;
+                setNotice(data);
+                setValue(JSON.parse(data.text));
+                setSelectedTags(data.tags);
+                setIsLoading(false);
+            } else {
+                history.push('..');
+            }
+        });
+    }, [authUser, history, noticeId]);
+
     const deleteImage = () => {
         setFinalImage(null);
+        setRemoveBanner(true);
     };
 
     useEffect(() => {
         if (file) setFileUrl(URL.createObjectURL(file));
     }, [file]);
-
-    useEffect(() => {
-        if (notice.text) setValue(JSON.parse(notice.text));
-    }, [notice]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -72,15 +73,14 @@ export default function Notice(props) {
         let object;
         // eslint-disable-next-line prefer-const
         object = JSON.parse(JSON.stringify(value));
-        const notice = await serializeSlateToJson(object);
-        return;
+        const text = await serializeSlateToJson(object);
         const serializedTags = selectedTags.map((tag) => {
             return { id: tag.id };
         });
         data = {
-            title,
-            abstract,
-            text: notice,
+            title: notice.title,
+            abstract: notice.abstract,
+            text,
             tags: serializedTags,
         };
 
@@ -94,10 +94,16 @@ export default function Notice(props) {
                 imageId,
                 imageType,
             };
+        } else if (removeBanner) {
+            data = {
+                ...data,
+                imageId: null,
+            };
         }
 
-        api.post('/notices', data)
-            .then(() => {
+        api.put(`/notices/${noticeId}`, data)
+            .then((res) => {
+                console.log(res);
                 setRedirectMessage(
                     'Notícia alterada com sucesso! Redirecionando...',
                 );
@@ -134,7 +140,7 @@ export default function Notice(props) {
                                     onChange={(e) => {
                                         setNotice({
                                             ...notice,
-                                            text: e.target.value,
+                                            title: e.target.value,
                                         });
                                     }}
                                     placeholder="Titulo..."
@@ -159,13 +165,18 @@ export default function Notice(props) {
                                 />
 
                                 <div className="banner-change">
-                                    {finalImage ? (
+                                    {finalImage ||
+                                    (notice.imageId && !removeBanner) ? (
                                         <div className="banner">
                                             <h3>Banner da notícia</h3>
                                             <img
-                                                src={URL.createObjectURL(
-                                                    finalImage,
-                                                )}
+                                                src={
+                                                    finalImage
+                                                        ? URL.createObjectURL(
+                                                              finalImage,
+                                                          )
+                                                        : `https://res.cloudinary.com/saudepp/image/upload/${notice.imageId}.${notice.imageType}`
+                                                }
                                                 alt="Banner"
                                             />
                                             <button
@@ -173,10 +184,22 @@ export default function Notice(props) {
                                                 className="noborder"
                                                 onClick={deleteImage}
                                             >
-                                                Remover foto
+                                                Remover banner
                                             </button>
                                         </div>
-                                    ) : null}
+                                    ) : (
+                                        notice.imageId && (
+                                            <button
+                                                type="button"
+                                                className="noborder"
+                                                onClick={() =>
+                                                    setRemoveBanner(false)
+                                                }
+                                            >
+                                                Restaurar banner
+                                            </button>
+                                        )
+                                    )}
                                     <Dropzone
                                         setFile={setFile}
                                         callback={() => setImageModal(true)}
@@ -197,7 +220,7 @@ export default function Notice(props) {
                                                 isDisabled ? 'disabled' : null
                                             }
                                         >
-                                            Enviar
+                                            Salvar mudanças
                                         </button>
                                     </div>
                                 </div>

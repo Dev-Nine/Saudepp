@@ -234,13 +234,13 @@ export default function Create() {
                         <Input
                             icon={FiLock}
                             name="password"
-                            placeholder="Sua Senha"
+                            placeholder="Senha"
                             type="password"
                         />
                         <Input
                             icon={FiLock}
                             name="confirmPassword"
-                            placeholder="Confirme sua Senha"
+                            placeholder="Confirme a Senha"
                             type="password"
                         />
 
@@ -267,7 +267,7 @@ export default function Create() {
                             />
                         </div>
                         <p>{redirectMessage}</p>
-                        <button type="submit">Criar Conta</button>
+                        <button type="submit">Criar conta</button>
                     </FormStyle>
 
                     {/* <div>

@@ -18,19 +18,28 @@ import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import Header from '../../../components/Header';
 import Footer from '../../../components/Footer';
 import Input from '../../../components/Input';
+import PageSelector from '../../../components/PageSelector';
 
-async function loadTags() {
-    const { data } = await api.get('/tags');
-    return data;
+async function loadTags(url, setTotalCount, setIsLoading) {
+    const res = await api.get(url);
+    setTotalCount(Number(res.headers['x-total-count']));
+    setIsLoading(false);
+    return res.data;
 }
 
 Modal.setAppElement('#root');
 
 export default function PanelTags() {
-    const { data: tags, mutate } = useSWR('/tags', loadTags);
     const [createIsOpen, setCreateIsOpen] = useState(false);
     const [editIsOpen, setEditIsOpen] = useState(false);
     const [editValue, setEditValue] = useState('');
+    const [page, setPage] = useState(1);
+    const [totalCount, setTotalCount] = useState(1);
+    const [isLoading, setIsLoading] = useState(true);
+    const { data: tags, mutate } = useSWR(
+        [`/tags?page=${page}`, setTotalCount, setIsLoading],
+        loadTags,
+    );
     const formRef = useRef(null);
 
     function remove(id) {
@@ -45,6 +54,9 @@ export default function PanelTags() {
                         const updatedTags = tags.filter((tag) => {
                             if (tag.id !== id) return true;
                             return false;
+                        });
+                        setTotalCount((old) => {
+                            return old - 1;
                         });
                         mutate(updatedTags, false);
                     },
@@ -74,6 +86,9 @@ export default function PanelTags() {
                     tags.unshift(res.data[0]);
                     tags.pop();
                     mutate(tags, false);
+                    setTotalCount((old) => {
+                        return old + 1;
+                    });
                     setCreateIsOpen(false);
                 });
             } catch (err) {
@@ -183,52 +198,63 @@ export default function PanelTags() {
                 </Modal>
                 <Container>
                     <h1>Painel de Categorias</h1>
-                    <Table>
-                        <TableLine isHeader>
-                            <div>Descrição</div>
-                            <div>
-                                <Button
-                                    isCreate
-                                    onClick={() => {
-                                        setCreateIsOpen(true);
-                                    }}
-                                >
-                                    <FiPlus />
-                                </Button>
-                            </div>
-                        </TableLine>
+                    {isLoading ? (
+                        <p>Carregando...</p>
+                    ) : (
+                        <Table>
+                            <PageSelector
+                                totalCount={totalCount}
+                                currentPage={page}
+                                setCurrentPage={setPage}
+                                itemsPerPage={8}
+                            />
+                            <TableLine isHeader>
+                                <div>Descrição</div>
+                                <div>
+                                    <Button
+                                        isCreate
+                                        onClick={() => {
+                                            setCreateIsOpen(true);
+                                        }}
+                                    >
+                                        <FiPlus />
+                                    </Button>
+                                </div>
+                            </TableLine>
 
-                        {tags ? (
-                            tags.map((t) => (
-                                <TableLine key={t.id}>
-                                    <div>{t.description}</div>
-                                    <div>
-                                        <Button
-                                            onClick={() => {
-                                                setEditValue({
-                                                    id: t.id,
-                                                    description: t.description,
-                                                });
-                                                setEditIsOpen(true);
-                                            }}
-                                        >
-                                            <FiSearch />
-                                        </Button>
-                                        <Button
-                                            onClick={() => {
-                                                remove(t.id);
-                                            }}
-                                            isDelete
-                                        >
-                                            <FiX />
-                                        </Button>
-                                    </div>
-                                </TableLine>
-                            ))
-                        ) : (
-                            <TableLine />
-                        )}
-                    </Table>
+                            {tags ? (
+                                tags.map((t) => (
+                                    <TableLine key={t.id}>
+                                        <div>{t.description}</div>
+                                        <div>
+                                            <Button
+                                                onClick={() => {
+                                                    setEditValue({
+                                                        id: t.id,
+                                                        description:
+                                                            t.description,
+                                                    });
+                                                    setEditIsOpen(true);
+                                                }}
+                                            >
+                                                <FiSearch />
+                                            </Button>
+                                            <Button
+                                                onClick={() => {
+                                                    remove(t.id);
+                                                }}
+                                                isDelete
+                                            >
+                                                <FiX />
+                                            </Button>
+                                        </div>
+                                    </TableLine>
+                                ))
+                            ) : (
+                                <TableLine />
+                            )}
+                        </Table>
+                    )}
                 </Container>
             </div>
             <Footer />

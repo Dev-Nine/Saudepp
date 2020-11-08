@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
@@ -16,13 +16,23 @@ import api from '../../../services/api';
 import Header from '../../../components/Header';
 import Footer from '../../../components/Footer';
 
-async function getInfo(url) {
-    const response = await api.get(url);
-    return response.data;
+import PageSelector from '../../../components/PageSelector';
+
+async function loadUsers(url, setTotalCount, setIsLoading) {
+    const res = await api.get(url);
+    setTotalCount(Number(res.headers['x-total-count']));
+    setIsLoading(false);
+    return res.data;
 }
 
 export default function Panel() {
-    const { data: users, mutate } = useSWR('/professionals', getInfo);
+    const [totalCount, setTotalCount] = useState(1);
+    const [page, setPage] = useState(1);
+    const [isLoading, setIsLoading] = useState(true);
+    const { data: users, mutate } = useSWR(
+        ['/professionals', setTotalCount, setIsLoading],
+        loadUsers,
+    );
 
     useEffect(() => {
         document.title = 'Painel de controle';
@@ -58,40 +68,50 @@ export default function Panel() {
             <div className="main">
                 <Container>
                     <h1>Painel de usuarios</h1>
-                    <Table>
-                        <TableLine isHeader>
-                            <div> Name </div>
-                            <div>
-                                <Link to="create">
-                                    <Button isCreate>
-                                        <FiPlus />
-                                    </Button>
-                                </Link>
-                            </div>
-                        </TableLine>
-                        {users ? (
-                            users.map((u) => (
-                                <TableLine key={u.id}>
-                                    <div>{u.name}</div>
-                                    <div>
-                                        <Link to={`edit/${u.id}`}>
-                                            <Button>
-                                                <FiSearch />
-                                            </Button>
-                                        </Link>
-                                        <Button
-                                            onClick={() => remove(u.id)}
-                                            isDelete
-                                        >
-                                            <FiX />
+                    {isLoading ? (
+                        <p>Carregando...</p>
+                    ) : (
+                        <Table>
+                            <PageSelector
+                                totalCount={totalCount}
+                                currentPage={page}
+                                setCurrentPage={setPage}
+                                itemsPerPage={8}
+                            />
+                            <TableLine isHeader>
+                                <div> Name </div>
+                                <div>
+                                    <Link to="create">
+                                        <Button isCreate>
+                                            <FiPlus />
                                         </Button>
-                                    </div>
-                                </TableLine>
-                            ))
-                        ) : (
-                            <div />
-                        )}
-                    </Table>
+                                    </Link>
+                                </div>
+                            </TableLine>
+                            {users ? (
+                                users.map((u) => (
+                                    <TableLine key={u.id}>
+                                        <div>{u.name}</div>
+                                        <div>
+                                            <Link to={`edit/${u.id}`}>
+                                                <Button>
+                                                    <FiSearch />
+                                                </Button>
+                                            </Link>
+                                            <Button
+                                                onClick={() => remove(u.id)}
+                                                isDelete
+                                            >
+                                                <FiX />
+                                            </Button>
+                                        </div>
+                                    </TableLine>
+                                ))
+                            ) : (
+                                <div />
+                            )}
+                        </Table>
+                    )}
                 </Container>
             </div>
 

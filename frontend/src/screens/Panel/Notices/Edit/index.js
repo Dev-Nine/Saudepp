@@ -1,5 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { Form } from '@unform/web';
+import { useRef } from 'react';
+import * as Yup from 'yup';
 import Dropzone from '../../../../components/Dropzone';
 import { Container } from './styles';
 import Header from '../../../../components/Header';
@@ -10,10 +13,13 @@ import TagSelector from '../../../../components/TagSelector';
 import NoticeBannerChangeModal from '../../../../components/NoticeBannerChangeModal';
 import serializeSlateToJson from '../../../../utils/serializeSlateToJson';
 import { useAuth } from '../../../../hooks/AuthProvider';
+import Input from '../../../../components/Input';
+import getValidationErros from '../../../../utils/getValidationErros';
 
 export default function Notice(props) {
     const history = useHistory();
     const { user: authUser } = useAuth();
+    const formRef = useRef();
 
     const { computedMatch } = props;
     const { params } = computedMatch;
@@ -66,63 +72,84 @@ export default function Notice(props) {
         if (file) setFileUrl(URL.createObjectURL(file));
     }, [file]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        let data;
-        setIsDisabled(true);
-        let object;
-        // eslint-disable-next-line prefer-const
-        object = JSON.parse(JSON.stringify(value));
-        const text = await serializeSlateToJson(object);
-        const serializedTags = selectedTags.map((tag) => {
-            return { id: tag.id };
-        });
-        data = {
-            title: notice.title,
-            abstract: notice.abstract,
-            text,
-            tags: serializedTags,
-        };
+    const handleSubmit = useCallback(
+        async (data) => {
+            setIsDisabled(true);
+            try {
+                formRef.current.setErrors({});
+                const schema = Yup.object().shape({
+                    title: Yup.string()
+                        .min(5, 'Mínimo de 5 caracteres')
+                        .max(100, 'Máximo de 100 caracteres')
+                        .required('Campo obrigatório'),
+                    abstract: Yup.string()
+                        .min(5, 'Mínimo de 5 caracteres')
+                        .max(150, 'Máximo de 150 caracteres')
+                        .required('Campo obrigatório'),
+                });
+                await schema.validate(data, {
+                    abortEarly: false,
+                });
 
-        if (finalImage) {
-            const formData = new FormData();
-            formData.append('image', finalImage);
-            const res = await api.post('/images', formData);
-            const { imageId, imageType } = res.data;
-            data = {
-                ...data,
-                imageId,
-                imageType,
-            };
-        } else if (removeBanner) {
-            data = {
-                ...data,
-                imageId: null,
-            };
-        }
+                let object;
+                // eslint-disable-next-line prefer-const
+                object = JSON.parse(JSON.stringify(value));
+                const text = await serializeSlateToJson(object);
+                const serializedTags = selectedTags.map((tag) => {
+                    return { id: tag.id };
+                });
+                data = {
+                    ...data,
+                    text,
+                    tags: serializedTags,
+                };
 
-        api.put(`/notices/${noticeId}`, data)
-            .then((res) => {
-                console.log(res);
-                setRedirectMessage(
-                    'Notícia alterada com sucesso! Redirecionando...',
-                );
-                setTimeout(() => {
-                    history.push('/panel/notices/');
-                }, 3000);
-            })
-            .catch((err) => {
-                console.log({ err });
-                setIsDisabled(false);
-            });
-    };
+                if (finalImage) {
+                    const formData = new FormData();
+                    formData.append('image', finalImage);
+                    const res = await api.post('/images', formData);
+                    const { imageId, imageType } = res.data;
+                    data = {
+                        ...data,
+                        imageId,
+                        imageType,
+                    };
+                } else if (removeBanner) {
+                    data = {
+                        ...data,
+                        imageId: null,
+                    };
+                }
+
+                api.put(`/notices/${noticeId}`, data)
+                    .then((res) => {
+                        setRedirectMessage(
+                            'Notícia alterada com sucesso! Redirecionando...',
+                        );
+                        setTimeout(() => {
+                            history.push('/panel/notices/');
+                        }, 3000);
+                    })
+                    .catch((err) => {
+                        setIsDisabled(false);
+                    });
+            } catch (err) {
+                if (err instanceof Yup.ValidationError) {
+                    const erros = getValidationErros(err);
+                    formRef.current.setErrors(erros);
+                    setIsDisabled(false);
+                }
+            }
+        },
+        [finalImage, history, noticeId, removeBanner, selectedTags, value],
+    );
 
     return (
         <>
             <Header />
             <Container>
                 <div className="content">
-                    <form>
+                    <Form ref={formRef} onSubmit={handleSubmit}>
                         {isLoading ? (
                             <p>Carregando notícia...</p>
                         ) : (
@@ -133,9 +160,7 @@ export default function Notice(props) {
                                     setIsModalOpen={setImageModal}
                                     imageUrl={fileUrl}
                                 />
-                                <p>Título</p>
-                                <input
-                                    type="text"
+                                <Input
                                     value={notice.title}
                                     onChange={(e) => {
                                         setNotice({
@@ -143,12 +168,10 @@ export default function Notice(props) {
                                             title: e.target.value,
                                         });
                                     }}
-                                    placeholder="Titulo..."
+                                    name="title"
+                                    placeholder="Título"
                                 />
-
-                                <p>Resumo</p>
-                                <input
-                                    type="text"
+                                <Input
                                     value={notice.abstract}
                                     onChange={(e) => {
                                         setNotice({
@@ -156,7 +179,8 @@ export default function Notice(props) {
                                             abstract: e.target.value,
                                         });
                                     }}
-                                    placeholder="Resumo..."
+                                    name="abstract"
+                                    placeholder="Resumo"
                                 />
 
                                 <TagSelector
@@ -226,7 +250,7 @@ export default function Notice(props) {
                                 </div>
                             </>
                         )}
-                    </form>
+                    </Form>
                 </div>
             </Container>
             <Footer />

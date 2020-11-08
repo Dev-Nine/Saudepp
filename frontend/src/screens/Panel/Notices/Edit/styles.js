@@ -28,18 +28,6 @@ export const Container = styled.div`
         font-size: 20px;
         color: var(--main-text-color);
     }
-
-    .content form input {
-        display: block;
-        height: 40px;
-        width: 100%;
-        margin-bottom: 20px;
-        border-radius: 8px;
-        border: 1px;
-        padding: 0 10px;
-        box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
-    }
-
     .button-container {
         display: flex;
         justify-content: space-between;

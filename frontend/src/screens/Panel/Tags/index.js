@@ -5,11 +5,10 @@ import Modal from 'react-modal';
 import * as Yup from 'yup';
 import { FiSearch, FiX, FiPlus } from 'react-icons/fi';
 import useSWR from 'swr';
-import { Link } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert'; // Import element
 
-import { Form } from '@unform/core';
-import { Container, Table, TableLine, Button } from './styles';
+import { Form } from '@unform/web';
+import { Container, Table, TableLine, Button, ModalContent } from './styles';
 
 import getValidationErros from '../../../utils/getValidationErros';
 import api from '../../../services/api';
@@ -29,7 +28,9 @@ Modal.setAppElement('#root');
 
 export default function PanelTags() {
     const { data: tags, mutate } = useSWR('/tags', loadTags);
-    const [modalIsOpen, setIsOpen] = useState(false);
+    const [createIsOpen, setCreateIsOpen] = useState(false);
+    const [editIsOpen, setEditIsOpen] = useState(false);
+    const [editValue, setEditValue] = useState('');
     const formRef = useRef(null);
 
     function remove(id) {
@@ -55,51 +56,143 @@ export default function PanelTags() {
         });
     }
 
-    function openModal() {
-        setIsOpen(true);
-    }
+    const handleCreateSubmit = useCallback(
+        async (data) => {
+            try {
+                formRef.current.setErrors({});
+                const schema = Yup.object().shape({
+                    description: Yup.string()
+                        .min(2, 'Precisa de pelo menos 2 caracteres')
+                        .required('Informe uma descrição válida'),
+                });
 
-    function closeModal() {
-        setIsOpen(false);
-    }
+                await schema.validate(data, {
+                    abortEarly: false,
+                });
 
-    const handleSubmit = useCallback(async (data) => {
-        console.log('aaa');
-        try {
-            formRef.current.setErrors({});
-            const schema = Yup.object().shape({
-                description: Yup.string().required(
-                    'Informe uma descrição válida',
-                ),
-            });
-
-            await schema.validate(data, {
-                abortEarly: false,
-            });
-
-            const res = await api.post('tags', data);
-            console.log(res);
-            closeModal();
-        } catch (err) {
-            if (err instanceof Yup.ValidationError) {
-                const erros = getValidationErros(err);
-                formRef.current.setErrors(erros);
+                api.post('tags', data).then((res) => {
+                    tags.unshift(res.data[0]);
+                    tags.pop();
+                    mutate(tags, false);
+                    setCreateIsOpen(false);
+                });
+            } catch (err) {
+                if (err instanceof Yup.ValidationError) {
+                    const erros = getValidationErros(err);
+                    formRef.current.setErrors(erros);
+                }
             }
-            console.log(err);
-        }
-    }, []);
+        },
+        [mutate, tags],
+    );
+
+    const handleEditSubmit = useCallback(
+        async (data) => {
+            try {
+                formRef.current.setErrors({});
+                const schema = Yup.object().shape({
+                    description: Yup.string()
+                        .min(2, 'Precisa de pelo menos 2 caracteres')
+                        .required('Informe uma descrição válida'),
+                });
+
+                await schema.validate(data, {
+                    abortEarly: false,
+                });
+
+                await api.put(`tags/${editValue.id}`, data).then(() => {
+                    const updatedTags = tags.map((tag) => {
+                        if (tag.id === editValue.id)
+                            tag.description = editValue.description;
+                        return tag;
+                    });
+                    mutate(updatedTags, false);
+                    setEditIsOpen(false);
+                });
+            } catch (err) {
+                if (err instanceof Yup.ValidationError) {
+                    const erros = getValidationErros(err);
+                    formRef.current.setErrors(erros);
+                }
+            }
+        },
+        [editValue.description, editValue.id, mutate, tags],
+    );
 
     return (
         <>
             <Header />
             <div className="main">
+                <Modal
+                    isOpen={createIsOpen}
+                    onRequestClose={() => {
+                        setCreateIsOpen(false);
+                    }}
+                    className="modal"
+                >
+                    <ModalContent>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setCreateIsOpen(false);
+                            }}
+                            className="close"
+                        >
+                            <FiX size="32px" />
+                        </button>
+                        <Form ref={formRef} onSubmit={handleCreateSubmit}>
+                            <h2>Cadastrar Tags</h2>
+                            <Input name="description" placeholder="Descrição" />
+                            <button type="submit">Cadastrar</button>
+                        </Form>
+                    </ModalContent>
+                </Modal>
+                <Modal
+                    isOpen={editIsOpen}
+                    onRequestClose={() => {
+                        setEditIsOpen(false);
+                    }}
+                    className="modal"
+                >
+                    <ModalContent>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setEditIsOpen(false);
+                            }}
+                            className="close"
+                        >
+                            <FiX size="32px" />
+                        </button>
+                        <Form ref={formRef} onSubmit={handleEditSubmit}>
+                            <h2>Alterar Tag</h2>
+                            <Input
+                                value={editValue.description}
+                                onChange={(e) => {
+                                    setEditValue({
+                                        ...editValue,
+                                        description: e.target.value,
+                                    });
+                                }}
+                                name="description"
+                                placeholder="Descrição"
+                            />
+                            <button type="submit">Salvar</button>
+                        </Form>
+                    </ModalContent>
+                </Modal>
                 <Container>
                     <h1>Painel de Categorias</h1>
                     <Table>
                         <TableLine isHeader>
                             <div>Descrição</div>
                             <div>
-                                <Button isCreate onClick={() => openModal()}>
+                                <Button
+                                    isCreate
+                                    onClick={() => {
+                                        setCreateIsOpen(true);
+                                    }}
+                                >
                                     <FiPlus />
                                 </Button>
                             </div>
@@ -110,11 +203,17 @@ export default function PanelTags() {
                                 <TableLine key={t.id}>
                                     <div>{t.description}</div>
                                     <div>
-                                        <Link to="edit">
-                                            <Button>
-                                                <FiSearch />
-                                            </Button>
-                                        </Link>
+                                        <Button
+                                            onClick={() => {
+                                                setEditValue({
+                                                    id: t.id,
+                                                    description: t.description,
+                                                });
+                                                setEditIsOpen(true);
+                                            }}
+                                        >
+                                            <FiSearch />
+                                        </Button>
                                         <Button
                                             onClick={() => {
                                                 remove(t.id);
@@ -130,21 +229,6 @@ export default function PanelTags() {
                             <TableLine />
                         )}
                     </Table>
-                    <Modal
-                        isOpen={modalIsOpen}
-                        onRequestClose={() => closeModal()}
-                        contentLabel="AAAAAAAAAAAAAAAAAAAAAAAAAA"
-                        className="modal"
-                    >
-                        <h2>Cadastrar Tags</h2>
-                        <button type="button" onClick={() => closeModal()}>
-                            X
-                        </button>
-                        <Form ref={formRef} onSubmit={handleSubmit}>
-                            <Input name="description" placeholder="Descrição" />
-                            <button type="submit">Cadastrar</button>
-                        </Form>
-                    </Modal>
                 </Container>
             </div>
             <Footer />

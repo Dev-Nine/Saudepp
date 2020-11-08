@@ -5,7 +5,7 @@ import { useAxios } from '../../services/api';
 import { Search, TagContainer, TagButton } from './style';
 
 const TagSelector = ({ selectedTags, setSelectedTags }) => {
-    const { data: tags, mutate } = useAxios('/tags');
+    const { data: tags, mutate } = useAxios('/tags?limit=200');
     const [unchosenTags, setUnchosenTags] = useState();
 
     useEffect(() => {

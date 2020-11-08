@@ -31,7 +31,9 @@ export default class App {
 
     private initializeMiddlewares(): void {
         this.app.use(express.json());
-        this.app.use(cors());
+        this.app.use(cors({
+            exposedHeaders : 'X-Total-Count',
+        }));
         this.app.use(limiter);
         this.app.use(helmet());
     }

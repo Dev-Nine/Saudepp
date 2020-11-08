@@ -18,6 +18,9 @@ export const Container = styled.div`
 
 export const ModalContent = styled.div`
     width: 100%;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
 
     form {
         border-radius: 20px;
@@ -42,6 +45,7 @@ export const ModalContent = styled.div`
                 background-color: ${shade(0.1, '#77C6FF')};
             }
         }
+    }
 `;
 
 export const Table = styled.div`
@@ -68,7 +72,7 @@ export const TableLine = styled.div`
         }
     }}
 
-    a + a, a + button, button + a {
+    a + a, a + button, button + a, button + button {
         margin-left: 8px;
     }
 

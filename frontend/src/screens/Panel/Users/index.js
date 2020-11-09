@@ -19,10 +19,16 @@ import Footer from '../../../components/Footer';
 import PageSelector from '../../../components/PageSelector';
 
 async function loadUsers(url, setTotalCount, setIsLoading) {
-    const res = await api.get(url);
-    setTotalCount(Number(res.headers['x-total-count']));
-    setIsLoading(false);
-    return res.data;
+    try {
+        const res = await api.get(url);
+        setTotalCount(Number(res.headers['x-total-count']));
+        return res.data;
+    } catch (err) {
+        console.log(err);
+        return null;
+    } finally {
+        setIsLoading(false);
+    }
 }
 
 export default function Panel() {

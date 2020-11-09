@@ -37,7 +37,7 @@ import { useAuth } from '../../../../hooks/AuthProvider';
 
 export default function Edit(props) {
     const history = useHistory();
-    const { user: authUser } = useAuth();
+    const { user: authUser, updateAvatar } = useAuth();
 
     // modal
     const [passwordModal, setPasswordModal] = useState(false);
@@ -177,10 +177,6 @@ export default function Edit(props) {
 
                 delete data.confirmPassword;
 
-                console.log(data);
-                console.log(finalImage);
-                console.log(removeAvatar);
-
                 if (finalImage) {
                     const formData = new FormData();
                     formData.append('image', finalImage);
@@ -197,6 +193,7 @@ export default function Edit(props) {
                         imageId: null,
                     };
                 }
+                updateAvatar(data.imageId, data.imageType);
                 try {
                     await api.put(`users/${userId}`, {
                         ...data,
@@ -220,7 +217,14 @@ export default function Edit(props) {
                 }
             }
         },
-        [finalImage, history, removeAvatar, selectedRegister.test, userId],
+        [
+            finalImage,
+            history,
+            removeAvatar,
+            selectedRegister.test,
+            updateAvatar,
+            userId,
+        ],
     );
 
     const handleRegisterChange = (event) => {

@@ -25,7 +25,6 @@ const AuthProvider = ({ children }) => {
     });
 
     const updateAvatar = (imageId, imageType) => {
-        console.log(imageId, imageType);
         setData((oldData) => {
             if (!imageId) {
                 oldData.user.imageUrl = `https://ui-avatars.com/api/?background=0086e6&bold=true&color=fff&uppercase=false&size=256&name=${oldData.user.name}`;

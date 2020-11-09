@@ -66,7 +66,7 @@ export default function Edit(props) {
             if (response.data.registerState)
                 setSelectedState(response.data.registerState);
         });
-    }, [authUser.id, selectedState, setIsLoading, userId]);
+    }, [authUser.id, setIsLoading, userId]);
 
     const formRef = useRef(null);
     const passwordFormRef = useRef(null);
@@ -232,6 +232,10 @@ export default function Edit(props) {
             index: event.target.value,
             ...registerMap.get(event.target.value),
         });
+        setUser({
+            ...user,
+            register: '',
+        });
     };
 
     const handleStateChange = (event) => {
@@ -335,7 +339,12 @@ export default function Edit(props) {
                                     icon={FiClipboard}
                                 >
                                     {[...registerMap.keys()].map((value) => (
-                                        <option value={value} key={value}>
+                                        <option
+                                            value={value}
+                                            key={value}
+                                            disabled={value === 'default'}
+                                            hidden={value === 'default'}
+                                        >
                                             {registerMap.get(value).name}
                                         </option>
                                     ))}
@@ -344,7 +353,13 @@ export default function Edit(props) {
                                     <Input
                                         icon={FiCreditCard}
                                         name="register"
-                                        defaultValue={user.register}
+                                        value={user.register}
+                                        onChange={(e) => {
+                                            setUser({
+                                                ...user,
+                                                register: e.target.value,
+                                            });
+                                        }}
                                         placeholder={selectedRegister.register}
                                         mask={selectedRegister.mask}
                                     />

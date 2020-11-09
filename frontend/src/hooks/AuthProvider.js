@@ -24,6 +24,19 @@ const AuthProvider = ({ children }) => {
         return {};
     });
 
+    const updateAvatar = (imageId, imageType) => {
+        console.log(imageId, imageType);
+        setData((oldData) => {
+            if (!imageId) {
+                oldData.user.imageUrl = `https://ui-avatars.com/api/?background=0086e6&bold=true&color=fff&uppercase=false&size=256&name=${oldData.user.name}`;
+            } else {
+                oldData.user.imageUrl = `https://res.cloudinary.com/saudepp/image/upload/${imageId}.${imageType}`;
+            }
+            localStorage.setItem('@Saude:user', JSON.stringify(oldData.user));
+            return oldData;
+        });
+    };
+
     const signIn = useCallback(async ({ email, username, password }) => {
         let signInData;
 
@@ -76,7 +89,9 @@ const AuthProvider = ({ children }) => {
     }, [data.token, signOut]);
 
     return (
-        <AuthContext.Provider value={{ user: data.user, signIn, signOut }}>
+        <AuthContext.Provider
+            value={{ user: data.user, signIn, signOut, updateAvatar }}
+        >
             {children}
         </AuthContext.Provider>
     );

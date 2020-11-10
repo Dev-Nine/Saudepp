@@ -121,6 +121,11 @@ export default function Edit(props) {
 
                 try {
                     await api.put(`/users/${user.id}`, { ...data });
+                    setPasswordModal(false);
+                    setRedirectMessage('Senha alterada com sucesso');
+                    setTimeout(() => {
+                        setRedirectMessage(null);
+                    }, 3000);
                 } catch (err) {
                     // console.log({ err });
                 }
@@ -205,14 +210,22 @@ export default function Edit(props) {
                         history.push('/panel/users/');
                     }, 3000);
                 } catch (err) {
-                    // console.log(err.response.data);
+                    if (err.response && err.response.status == 400) {
+                        const { data } = err.response;
+                        if (
+                            data.name === 'conflictError' &&
+                            data.column === 'email'
+                        )
+                            formRef.current.setErrors({
+                                email: 'Email já cadastrado',
+                            });
+                    }
                 }
 
                 // history.push('/panel/users/');
             } catch (err) {
                 if (err instanceof Yup.ValidationError) {
                     const erros = getValidationErros(err);
-
                     formRef.current.setErrors(erros);
                 }
             }

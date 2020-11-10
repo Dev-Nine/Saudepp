@@ -140,6 +140,15 @@ export default function Create() {
                     const erros = getValidationErros(err);
 
                     formRef.current.setErrors(erros);
+                } else if (err.response && err.response.status === 400) {
+                    const { data: errData } = err.response;
+                    if (
+                        errData.name === 'conflictError' &&
+                        errData.column === 'email'
+                    )
+                        formRef.current.setErrors({
+                            email: 'Email já cadastrado',
+                        });
                 }
             }
         },
